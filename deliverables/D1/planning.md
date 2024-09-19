@@ -1,4 +1,4 @@
-# YOUR PRODUCT/TEAM NAME
+# YOUR PRODUCT/HeavyLifters
 > _Note:_ This document will evolve throughout your project. You commit regularly to this file while working on the project (especially edits/additions/deletions to the _Highlights_ section). 
  > **This document will serve as a master plan between your team, your partner and your TA.**
 
@@ -17,6 +17,10 @@
  * Focus on *what* your product does, and avoid discussing *how* you're going to implement it.      
    For example: This is not the time or the place to talk about which programming language and/or framework you are planning to use.
  * **Feel free (and very much encouraged) to include useful diagrams, mock-ups and/or links**.
+
+A. Web app visualizing reasoning of AI versus human, such that researchers can improve their AI forecasting model.
+
+The Problems we’re solving make it easy for researchers to make judgement as a benchmark in order to improve AI forecasting models.
 
 
 #### Q2: Who are your target users?
@@ -152,3 +156,5 @@ List/describe the artifacts you will produce in order to organize your team.
   * Adding more details for an user story might make it less abstract.
   * Adding an extra user story might increase the project complexity, making it less simple.
 * It's ok if you are unable to find mitigation strategies for all the risks right now.
+
+
