@@ -18,7 +18,8 @@
    For example: This is not the time or the place to talk about which programming language and/or framework you are planning to use.
  * **Feel free (and very much encouraged) to include useful diagrams, mock-ups and/or links**.
 
-A. Web app visualizing reasoning of AI versus human, such that researchers can improve their AI forecasting model.
+A.
+Web app visualizing reasoning of AI versus human, such that researchers can improve their AI forecasting model.
 
 The Problems we’re solving make it easy for researchers to make judgement as a benchmark in order to improve AI forecasting models.
 
