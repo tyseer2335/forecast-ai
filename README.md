@@ -18,7 +18,7 @@ Project Team Leads:
 - **Software Lead**: Yuchen Wang, University of Toronto, Stanford, Microsoft, https://www.yuchenwyc.com.
 - **Advisor**: Prof. Roger Grosse, CS Prof at University of Toronto, Scientist at Anthropic, https://www.cs.toronto.edu/~rgrosse.
 
-**Contact**: Sheldon Huang, Research Scientist, huang@cs.toronto.edu
+**Contact**: Sheldon Huang, Research Lead, huang@cs.toronto.edu
 
 ## Description about the project
 

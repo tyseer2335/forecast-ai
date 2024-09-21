@@ -1,1 +1,9 @@
+i. Partner: Machine Learning Group, Department of Computer Science, University of Toronto
+
+   Project team leads:
+        Sheldon Huang, Research Lead, huang@cs.toronto.edu (Primary Contact)
+        Yuchen Wang, Software Lead, yuchenw@stanford.edu (Primary Contact)
+        Ezra Karger, Data Lead, karger@uchicago.edu (Secondary Contact)
+        Prof. Roger Grosse, Advisor, rgrosse@cs.toronto.edu (Secondary Contact)
+
 ii. TA: Aneri Gandhi, Email: aneri@cs.toronto.edu
