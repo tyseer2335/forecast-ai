@@ -28,9 +28,11 @@ Keep this section very brief.
 
  * What is the problem you're trying to solve? Is there any context required to understand **why** the application solves this problem?
 
-Web app visualizing reasoning of AI versus human, such that researchers can improve their AI forecasting model.
+A software platform that gathers global data to enhance an AI agent's ability to forecast significant future events and visualize AI rational and cognitive bias.
 
-The Problems we’re solving make it easy for researchers to make judgement as a benchmark in order to improve AI forecasting models.
+We’re building a website that enables users to prompt forecasting questions like ‘will Kamala Harris win the 2024 election?’, then gather relevant global data to validate, get statistics, then feed to the AI forecasting model. Output of AI rational will be then visualized to make it easy for users to identify the cognitive bias.
+
+The Problems we’re solving make it easy for researchers to make judgement in order to improve AI forecasting models, and understand bias.
 
 ## Key Features
 
@@ -72,14 +74,13 @@ Describe your Git/GitHub workflow. Essentially, we want to understand how your t
 
  * Don't forget to **briefly justify why** you chose this workflow or particular aspects of it!
 
-We have 3 main branch types:
+Here's a git workflow we will follow:
 
 * Main -- this restricts any commits, and accepts only pull requests (PR). We require at least 1 developer to review.
 * Docs/..major doc work name.. -- we also version control the document we work on. Ex) “docs/readme”.
 * Features/developer name/feature name -- this is where major development happens. We then merge this to main via PR.
 * Release/name of major features -- when we have a safe main branch, we will on weekly or monthly basis, save backup of main branch.
-
-No underlines _ but only dashes -
+* No underlines _ but only dashes -
 
  ## Coding Standards and Guidelines
 
