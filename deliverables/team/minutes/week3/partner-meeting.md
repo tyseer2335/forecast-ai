@@ -85,7 +85,7 @@ NOTES Took Live by Yehyun
             Even for questions(input):
 
 
-                **collect news regarding question**
+                collect news regarding question
 
 
                 meta data (views)
@@ -111,16 +111,16 @@ NOTES Took Live by Yehyun
         -> gather much as possible
 
 
-        ->**Twitter** ?
+        ->Twitter ?
 
 
-        Relying on **google**
+        Relying on google
 
 
         Can we scale up???
 
 
-        **perplexity** as a API
+        perplexity as a API
 
 * 2nd part: visualization after forecasting
 
@@ -142,13 +142,13 @@ NOTES Took Live by Yehyun
 
         Open API 
 
-- **Summary of platform user flow**:
+- Summary of platform user flow:
 
 
         Users/researchers input forecasting questions
 
 
-        **(breakdown the query)**
+        (breakdown the query)
 
 
 
