@@ -274,7 +274,26 @@ For partner meetings, we’re meeting every Friday at 4PM with Discord.
 
 #### Q11. How does your team fit within the overall team organisation of the partner?
 
+Our team plays a vital role in the **product development** and enhancement of the Machine Learning Group's project, specifically focusing on visualizing the outputs of their LLM model to forecast future events and its biases. This visualization is crucial because it allows both researchers and general users to understand and analyze the model’s results more effectively. We fit into the product development cycle by creating and refining the tools that display this complex data in an accessible and informative way. 
+
+Examples of this are given from our team skills, such as:
+ - The development of a heatmap visualization by our frontend team
+ - Sidebar Chat History by Irene
+ - Newsfeed Expansion by Edison
+ - User Prompt and News Article Visualization by Tyseer
+ - Statistics and Metrics Display on Heatmap by Jasjot
+ - Backend and Data Processing by Muaj and Aditya
+ - Infrastructure and Team Management by Yehyun, who is also a team-lead full stack developer. 
+
+This dynamic group fits well with the organization of the partner as they expect us to create this full-stack application, with the partner setting benchmarks and timelines for the full stack development of the product.
+
 #### Q12. How does your project fit within the overall product from the partner?
+
+Our project is the core frontend visualization component and user backend for the Machine Learning Group’s product, which involves using their LLM to forecast future events. The big picture of the product is a system that provides accurate, transparent, and bias-aware forecasts of significant events. The role of our team is to ensure that these complex outputs are visually represented in an accessible way that both researchers and general users can interact with. 
+
+Our project is the frontend/backend of the Web App, visualizing the output of the LLM model, while the AI data is handled by the partner (the Machine Learning Group). This allows us to focus solely on the user experience, interface, while the partner ensures the model’s functionality and data accuracy. Specifically, our work can be seen as the first major step toward a user-ready product. Without our visualizations, the model's predictions would remain abstract, making it harder for researchers to interpret them and for users to gain any meaningful insights. 
+
+(Will be adding more, I’ll read a bit into the document)
 
 ## Potential Risks
 
@@ -285,5 +304,22 @@ For partner meetings, we’re meeting every Friday at 4PM with Discord.
 #### Q14. What are some potential mitigation strategies for the risks you identified?
 
 - Communicate regularly with our partner to clarify any uncertainty and project-specific technical requirements through weekly meetings and daily conversation in discord.
+
+**Risk:** Abstract or poorly defined user stories. 
+- **Mitigation Strategy:** Refine user stories more detailed.
+- To prevent ambiguity, we should add specific details to each user story. For instance, instead of vague user stories like "As a user, I want to see event predictions," we could specify, "As a user, I want to see event predictions displayed in a heatmap format that shows bias levels." 
+
+**Risk:** Adding too many features and not being able to manage them.
+- **Mitigation Strategy:** Prioritizing user stories and focusing on core features.
+- To prevent the project from becoming too complex, we should prioritize the most critical features first and avoid adding unnecessary features. This allows us to keep the project manageable and within the deadlines.
+
+**Risk:** Lack of experience or technical expertise in specific tools
+- **Mitigation Strategy:** Peer learning and support for the partners
+- Since we are university students, there may be gaps in our technical skills. To mitigate this, we can schedule programming sessions where team members with more expertise in specific tools (e.g., React, TailwindCSS, or backend APIs) can help others. For example, organize a quick tutorial or share links in discord.
+
+**Risk:** Inefficient team collaboration + workflow
+- **Mitigation Strategy:** Use of project management tools and agile practices
+- To ensure everyone is on the same page, we can use tools like Jira to track tasks and progress. Breaking the project into sprints and conducting standups would help us stay organized and quickly address any blockers.
+
 
 

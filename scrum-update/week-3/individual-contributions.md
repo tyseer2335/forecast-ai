@@ -6,6 +6,9 @@
 - Reviewed pull requests
 
 ### Jasjot Benipal:
+- Answered Q11, Q12, and Q14 on D1/planning.md
+- Contributed to Q13, adding more
+- May add a mockup
 
 ### Irene Kang:
 - Added Q3, Q8, Q9, and Q10(Collaboration) on D1/planning.md
