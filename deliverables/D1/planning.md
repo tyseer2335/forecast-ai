@@ -6,6 +6,12 @@
  
 #### Q1: What is the product?
 
+* **<u>Mockup Design</u>**
+
+  Below is a rough website design created by Tyseer, which illustrates the user interface and flow of the platform. This mockup serves as a foundation for the development process, guiding the design of core pages and interactions.
+  <img src="./images/mockup(1:2).jpg" width="600" height="260">
+  <img src="./images/mockup(2:2).jpg" width="600" height="260">
+
 #### Q2: Who are your target users?
 
 Our target users are advanced researchers and engineers from various organizations. This includes key members of the Machine Learning Group at UofT, along with members from external organizations engaged in AI, NLP, and AI forecasting research. These users possess strong technical skills and are engaged in cutting-edge research and practical applications in their fields.
@@ -52,7 +58,7 @@ Briefly describe which option you have agreed to.
 
 #### Q6: Have you met with your team?
 
-<img src="./team-building.jpg" width="600" height="260">
+<img src="./images/team-building.jpg" width="600" height="260">
 
 #### Q7: What are the roles & responsibilities on the team?
 
