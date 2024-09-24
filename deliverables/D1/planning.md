@@ -67,6 +67,18 @@ Yehyun wants to choose which metrics are used to visualize an AI forecasting ans
 **User Story:**  
 Tyseer, a researcher, wants to share the results that the AI agent sent and share his findings with others. He wants recipients to be able to click a link and view the entire chat history.
 
+=======
+1. As a forecast researcher, I want to be able to view all my chat messages with the AI agent so that I can go back and use it as reference material for future work. 
+    - Acceptance Criteria:
+    The user should be able to search for their past chats by typing into a search bar.
+
+2. As a forecast researcher, I want to be able to see the 10 most relevant data related to the forecasting question that I have inputted so that I can view all the related sources that feed to the AI forecasting model. Users can control the parameters of how much data is needed.
+    - Acceptance Criteria:
+      1. The system must allow users to input a specific forecasting question.
+      2. The system must retrieve and display the 10 most relevant data points related to the forecasting question inputted by the user.
+      3. Users should be able to view the entire content of each data source to understand its context.
+
+  3. As a forecast researcher, I want to be able to see the quantified reasoning and bias of the data sources when the relevant query is given in a visually appealing manner in order to save time by streamlining the data exploration.
 
 
 #### Q5: Have you decided on how you will build it? Share what you know now or tell us the options you are considering.
@@ -157,7 +169,8 @@ Briefly describe which option you have agreed to.
     * **Where**: Discord, our main communication channel for real-time discussions
     * **Purpose**: To resolve time-sensitive issues swiftly, ensuring quick coordination and decision making for in-depth questions
 
-  
+  We will take meeting notes using Google docs.
+
 #### Q9: How will you organize your team?
 
   We will use **Jira**, to manage our To-Do lists, track tasks, and set deadlines.
@@ -192,6 +205,8 @@ Briefly describe which option you have agreed to.
 ## Potential Risks
 
 #### Q13. What are some potential risks to your project?
+
+* Uncertainty regarding visuals. We have a good idea on what the partner wants and were given reference code, but there are specifics we are not sure about like what would be appropriate to display to the user interacting with the bot . 
 
 #### Q14. What are some potential mitigation strategies for the risks you identified?
 

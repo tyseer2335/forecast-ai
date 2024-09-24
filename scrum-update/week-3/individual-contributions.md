@@ -1,6 +1,9 @@
 # Individual Contribution
 
 ### Muaj Ahmed:
+- Contributed to Q4, Q6, Q8 and Q13 on D1/planning.md
+- Made minor format changes to D1/planning.md
+- Reviewed pull requests
 
 ### Jasjot Benipal:
 
