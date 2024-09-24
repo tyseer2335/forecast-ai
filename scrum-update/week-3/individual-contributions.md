@@ -18,6 +18,7 @@
 - Setup Firebase NoSQL (credentials to be shared with team).
 - Setup Jira for project management (everyone invited).
 - Setup Netlify for CI/CD of frontend (backend to be added later).
+- Worked on D1 Q1, 3, 4, 5, 6, 7, 10
 
 ### Ho Kwan Edison Liem:
 

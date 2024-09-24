@@ -21,6 +21,13 @@ In terms of bias detection, we are partnering with a custom-trained AI model to 
   <img src="./images/mockup(1-2).jpg" width="600" height="260">
   <img src="./images/mockup(2-2).jpg" width="600" height="260">
 
+  Below is another rouch design made by Yehyun approved by the partner.
+  <img src="./images/mockup(3).png">
+
+  Below represent how the heatmap will visualize the bias and dropdown for selecting metrics.
+  *This was made by Yehyun before meeting the partner, but this gives rough idea on what the heatmap will look.
+  <img src="./images/mockup(4).png">
+
 #### Q2: Who are your target users?
 
 Our target users are advanced researchers and engineers from various organizations. This includes key members of the Machine Learning Group at UofT, along with members from external organizations engaged in AI, NLP, and AI forecasting research. These users possess strong technical skills and are engaged in cutting-edge research and practical applications in their fields.
