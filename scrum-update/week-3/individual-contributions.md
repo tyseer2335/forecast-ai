@@ -29,4 +29,9 @@
 
 ### Aditya Ohri:
 
-### Tyseer Toufiq:
+### Tyseer Toufiq: 
+- Completed Q1 and added it to D1/planning.md
+- Drew the mockups for D1
+- Formatted Q4 and added user-added acceptance criteria to all user stories
+- Added a list of the technologies that we plan to use and for what in Q5
+- Added "fun facts" for Q6
