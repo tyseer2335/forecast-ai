@@ -12,6 +12,10 @@ Our target users are advanced researchers and engineers from various organizatio
 
 #### Q3: Why would your users choose your product? What are they using today to solve their problem/need?
 
+  Current solutions, such as those used by FiveThirtyEight, are limited in their interactivity and do not allow for a granular view of the data and bias within the text. Our product changes this by providing visualizations that allow users to not only see where bias exists but also control the extent of bias they want to examine.
+
+  This saves users time by streamlining the process of bias analysis, which would otherwise require manual/less precise tools.
+
 #### Q4: What are the user stories that make up the Minumum Viable Product (MVP)?
 
 2. As a forecast researcher, I want to be able to see the 10 most relevant data related to the forecasting question that I have inputted so that I can view all the related sources that feed to the AI forecasting model. Users can control the parameters of how much data is needed.
@@ -19,6 +23,9 @@ Our target users are advanced researchers and engineers from various organizatio
       1. The system must allow users to input a specific forecasting question.
       2. The system must retrieve and display the 10 most relevant data points related to the forecasting question inputted by the user.
       3. Users should be able to view the entire content of each data source to understand its context.
+
+  * As a forecast researcher, I want to be able to see the quantified reasoning and bias of the data sources when the relevant query is given in a visually appealing manner in order to save time by streamlining the data exploration.
+
 
 #### Q5: Have you decided on how you will build it? Share what you know now or tell us the options you are considering.
 
@@ -50,10 +57,48 @@ Briefly describe which option you have agreed to.
 #### Q7: What are the roles & responsibilities on the team?
 
 #### Q8: How will you work as a team?
+
+  * **<u>Weekly Team Meetings</u>**
+    
+    * **When**: Every Saturday 4pm
+    * **Where**: Online via Discord Meetings
+    * **Purpose**: To summarize the week's work, discuss progress, and identify any roadblocks. We will use this meeting to ensure alignment and plan for the upcoming week.
+  
+  * **<u>Partner Meetings</u>**
+    * **When**: Every Friday 4pm
+    * **Where**: Online
+    * **Purpose**: To maintain alignment with our project partner, clarify any requirements, and review key deliverables before submission.
+
+  * **<u>Urgent/Quick Meetings</u>**
+    * **When**: Ad hoc, as needed for quick decisions or urgent matters
+    * **Where**: Discord, our main communication channel for real-time discussions
+    * **Purpose**: To resolve time-sensitive issues swiftly, ensuring quick coordination and decision making for in-depth questions
+
   
 #### Q9: How will you organize your team?
 
+  We will use **Jira**, to manage our To-Do lists, track tasks, and set deadlines.
+
+  * **<u>Tracking Work</u>**: Jira will serve as our central hub, where all tasks are listed and tracked. Both our TA and partner will have access to the system to monitor progress in real time.
+
+  * **<u>Prioritizing Tasks</u>**: We will assign priorities based on the project’s timeline and critical milestones. Tasks that are critical to overall goals and are emphasized by the partners in the meetings will be marked as high priority, and we will use Jira’s backlog and sprint planning features to organize these tasks accordingly.
+
+  * **<u>Task Assignment</u>**: Tasks will be assigned to members based on their expertise, current workload, and preference. We will use Jira’s assignment feature to ensure clarity on who is responsible for each task. Members can self-assign tasks if they align with their strengths but need to notify the team in this case.
+
+
 #### Q10: What are the rules regarding how your team works?
+
+**Communications:**
+ * What is the expected frequency? What methods/channels will be used? 
+ * If you have a partner project, what is your process for communicating with your partner?
+ 
+**Collaboration: (Share your responses to Q8 & Q9 from A1)**
+ * How are people held accountable for attending meetings, completing action items? Is there a moderator or process?
+ 
+ * How will you address the issue if one person doesn't contribute or is not responsive?
+
+  If a team member doesn't contribute or is unresponsive, the team manager will first have a one-on-one conversation to understand why the deadline wasn't met and offer support if needed. If the issue persists, the team will collectively address it with the member to resolve the situation quickly. Should the problem continue, we will escalate the matter to the TA to seek further assistance in resolving the issue.
+
 
 ## Organisation Details
 

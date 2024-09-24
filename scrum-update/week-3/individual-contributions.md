@@ -5,6 +5,8 @@
 ### Jasjot Benipal:
 
 ### Irene Kang:
+- Added Q3, Q8, Q9, and Q10(Collaboration) on D1/planning.md
+- Resolved some minor merge conflicts
 
 ### Yehyun Lee:
 
