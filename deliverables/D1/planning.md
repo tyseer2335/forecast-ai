@@ -6,17 +6,17 @@
  
 #### Q1: What is the product?
 
-The project is a software platform designed to enhance an AI agent's ability to forecast significant future events by gathering global data and visualizing the AI's reasoning and cognitive biases.
+The product is a full-stack web app designed to enhance an AI agent's ability to forecast significant future events by gathering global data and visualizing the AI's reasoning and cognitive biases.
 
 A key aspect of AI research is collecting vast, up-to-date, and relevant data to train models effectively. This project aims to streamline that process while providing researchers with valuable feedback by highlighting biases in the model's predictions. Additionally, the platform allows researchers to share their findings via link sharing for collaborative analysis.
 
-The Machine Learning Group at the University of Toronto's Department of Computer Science has developed a language model (LLM) for forecasting significant future events. Our role is to visualize the model's outputs in an intuitive and shareable way, enabling both researchers and general users to easily interpret the results. This visualization will help users understand where bias occurs and how it affects the predictions, ultimately improving the accuracy and reliability of AI forecasting systems by reducing bias and ensuring decisions are based on factual evidence.
+The Machine Learning Group at the University of Toronto's Department of Computer Science has developed a large language model (LLM) for forecasting significant future events. Our role is to visualize the model's outputs in an intuitive and shareable way, enabling both researchers and general users to easily interpret the results. This visualization will help users understand where bias occurs and how it affects the predictions, ultimately improving the accuracy and reliability of AI forecasting systems by reducing bias and ensuring decisions are based on factual evidence.
 
-For example, users can ask the platform questions such as "Will Kamala Harris win the 2024 election?" The system will then gather relevant global data, validate it, and use it to generate AI forecasts. The results will be displayed in a way that highlights the AI's reasoning, allowing users to spot any cognitive biases.
+For example, users can ask the platform questions such as "Will Kamala Harris win the 2024 election?" The system will then gather relevant global data, validate it, and use it to generate AI forecasts. The results will be displayed in a way that highlights both the statistics/characteristics of the collected global data and its potential cognitive biases, as well as the AI's reasoning in proudcing a forecast probability on the input question. This will allow users to gain key insights into the end-to-end AI forecasting process and the biases associated with it.
 
-In terms of bias detection, we are partnering with a custom-trained AI model to identify and quantify biases in the data. These biases are visualized using color coding: darker colors indicate more bias, softer colors like green indicate less bias, and no color indicates no bias at all.
+In terms of bias detection, we are leveraging a custom-trained AI model to identify and quantify biases in the data. These biases are visualized using color coding: darker colors indicate more bias, softer colors like green indicate less bias, and no color indicates no bias at all.
 
-Information about the team overlooking us:
+Information about our partner team advising us:
 
 Project team leads:
 - Research Lead: Sheldon Huang (PhD Student at UToronto): https://www.cs.toronto.edu/~huang/
@@ -39,7 +39,7 @@ Project team leads:
 
 #### Q2: Who are your target users?
 
-Our target users are advanced researchers and engineers from various organizations. This includes key members of the Machine Learning Group at UofT, along with members from external organizations engaged in AI, NLP, and AI forecasting research. These users possess strong technical skills and are engaged in cutting-edge research and practical applications in their fields.
+Our target users are advanced researchers and engineers from various organizations. This includes key members of the Machine Learning Group at UofT, along with members from external organizations engaged in AI, NLP, and AI forecasting research. These users possess strong technical skills and are engaged in cutting-edge research and practical applications in their fields. They work on training advanced and large AI models for forecasting and need tools to help them debug and evaluate their model's complex reasoning processes.
 
 #### Q3: Why would your users choose your product? What are they using today to solve their problem/need?
 
@@ -51,7 +51,7 @@ What we offer is the ability to visualize different metrics and make it easy for
 
 Current solutions, such as those used by FiveThirtyEight, are limited in their interactivity and do not allow for a granular view of the data and bias within the text. Our product changes this by providing visualizations that allow users to not only see where bias exists but also control the extent of bias they want to examine.
 
-This saves users time by streamlining the process of bias analysis, which would otherwise require manual/less precise tools.
+This saves users time by streamlining the process of bias analysis, which would otherwise require manual/less precise tools. It provides all the insights, visualizations, and key metrics in one view for each forecasting questions for researchers to get a complete picture of the biases in various parts of the forecasting/reasoning process, helping them more effectively and efficiently debug their models.
 
 #### Q4: What are the user stories that make up the Minumum Viable Product (MVP)?
 
@@ -170,6 +170,7 @@ Here's a picture of a proof!
 - **Irene** is a TA for CSC465.
 - **Yehyun** just joined a book club!
 - **Tyseer** likes collecting watches.
+- **Aditya** is a visiting student from UC Berkeley and plays tennis!
 
 #### Q7: What are the roles & responsibilities on the team?
 
@@ -206,7 +207,10 @@ Muaj: Backend Developer
 - Muaj will work on filtering/validating them using LLMs.
 
 Aditya: Backend Developer
-- Aditya will work on gathering news articles.
+- Aditya will work on converting inputted forecasting question into searchable queries
+- Then gathering relevant global data and news articles about identified stakeholders.
+- Aditya will work on the API and integrating the partner APIs.
+- Aditya will help across the stack when needed and offer technical help for roadblocks, as a tech lead.
 
 Yehyun: Full-stack Dev, Infrastructure
 - I will work on managing the team and communicating with partners
