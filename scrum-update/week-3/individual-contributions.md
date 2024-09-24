@@ -24,7 +24,6 @@
 - Worked on D1 Q1, 3, 4, 5, 6, 7, 10
 
 ### Ho Kwan Edison Liem:
-
 - Setup github workflow in .github folder to add code reviewers and pull request template automatically when opening a new pull request
 - Work on Stakeholders.txt and Team-14-HeavyLifters.csv in deliverables/team folder
 - Setup the repo structure to include all required folders and files for D1
