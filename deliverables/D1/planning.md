@@ -86,7 +86,6 @@ Briefly describe which option you have agreed to.
 
   We will take meeting notes using Google docs.
 
-  
 #### Q9: How will you organize your team?
 
   We will use **Jira**, to manage our To-Do lists, track tasks, and set deadlines.
