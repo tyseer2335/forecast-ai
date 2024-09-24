@@ -45,6 +45,8 @@ Briefly describe which option you have agreed to.
 
 #### Q6: Have you met with your team?
 
+<img src="./team-building.jpg" width="600" height="260">
+
 #### Q7: What are the roles & responsibilities on the team?
 
 #### Q8: How will you work as a team?
