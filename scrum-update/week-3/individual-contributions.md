@@ -12,6 +12,12 @@
 - Resolved some minor merge conflicts
 
 ### Yehyun Lee:
+- Conducted 2 team meetings, 2 partner meetings, and markdown minutes/notes.
+- Setup Discord server with github webhook for notifications.
+- Setup React vanilla project with TypeScript.
+- Setup Firebase NoSQL (credentials to be shared with team).
+- Setup Jira for project management (everyone invited).
+- Setup Netlify for CI/CD of frontend (backend to be added later).
 
 ### Ho Kwan Edison Liem:
 

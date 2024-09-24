@@ -27,19 +27,25 @@ Our target users are advanced researchers and engineers from various organizatio
 
 #### Q3: Why would your users choose your product? What are they using today to solve their problem/need?
 
+  AI forecasting systems will be able to make a fair forecasting with less bias with validated evidence. For example, when making the 2024 election, it won’t be leaning left or right. This will be helpful for the users to trust a system that forecasts with less bias.
+
+  Human language is subjective. Making AI forecasting systems visualizing bias based on rigorous methods automatically will save time for researchers to identify pattern, bias, and compare to human rationality. Since it’s hard to identify them directly with the naked eyes!
+
+  What we offer is the ability to visualize different metrics and make it easy for users to compare reasoning and bias based on the metrics.
+
   Current solutions, such as those used by FiveThirtyEight, are limited in their interactivity and do not allow for a granular view of the data and bias within the text. Our product changes this by providing visualizations that allow users to not only see where bias exists but also control the extent of bias they want to examine.
 
   This saves users time by streamlining the process of bias analysis, which would otherwise require manual/less precise tools.
 
 #### Q4: What are the user stories that make up the Minumum Viable Product (MVP)?
-#### (Muaj) User Story:
+#### User Story 1:
  As a forecast researcher, I want to be able to view all my chat messages with the AI agent so that I can go back and use it as reference material for future work.
 
 ##### Acceptance Criteria:
 - The user should be able to search for their past chats by typing into a search bar.
 ---
 
-#### (Edison) User Story:
+#### User Story 2:
  As a forecast researcher, I want to be able to see the 10 most relevant data related to the forecasting question that I have inputted so that I can view all the related sources that feed to the AI forecasting model. Users can control the parameters of how much data is needed.
 
 ##### Acceptance Criteria:
@@ -48,7 +54,7 @@ Our target users are advanced researchers and engineers from various organizatio
 - Users should be able to view the entire content of each data source to understand its context.
 ---
 
-#### (Irene) User Story:
+#### User Story 3:
 As a forecast researcher, I want to be able to see the quantified reasoning and bias of the data sources when the relevant query is given in a visually appealing manner in order to save time by streamlining the data exploration.
 
 ##### Acceptance Criteria:
@@ -56,7 +62,7 @@ As a forecast researcher, I want to be able to see the quantified reasoning and 
 - Users should be able to adjust the display parameters
 ---
 
-#### (Yehyun) User Story 1:
+#### User Story 4:
 As a forecast researcher, I would like to see an AI forecasting answer with visualized heatmap per tokens to easily identify and judge AI’s reasoning and bias.
 
 ##### Acceptance Criteria:
@@ -66,7 +72,7 @@ As a forecast researcher, I would like to see an AI forecasting answer with visu
 
 ---
 
-#### (Yehyun) User Story 2:
+#### User Story 5:
 As a forecast researcher, I would like to choose which metrics to use to visualize an AI forecasting answer.
 
 ##### Acceptance Criteria:
@@ -75,19 +81,21 @@ As a forecast researcher, I would like to choose which metrics to use to visuali
 - Users should be able to toggle multiple metrics simultaneously for comparison.
 ---
 
-#### (Tyseer) User Story:
+#### User Story 6:
 As a researcher, I want to send the results that the AI agent sent me and share my findings with others. I want them to be able to click a link and view the entire chat history.
 
 ##### Acceptance Criteria:
 - The system must generate a shareable link for the user’s chat history.
 - The shared link should provide read-only access to the full chat history.
 
+Here's proof that we've discussed these user stories with our partner and they've approved them:
+<img src="./images/approval-of-user-stories.png">
+
 #### Q5: Have you decided on how you will build it? Share what you know now or tell us the options you are considering.
 
 It will be a full-stack web application where TypeScript, React will be used in building the frontend for user input, displaying visualizations, and handling user interactions while Python, FastAPI will be used in building the backend to handle requests from the front-end, manage data processing, and integrate with external APIs to collect news and social media data. We will also be using Firebase for the database to store user accounts, user inputs, collected data, and metadata, along with Python to perform data processing tasks like sentiment analysis, stakeholder identification, and structuring data into JSON objects. At last, we will also need to build a separate RESTful API using Python, FastAPI to provide endpoints for querying collected and processed data for AI models and other systems. We are planning to deploy the application through Netlify. We will be using Google Search API and OpenAI API to search for all the relevant data related to the forecasting question and rank the 10 most relevant ones. 
 
 ##### Stack:
-
 ###### Frontend:
 - **React** with **TypeScript**
 ---
@@ -117,6 +125,9 @@ It will be a full-stack web application where TypeScript, React will be used in 
 ###### Management:
 - **Jira**
 
+
+Most of these are flexible for changes. We will make an update in our README file for the latest stack. So far, they have been approved by our partner.
+
 ----
 ## Intellectual Property Confidentiality Agreement 
 > Note this section is **not marked** but must be completed briefly if you have a partner. If you have any questions, please ask on Piazza.
@@ -132,11 +143,20 @@ It will be a full-stack web application where TypeScript, React will be used in 
 
 Briefly describe which option you have agreed to.
 
+
+We have agreed that until the project is completed, source code, repository will be private, and restrict sharing to the public.
+Once the project is completed, we will completely open source everything without license, so everyone can access the source code. We will keep hosting the frontend and backend but the API cost won’t be handled by the partner. So we will most likely just host it ourselves unless they decide to continue the project and handle the infrastructure cost.
+We will own the work that we do as part of the course and we will not be signing any legal agreements, IP ownership, etc.
+
 ----
 
 ## Teamwork Details
 
 #### Q6: Have you met with your team?
+
+We met with partner Sheldon Huang, Yuchen, and the whole team at the MaRS building in-person.
+
+Here's a picture of a proof!
 
 <img src="./images/team-building.jpg" width="600" height="260"> 
 
@@ -150,6 +170,48 @@ Briefly describe which option you have agreed to.
 
 
 #### Q7: What are the roles & responsibilities on the team?
+Team will be really flexible on what they work on. When making a team I asked what their expertise/preference is.
+
+Here's the following most to least:
+- Yehyun: Backend, frontend, devOps, db, app dev
+- Tyseer: Frontend
+- Muaj: Backend, frontend, devOps, db, app dev
+- Edison: Backend, Db, Frontend, DevOps, App dev
+- Irene: Backend, frontend, devops, app dev
+- Jasjot: Frontend, Backend/db, app dev, dev ops.
+- Aditya: Backend/db, App dev, Devops, Front end
+
+Frontend developers will work on writing a react with tailwindCSS code.
+
+Irene: Frontend Developer
+- Irene will work on adding a left sidebar of chat history.
+- Irene helps with heatmap of text colouring with everyone.
+- This will involve react with tailwindCSS.
+
+Tyseer: Frontend Developer
+- Tyseer will work on visualizing user prompt, news articles, outline prompt.
+- Tyseer will also help with heatmap of text colouring with everyone.
+
+Edison: Frontend Developer
+- Edison will work on showing the newsfeed expansion that shows the full text of a news article.
+
+Jasjot: Frontend Developer
+- Jasjot will help with heatmap of text colouring.
+- Showing statistics, and metrics.
+
+Muaj: Backend Developer
+- Muaj will work on filtering/validating them using LLMs.
+
+Aditya: Backend Developer
+- Aditya will work on gathering news articles.
+
+Yehyun: Full-stack Dev, Infrastructure
+- I will work on managing the team and communicating with partners
+- I will be working back and forth on each feature of the frontend and backend. I would love to do a lot of heavy lifts.
+- Setting up the infrastructure will be my responsibility as well.
+
+*These specific components may change largely, but the general responsibility whether it’s frontend or backend will be generally followed.
+
 
 #### Q8: How will you work as a team?
 
@@ -188,6 +250,11 @@ Briefly describe which option you have agreed to.
  * What is the expected frequency? What methods/channels will be used? 
  * If you have a partner project, what is your process for communicating with your partner?
  
+ We will be communicating through Discord on our Discord server. We have a dedicated channel with our partners for quick questions.
+For meetings, we will be using Discord.
+We have an hour team meeting at 4PM Saturday on a weekly basis with Discord.
+For partner meetings, we’re meeting every Friday at 4PM with Discord.
+
 **Collaboration: (Share your responses to Q8 & Q9 from A1)**
  * How are people held accountable for attending meetings, completing action items? Is there a moderator or process?
  

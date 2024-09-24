@@ -65,7 +65,7 @@ Describe your Git/GitHub workflow. Essentially, we want to understand how your t
 Here's a git workflow we will follow:
 
 * Main -- this restricts any commits, and accepts only pull requests (PR). We require at least 1 developer to review.
-* Docs/..major doc work name.. -- we also version control the document we work on. Ex) “docs/readme”.
+* Docs/developer name/..major doc work name.. -- we also version control the document we work on. Ex) “docs/readme”.
 * Features/developer name/feature name -- this is where major development happens. We then merge this to main via PR.
 * Release/name of major features -- when we have a safe main branch, we will on weekly or monthly basis, save backup of main branch.
 * No underlines _ but only dashes -
