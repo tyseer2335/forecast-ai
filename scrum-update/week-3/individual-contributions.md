@@ -13,6 +13,8 @@
 ### Irene Kang:
 - Added Q3, Q8, Q9, and Q10(Collaboration) on D1/planning.md
 - Resolved some minor merge conflicts
+- Added mockup images drawn by Tyseer
+- Reviewed some PRs
 
 ### Yehyun Lee:
 - Conducted 2 team meetings, 2 partner meetings, and markdown minutes/notes.
