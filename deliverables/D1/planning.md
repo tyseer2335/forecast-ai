@@ -33,40 +33,54 @@ Our target users are advanced researchers and engineers from various organizatio
 
 #### Q4: What are the user stories that make up the Minumum Viable Product (MVP)?
 #### (Muaj) User Story:
-As a forecast researcher, I want to be able to view all my chat messages with the AI agent so that I can go back and use it as reference material for future work.
+ As a forecast researcher, I want to be able to view all my chat messages with the AI agent so that I can go back and use it as reference material for future work.
 
 ##### Acceptance Criteria:
 - The user should be able to search for their past chats by typing into a search bar.
-
 ---
 
 #### (Edison) User Story:
-As a forecast researcher, I want to be able to see the 10 most relevant data points related to the forecasting question that I have inputted so that I can view all the related sources that feed the AI forecasting model.
+ As a forecast researcher, I want to be able to see the 10 most relevant data related to the forecasting question that I have inputted so that I can view all the related sources that feed to the AI forecasting model. Users can control the parameters of how much data is needed.
 
 ##### Acceptance Criteria:
 - The system must allow users to input a specific forecasting question.
 - The system must retrieve and display the 10 most relevant data points related to the forecasting question inputted by the user.
 - Users should be able to view the entire content of each data source to understand its context.
-
 ---
 
 #### (Irene) User Story:
-As a forecast researcher, I want to be able to see the quantified reasoning and bias of the data sources when the relevant query is given in a visually appealing manner, in order to save time by streamlining data exploration.
+As a forecast researcher, I want to be able to see the quantified reasoning and bias of the data sources when the relevant query is given in a visually appealing manner in order to save time by streamlining the data exploration.
 
+##### Acceptance Criteria:
+- The system must visually display the quantified reasoning and bias of each data source.
+- Users should be able to adjust the display parameters
 ---
 
 #### (Yehyun) User Story 1:
-As a forecast researcher, I would like to see an AI forecasting answer with a visualized heatmap per token to easily identify and judge the AI’s reasoning and bias.
+As a forecast researcher, I would like to see an AI forecasting answer with visualized heatmap per tokens to easily identify and judge AI’s reasoning and bias.
+
+##### Acceptance Criteria:
+- The system must provide a heatmap visualization for each token in the AI’s answer.
+- Users should be able to adjust the color gradient of the heatmap.
+- The heatmap must be interactive, allowing users to hover over each token to see its relevance score.
 
 ---
 
 #### (Yehyun) User Story 2:
 As a forecast researcher, I would like to choose which metrics to use to visualize an AI forecasting answer.
 
+##### Acceptance Criteria:
+- The system must allow users to select from a predefined set of metrics.
+- The system should provide multiple visualization options (e.g., graphs, heatmaps, charts).
+- Users should be able to toggle multiple metrics simultaneously for comparison.
 ---
 
 #### (Tyseer) User Story:
 As a researcher, I want to send the results that the AI agent sent me and share my findings with others. I want them to be able to click a link and view the entire chat history.
+
+##### Acceptance Criteria:
+- The system must generate a shareable link for the user’s chat history.
+- The shared link should provide read-only access to the full chat history.
 
 #### Q5: Have you decided on how you will build it? Share what you know now or tell us the options you are considering.
 
