@@ -84,6 +84,8 @@ Briefly describe which option you have agreed to.
     * **Where**: Discord, our main communication channel for real-time discussions
     * **Purpose**: To resolve time-sensitive issues swiftly, ensuring quick coordination and decision making for in-depth questions
 
+  We will take meeting notes using Google docs.
+
   
 #### Q9: How will you organize your team?
 
