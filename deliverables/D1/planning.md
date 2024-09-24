@@ -9,8 +9,8 @@
 * **<u>Mockup Design</u>**
 
   Below is a rough website design created by Tyseer, which illustrates the user interface and flow of the platform. This mockup serves as a foundation for the development process, guiding the design of core pages and interactions.
-  <img src="./images/mockup(1:2).jpg" width="600" height="260">
-  <img src="./images/mockup(2:2).jpg" width="600" height="260">
+  <img src="./images/mockup(1-2).jpg" width="600" height="260">
+  <img src="./images/mockup(2-2).jpg" width="600" height="260">
 
 #### Q2: Who are your target users?
 
