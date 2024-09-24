@@ -24,11 +24,24 @@ The Problems we’re solving make it easy for researchers to make judgement in o
 
 ## Key Features
 
- * Describe the key features in the application that the user can access.
+1. **Data Aggregation and Visualization**
+   - **Purpose**: To collect vast, up-to-date, and relevant global data, enhancing the AI agent's forecasting capabilities.
+   - **Details**: 
+     - Users can input specific queries, and the system automatically gathers relevant data from multiple sources.
+     - Visualizations display the collected data in an intuitive format, making it easier for users to understand trends and patterns on their own.
 
- * Provide a breakdown or detail for each feature.
+2. **Cognitive Bias Detection**
+   - **Purpose**: To identify and visualizee cognitive biases.
+   - **Details**: 
+     - The platform uses a custom-trained AI model to analyze predictions for potential biases, such as confirmation bias or overfitting to specific data.
+     - Biases are color-coded in visual representations: darker colors indicate significant bias, softer colors represent minimal bias, and uncolored elements denote neutrality, allowing users to quickly assess the reliability of the forecast.
 
- * This section will be used to assess the value of the features built
+3. **User-Friendly Query System**
+   - **Purpose**: To allow users to ask complex questions simply.
+   - **Details**: 
+     - Users can pose questions such as “Will Kamala Harris win the 2024 election?” and receive comprehensive AI-generated forecasts.
+     - The system automatically gathers relevant data, validates it, and provides a clear output that users can easily interpret.
+
 
 ## Instructions
 
