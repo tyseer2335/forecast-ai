@@ -26,6 +26,9 @@ Attendance
 
     Irene Kang
 
+    
+    Jasjot Benipal
+
 Agenda / Meeting Overview
 
     * Logistics
