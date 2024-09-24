@@ -1,12 +1,6 @@
-# YOUR PRODUCT/HeavyLifters
-
-> _Note:_ This document is intended to be relatively short. Be concise and precise. Assume the reader has no prior knowledge of your application and is non-technical. 
+# ForecastAI/HeavyLifters
 
 ## Partner Intro
-
- * Include the names, emails, titles, primary or secondary point of contact at the partner organization
-
- * Provide a short description about the partner organization. (2-4 lines)
 
 We’re working with the _Machine Learning Group, Department of Computer Science, University of Toronto_. The team consists of brilliant researchers and engineers.
 
@@ -18,15 +12,9 @@ Project Team Leads:
 - **Software Lead**: Yuchen Wang, University of Toronto, Stanford, Microsoft, https://www.yuchenwyc.com.
 - **Advisor**: Prof. Roger Grosse, CS Prof at University of Toronto, Scientist at Anthropic, https://www.cs.toronto.edu/~rgrosse.
 
-**Contact**: Sheldon Huang, Research Lead, huang@cs.toronto.edu
+**Primary Contact**: Sheldon Huang, Research Lead, huang@cs.toronto.edu
 
 ## Description about the project
-
-Keep this section very brief.
-
- * Provide a high-level description of your application and it's value from an end-user's perspective
-
- * What is the problem you're trying to solve? Is there any context required to understand **why** the application solves this problem?
 
 A software platform that gathers global data to enhance an AI agent's ability to forecast significant future events and visualize AI rational and cognitive bias.
 
