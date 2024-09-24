@@ -32,68 +32,54 @@ Our target users are advanced researchers and engineers from various organizatio
   This saves users time by streamlining the process of bias analysis, which would otherwise require manual/less precise tools.
 
 #### Q4: What are the user stories that make up the Minumum Viable Product (MVP)?
+#### (Muaj) User Story:
+As a forecast researcher, I want to be able to view all my chat messages with the AI agent so that I can go back and use it as reference material for future work.
 
-**User Story:**  
-Muaj, a forecast researcher, wants to be able to view all the chat messages with the AI agent so that he can go back and use them as reference material for future work.
-
-**Acceptance Criteria:**  
+##### Acceptance Criteria:
 - The user should be able to search for their past chats by typing into a search bar.
 
 ---
 
-**User Story:**  
-Edison, a forecast researcher, wants to see the 10 most relevant data points related to the forecasting question that he has inputted, allowing him to view all the related sources that feed into the AI forecasting model. Users can control the parameters for how much data is needed.
+#### (Edison) User Story:
+As a forecast researcher, I want to be able to see the 10 most relevant data points related to the forecasting question that I have inputted so that I can view all the related sources that feed the AI forecasting model.
 
-**Acceptance Criteria:**  
+##### Acceptance Criteria:
 - The system must allow users to input a specific forecasting question.
 - The system must retrieve and display the 10 most relevant data points related to the forecasting question inputted by the user.
-- Users should be able to view the entire content of each data source to understand its context. 
+- Users should be able to view the entire content of each data source to understand its context.
 
 ---
 
-**User Story:**  
-Irene, a forecast researcher, wants to see the quantified reasoning and bias of the data sources for a given query in a visually appealing manner to streamline data exploration and save time.
+#### (Irene) User Story:
+As a forecast researcher, I want to be able to see the quantified reasoning and bias of the data sources when the relevant query is given in a visually appealing manner, in order to save time by streamlining data exploration.
 
 ---
 
-**User Story 1:**  
-Yehyun, a forecast researcher, wants to see an AI forecasting answer with a heatmap visualized per token to easily identify and assess the AI's reasoning and bias.
-
-**User Story 2:**  
-Yehyun wants to choose which metrics are used to visualize an AI forecasting answer.
+#### (Yehyun) User Story 1:
+As a forecast researcher, I would like to see an AI forecasting answer with a visualized heatmap per token to easily identify and judge the AI’s reasoning and bias.
 
 ---
 
-**User Story:**  
-Tyseer, a researcher, wants to share the results that the AI agent sent and share his findings with others. He wants recipients to be able to click a link and view the entire chat history.
+#### (Yehyun) User Story 2:
+As a forecast researcher, I would like to choose which metrics to use to visualize an AI forecasting answer.
 
-=======
-1. As a forecast researcher, I want to be able to view all my chat messages with the AI agent so that I can go back and use it as reference material for future work. 
-    - Acceptance Criteria:
-    The user should be able to search for their past chats by typing into a search bar.
+---
 
-2. As a forecast researcher, I want to be able to see the 10 most relevant data related to the forecasting question that I have inputted so that I can view all the related sources that feed to the AI forecasting model. Users can control the parameters of how much data is needed.
-    - Acceptance Criteria:
-      1. The system must allow users to input a specific forecasting question.
-      2. The system must retrieve and display the 10 most relevant data points related to the forecasting question inputted by the user.
-      3. Users should be able to view the entire content of each data source to understand its context.
-
-  3. As a forecast researcher, I want to be able to see the quantified reasoning and bias of the data sources when the relevant query is given in a visually appealing manner in order to save time by streamlining the data exploration.
-
+#### (Tyseer) User Story:
+As a researcher, I want to send the results that the AI agent sent me and share my findings with others. I want them to be able to click a link and view the entire chat history.
 
 #### Q5: Have you decided on how you will build it? Share what you know now or tell us the options you are considering.
 
 It will be a full-stack web application where TypeScript, React will be used in building the frontend for user input, displaying visualizations, and handling user interactions while Python, FastAPI will be used in building the backend to handle requests from the front-end, manage data processing, and integrate with external APIs to collect news and social media data. We will also be using Firebase for the database to store user accounts, user inputs, collected data, and metadata, along with Python to perform data processing tasks like sentiment analysis, stakeholder identification, and structuring data into JSON objects. At last, we will also need to build a separate RESTful API using Python, FastAPI to provide endpoints for querying collected and processed data for AI models and other systems. We are planning to deploy the application through Netlify. We will be using Google Search API and OpenAI API to search for all the relevant data related to the forecasting question and rank the 10 most relevant ones. 
 
-
 ##### Stack:
 
 ###### Frontend:
 - **React** with **TypeScript**
-
+---
 ###### Authentication with Firebase:
 - Using **Google provider** and **Custom email**
-
+---
 ###### Database (DB):
 - **Firebase NoSQL**
 
