@@ -31,6 +31,9 @@
 - Add bullet points to progress updates and plans for next week to present during tutorials
 
 ### Aditya Ohri:
+- Worked on all questions for D1 planning.md, editing and adding key details to the team's responses
+- Will work on architecture diagram
+- Met with team and partner and led discussion on tech stack/architecture decision
 
 ### Tyseer Toufiq: 
 - Completed Q1 and added it to D1/planning.md
