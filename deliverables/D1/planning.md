@@ -5,6 +5,15 @@
 ## Product Details
  
 #### Q1: What is the product?
+The project is a software platform designed to enhance an AI agent's ability to forecast significant future events by gathering global data and visualizing the AI's reasoning and cognitive biases.
+
+A key aspect of AI research is collecting vast, up-to-date, and relevant data to train models effectively. This project aims to streamline that process while providing researchers with valuable feedback by highlighting biases in the model's predictions. Additionally, the platform allows researchers to share their findings via link sharing for collaborative analysis.
+
+The Machine Learning Group at the University of Toronto's Department of Computer Science has developed a language model (LLM) for forecasting significant future events. Our role is to visualize the model's outputs in an intuitive and shareable way, enabling both researchers and general users to easily interpret the results. This visualization will help users understand where bias occurs and how it affects the predictions, ultimately improving the accuracy and reliability of AI forecasting systems by reducing bias and ensuring decisions are based on factual evidence.
+
+For example, users can ask the platform questions such as "Will Kamala Harris win the 2024 election?" The system will then gather relevant global data, validate it, and use it to generate AI forecasts. The results will be displayed in a way that highlights the AI's reasoning, allowing users to spot any cognitive biases.
+
+In terms of bias detection, we are partnering with a custom-trained AI model to identify and quantify biases in the data. These biases are visualized using color coding: darker colors indicate more bias, softer colors like green indicate less bias, and no color indicates no bias at all.
 
 * **<u>Mockup Design</u>**
 
@@ -24,18 +33,77 @@ Our target users are advanced researchers and engineers from various organizatio
 
 #### Q4: What are the user stories that make up the Minumum Viable Product (MVP)?
 
-2. As a forecast researcher, I want to be able to see the 10 most relevant data related to the forecasting question that I have inputted so that I can view all the related sources that feed to the AI forecasting model. Users can control the parameters of how much data is needed.
-    - Acceptance Criteria:
-      1. The system must allow users to input a specific forecasting question.
-      2. The system must retrieve and display the 10 most relevant data points related to the forecasting question inputted by the user.
-      3. Users should be able to view the entire content of each data source to understand its context.
+**User Story:**  
+Muaj, a forecast researcher, wants to be able to view all the chat messages with the AI agent so that he can go back and use them as reference material for future work.
 
-  * As a forecast researcher, I want to be able to see the quantified reasoning and bias of the data sources when the relevant query is given in a visually appealing manner in order to save time by streamlining the data exploration.
+**Acceptance Criteria:**  
+- The user should be able to search for their past chats by typing into a search bar.
+
+---
+
+**User Story:**  
+Edison, a forecast researcher, wants to see the 10 most relevant data points related to the forecasting question that he has inputted, allowing him to view all the related sources that feed into the AI forecasting model. Users can control the parameters for how much data is needed.
+
+**Acceptance Criteria:**  
+- The system must allow users to input a specific forecasting question.
+- The system must retrieve and display the 10 most relevant data points related to the forecasting question inputted by the user.
+- Users should be able to view the entire content of each data source to understand its context. 
+
+---
+
+**User Story:**  
+Irene, a forecast researcher, wants to see the quantified reasoning and bias of the data sources for a given query in a visually appealing manner to streamline data exploration and save time.
+
+---
+
+**User Story 1:**  
+Yehyun, a forecast researcher, wants to see an AI forecasting answer with a heatmap visualized per token to easily identify and assess the AI's reasoning and bias.
+
+**User Story 2:**  
+Yehyun wants to choose which metrics are used to visualize an AI forecasting answer.
+
+---
+
+**User Story:**  
+Tyseer, a researcher, wants to share the results that the AI agent sent and share his findings with others. He wants recipients to be able to click a link and view the entire chat history.
+
 
 
 #### Q5: Have you decided on how you will build it? Share what you know now or tell us the options you are considering.
 
- It will be a full-stack web application where TypeScript, React will be used in building the frontend for user input, displaying visualizations, and handling user interactions while Python, FastAPI will be used in building the backend to handle requests from the front-end, manage data processing, and integrate with external APIs to collect news and social media data. We will also be using Firebase for the database to store user accounts, user inputs, collected data, and metadata, along with Python to perform data processing tasks like sentiment analysis, stakeholder identification, and structuring data into JSON objects. At last, we will also need to build a separate RESTful API using Python, FastAPI to provide endpoints for querying collected and processed data for AI models and other systems. We are planning to deploy the application through Netlify. We will be using Google Search API and OpenAI API to search for all the relevant data related to the forecasting question and rank the 10 most relevant ones.
+It will be a full-stack web application where TypeScript, React will be used in building the frontend for user input, displaying visualizations, and handling user interactions while Python, FastAPI will be used in building the backend to handle requests from the front-end, manage data processing, and integrate with external APIs to collect news and social media data. We will also be using Firebase for the database to store user accounts, user inputs, collected data, and metadata, along with Python to perform data processing tasks like sentiment analysis, stakeholder identification, and structuring data into JSON objects. At last, we will also need to build a separate RESTful API using Python, FastAPI to provide endpoints for querying collected and processed data for AI models and other systems. We are planning to deploy the application through Netlify. We will be using Google Search API and OpenAI API to search for all the relevant data related to the forecasting question and rank the 10 most relevant ones. 
+
+
+##### Stack:
+
+###### Frontend:
+- **React** with **TypeScript**
+
+###### Authentication with Firebase:
+- Using **Google provider** and **Custom email**
+
+###### Database (DB):
+- **Firebase NoSQL**
+
+---
+
+###### Backend/API:
+- **Python** with **FastAPI**
+- Not using **Node.js**, as more AI library support may be required with Python.
+
+---
+
+###### Infrastructure Hosting:
+- **Netlify**
+
+###### Domain (potential options):
+- `forecastai.alphastone.ai`
+- `forecastai.netlify.app`
+
+---
+
+###### Management:
+- **Jira**
 
 ----
 ## Intellectual Property Confidentiality Agreement 
@@ -58,7 +126,16 @@ Briefly describe which option you have agreed to.
 
 #### Q6: Have you met with your team?
 
-<img src="./images/team-building.jpg" width="600" height="260">
+<img src="./images/team-building.jpg" width="600" height="260"> 
+
+#### Fun Facts:
+
+- **Muaj** has a 2200-day Duolingo streak learning French.
+- **Edison** speaks 5 different languages.
+- **Irene** is a TA for CSC465.
+- **Yehyun** just joined a book club!
+- **Tyseer** likes collecting watches.
+
 
 #### Q7: What are the roles & responsibilities on the team?
 
