@@ -34,6 +34,8 @@
 - Setup the repo structure to include all required folders and files for D1
 - Work on question 2, 4, 5, 14 for D1 planning.md
 - Add bullet points to progress updates and plans for next week to present during tutorials
+- Draw the user flow diagram of our application for D1
+- Review a lot of PRs
 
 ### Aditya Ohri:
 - Worked on all questions for D1 planning.md, editing and adding key details to the team's responses

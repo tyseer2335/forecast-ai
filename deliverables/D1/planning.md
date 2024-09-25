@@ -195,6 +195,10 @@ Here's the following most to least:
 
 Frontend developers will work on writing a react with tailwindCSS code.
 
+Below is a user flow diagram created by Edison, highlighting the main features and steps users take, which provides a comprehensive visualization of the user's journey within our application. This diagram serves as an important reference for mapping out development tasks and ensuring alignment between design and implementation phases.
+
+<img src="./images/user-flow-diagram.png" width="850">
+
 Irene: Frontend Developer
 - Irene will work on adding a left sidebar of chat history.
 - This comes down to loading the user’s chat history from the database.
