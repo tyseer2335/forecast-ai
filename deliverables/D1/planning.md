@@ -30,8 +30,8 @@ Project team leads:
   <img src="./images/mockup(1-2).jpg" width="600" height="260">
   <img src="./images/mockup(2-2).jpg" width="600" height="260">
 
-  Below is another rouch design made by Yehyun approved by the partner.
-  <img src="./images/mockup(3).png">
+  Below is another rough design made by Yehyun approved by the partner.
+  <img src="./images/mockup(3).png" width="600" height="500">
 
   Below represent how the heatmap will visualize the bias and dropdown for selecting metrics.
   *This was made by Yehyun before meeting the partner, but this gives rough idea on what the heatmap will look.
@@ -110,7 +110,15 @@ Here's proof that we've discussed these user stories with our partner and they'v
 
 #### Q5: Have you decided on how you will build it? Share what you know now or tell us the options you are considering.
 
-It will be a full-stack web application where TypeScript, React will be used in building the frontend for user input, displaying visualizations, and handling user interactions while Python, FastAPI will be used in building the backend to handle requests from the front-end, manage data processing, and integrate with external APIs to collect news and social media data. We will also be using Firebase for the database to store user accounts, user inputs, collected data, and metadata, along with Python to perform data processing tasks like sentiment analysis, stakeholder identification, and structuring data into JSON objects. At last, we will also need to build a separate RESTful API using Python, FastAPI to provide endpoints for querying collected and processed data for AI models and other systems. We are planning to deploy the application through Netlify. We will be using Google Search API and OpenAI API to search for all the relevant data related to the forecasting question and rank the 10 most relevant ones. 
+It will be a full-stack web application where TypeScript, React will be used in building the frontend for user input, displaying visualizations, and handling user interactions while Python, FastAPI will be used in building the backend to handle requests from the front-end, manage data processing, and integrate with external APIs to collect news and social media data. We will also be using Firebase for the database to store user accounts, user inputs, collected data, and metadata, along with Python to perform data processing tasks like sentiment analysis, stakeholder identification, and structuring data into JSON objects. At last, we will also need to build a separate RESTful API using Python, FastAPI to provide endpoints for querying collected and processed data for AI models and other systems. We are planning to deploy the application through Netlify. We will be using Google Search API and OpenAI API to search for all the relevant data related to the forecasting question and rank the 10 most relevant ones.
+
+Link provided by our partner:
+  1. Design document - [AI Forecasting Platform Design Document](https://docs.google.com/document/d/1Qr3VVTM0fryBIWYBzLswTyxHEFczidP5hr3ySHnuI7o/edit#heading=h.orxhtfgzmj2a)
+      - This document outlines the overall vision, architecture, and technical specifications of the project. It includes detailed information about the application's objectives, user requirements, system components, and planned workflows.
+  2. Sample starter code - [FiveThirtyNine](https://github.com/centerforaisafety/forecasting)
+      - This GitHub repository contains sample starter code that demonstrates initial project setup and some basic functionalities. It can serve as a reference for understanding best practices in structure, coding standards, and some specific approaches to technical challenges
+
+We will be building the whole application from scratch, and using the sample starter code as a reference to the overall architectectural design of our application system.
 
 Stack:
 - Frontend:
