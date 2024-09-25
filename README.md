@@ -42,57 +42,68 @@ The Problems we’re solving make it easy for researchers to make judgement in o
      - Users can pose questions such as “Will Kamala Harris win the 2024 election?” and receive comprehensive AI-generated forecasts.
      - The system automatically gathers relevant data, validates it, and provides a clear output that users can easily interpret.
 
-
 ## Instructions
 
- * Clear instructions for how to use the application from the end-user's perspective
-
- * How do you access it? For example: Are accounts pre-created or does a user register? Where do you start? etc. 
-
- * Provide clear steps for using each feature described in the previous section.
-
- * This section is critical to testing your application and must be done carefully and thoughtfully.
+ *To be added later...*
  
  ## Development requirements
 
- * What are the technical requirements for a developer to set up on their machine or server (e.g. OS, libraries, etc.)?
+ *To be added later...*
 
- * Briefly describe instructions for setting up and running the application. You should address this part like how one would expect a README doc of real-world deployed application would be.
+## Deployment and GitHub Workflow
 
- * You can see this [example](https://github.com/alichtman/shallow-backup#readme) to get started.
+### Branching and Naming Conventions
+1. **Main Branch**: 
+   - The `main` branch is the branch where all the working code resides.
+   - Direct commits to `main` are **restricted**. Only **pull requests (PRs)** are merged after thorough review.
+   - Each PR requires at least **one reviewer** from the team to approve before merging.
+   
+2. **Feature Branches**:
+   - For major development, each developer creates a branch in the format: `features/developer-name/feature-name`. 
+   - Example: `features/alice/user-authentication`.
+   - This helps keep our work organized.
+   
+3. **Documentation Branches**:
+   - Documentation is also version-controlled for clarity and tracking. Branches follow the naming format: `docs/developer-name/doc-work-name`.
+   - Example: `docs/alice/d1-changes`.
 
- ## Deployment and Github Workflow
+4. **Release Branches**:
+   - On a weekly or monthly basis after a major feature is completed, we will create a copy of the `main` saved as a release. 
+   - Branch names follow the format: `release/major-feature-name`.
+   - Example: `release/ui-complete`.
 
-Describe your Git/GitHub workflow. Essentially, we want to understand how your team members share codebase, avoid conflicts and deploys the application.
+5. **Naming Conventions**:
+   - We follow the convention of **dashes (-)** for separating words in branch names, avoiding underlines (_) for the sake of consistency.
 
- * Be concise, yet precise. For example, "we use pull-requests" is not a precise statement since it leaves too many open questions - Pull-requests from where to where? Who reviews the pull-requests? Who is responsible for merging them? etc.
+### Git Workflow Process
+1. **Creating Feature Branches**:
+   - Developers will clone/pull from the `main` branch and create feature branches for any new work. 
+   
+2. **Pull Requests (PRs)**:
+   - Once a feature or document is complete, the developer submits a **pull request** from the feature/document branch to `main`.
+   - A PR requires at least **one reviewer** for approval to ensure code quality and reduce the chance of conflicts.
 
- * If applicable, specify any naming conventions or standards you decide to adopt.
+3. **Code Review and Merging**:
+   - After reviewing and ensuring no conflicts exist, the reviewer approves the PR, and it is merged into the `main` branch by either the reviewer or the developer requesting the PR.
+   
+4. **Release Cycle**:
+   - Periodically, once the `main` branch is considered stable and updated with a new feature, a backup is created using a `release` branch to keep track of the milestone.
+   
+### Deployment Process
+1. **Code Writing**: Developers write code in their feature branches.
+2. **Merging to Main**: Once tested and approved via testing locally, the feature branch is merged into the `main` branch.
+3. **Deployment**: We are using Netlify as our deployment tool for hosting and managing the application.
 
- * Describe your overall deployment process from writing code to viewing a live application
-
- * What deployment tool(s) are you using? And how?
-
- * Don't forget to **briefly justify why** you chose this workflow or particular aspects of it!
-
-Here's a git workflow we will follow:
-
-* Main -- this restricts any commits, and accepts only pull requests (PR). We require at least 1 developer to review.
-* Docs/developer name/..major doc work name.. -- we also version control the document we work on. Ex) “docs/readme”.
-* Features/developer name/feature name -- this is where major development happens. We then merge this to main via PR.
-* Release/name of major features -- when we have a safe main branch, we will on weekly or monthly basis, save backup of main branch.
-* No underlines _ but only dashes -
+### Justification for Workflow
+- **Code Isolation**: By using feature and documentation branches, we ensure that work is isolated, making it easier to track progress and manage changes.
+- **Peer Review**: Requiring a minimum of one peer review ensures that bugs, performance issues, and inconsistencies are caught early and can be fixed.
+- **Naming Conventions**: Clear naming conventions make it easier to understand the purpose of a branch, especially when there will be many branches for different features.
+- **Feature Release**: Regularly creating `release` branches allows us to maintain stable backups and provides a reliable fallback if issues arise in our code.
 
  ## Coding Standards and Guidelines
 
- Keep this section brief, a maximum of 2-3 lines. You would want to read through this [article](https://www.geeksforgeeks.org/coding-standards-and-guidelines/) to get more context about what this section is for before attempting to answer.
-
-  * These are 2 optional resources that you might want to go through: [article with High level explanation](https://blog.codacy.com/coding-standards-what-are-they-and-why-do-you-need-them/) and [this article with Detailed Explanation](https://google.github.io/styleguide/)
+  Our code will follow the coding standards that help keep our code understandable, consistent and maintanable. We will follow language-specific style guides (such as PEP 8 for Python), conduct code reviews to ensure quality, and write comprehensive documentation including comments to clarify complex code. 
 
  ## Licenses 
-
- Keep this section as brief as possible. You may read this [Github article](https://help.github.com/en/github/creating-cloning-and-archiving-repositories/licensing-a-repository) for a start.
-
- * What type of license will you apply to your codebase? And why?
-
- * What affect does it have on the development and use of your codebase?
+ 
+ As of right now, we have decided that once the project is completed, we will completely open source everything without license so that everyone can access the source code. We will keep hosting the frontend and backend but the API cost won’t be handled by the partner. So we will most likely just host it ourselves unless they decide to continue the project and handle the infrastructure cost. As such, we will own all the work we do during this course.
