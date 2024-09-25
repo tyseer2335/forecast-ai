@@ -189,33 +189,36 @@ Frontend developers will work on writing a react with tailwindCSS code.
 
 Irene: Frontend Developer
 - Irene will work on adding a left sidebar of chat history.
-- Irene helps with heatmap of text colouring with everyone.
-- This will involve react with tailwindCSS.
+- This comes down to loading the user’s chat history from the database.
+- UI for calling, deleting, rename APIs.
 
 Tyseer: Frontend Developer
-- Tyseer will work on visualizing user prompt, news articles, outline prompt.
-- Tyseer will also help with heatmap of text colouring with everyone.
+- Tyseer will work on showing the newsfeed expansion that shows the full text of a news article, as well as metrics: views, likes, statistics, charts.
 
 Edison: Frontend Developer
-- Edison will work on showing the newsfeed expansion that shows the full text of a news article.
+- Both Edison and Yehyun will work on visualizing user prompts with colour coding.
+- This applies to user prompt input and LLM output.
 
 Jasjot: Frontend Developer
-- Jasjot will help with heatmap of text colouring.
-- Showing statistics, and metrics.
+- Jasjot will help with showing statistics of the LLM output, related footnotes for direct links.
+- This may also involve backend work for creating statistics.
 
 Muaj: Backend Developer
-- Muaj will work on filtering/validating them using LLMs.
+- Muaj will work on filtering/validating articles using LLM.
+- This also comes down to ranking the articles using LLM.
 
 Aditya: Backend Developer
 - Aditya will work on converting inputted forecasting question into searchable queries
 - Then gathering relevant global data and news articles about identified stakeholders.
-- Aditya will work on the API and integrating the partner APIs.
+- Aditya will work on the API and integrate the partner APIs.
 - Aditya will help across the stack when needed and offer technical help for roadblocks, as a tech lead.
 
 Yehyun: Full-stack Dev, Infrastructure
-- I will work on managing the team and communicating with partners
-- I will be working back and forth on each feature of the frontend and backend. I would love to do a lot of heavy lifts.
-- Setting up the infrastructure will be my responsibility as well.
+- Yehyun will work on managing the team and communicating with partners.
+- Setting up the infrastructure for react hosting, backend hosting, Jira, authentication, and DB.
+- Yehyun will work on heatmap colour coding input and output per tokens based on bias metrics.
+- Yehyun will work with Aditya for gathering data and news via API, and integrating partner APIs for output.
+- Yehyun will work both the frontend and backend to support smooth development progress within the team, especially helping with any blockers team faces.
 
 *These specific components may change largely, but the general responsibility whether it’s frontend or backend will be generally followed.
 
