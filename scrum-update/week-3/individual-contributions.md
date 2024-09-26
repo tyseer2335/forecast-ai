@@ -17,6 +17,7 @@
 - Added mockup images drawn by Tyseer
 - Reviewed some PRs
 - Added a rough draft for the key features on README.md
+- Created and refined the design through a Figma prototype
 
 ### Yehyun Lee:
 - Conducted 2 team meetings, 2 partner meetings, and markdown minutes/notes.
