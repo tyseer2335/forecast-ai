@@ -37,6 +37,14 @@ Project team leads:
   *This was made by Yehyun before meeting the partner, but this gives rough idea on what the heatmap will look.
   <img src="./images/mockup(4).png">
 
+  Below is a Figma design created by Irene that visually represents the layout and functionality of our website. It captures some of they key elements and overall user experience we're aiming for.
+  <img src="./images/login-page.png" width="600" height="360">
+  <img src="./images/login-page-google.png" width="600" height="360">
+  <img src="./images/login-page-account-chosen.png" width="600" height="360">
+  <img src="./images/article-expansion.png" width="600" height="360">
+  <img src="./images/toggle-red-off.png" width="600" height="360">
+
+
 #### Q2: Who are your target users?
 
 Our target users are advanced researchers and engineers from various organizations. This includes key members of the Machine Learning Group at UofT, along with members from external organizations engaged in AI, NLP, and AI forecasting research. These users possess strong technical skills and are engaged in cutting-edge research and practical applications in their fields. They work on training advanced and large AI models for forecasting and need tools to help them debug and evaluate their model's complex reasoning processes.
@@ -147,22 +155,10 @@ Following diagram by Yehyun will give a rough idea of the stack:
 
 ----
 ## Intellectual Property Confidentiality Agreement 
-> Note this section is **not marked** but must be completed briefly if you have a partner. If you have any questions, please ask on Piazza.
->  
-**By default, you own any work that you do as part of your coursework.** However, some partners may want you to keep the project confidential after the course is complete. As part of your first deliverable, you should discuss and agree upon an option with your partner. Examples include:
-1. You can share the software and the code freely with anyone with or without a license, regardless of domain, for any use.
-2. You can upload the code to GitHub or other similar publicly available domains.
-3. You will only share the code under an open-source license with the partner but agree to not distribute it in any way to any other entity or individual. 
-4. You will share the code under an open-source license and distribute it as you wish but only the partner can access the system deployed during the course.
-5. You will only reference the work you did in your resume, interviews, etc. You agree to not share the code or software in any capacity with anyone unless your partner has agreed to it.
 
-**Your partner cannot ask you to sign any legal agreements or documents pertaining to non-disclosure, confidentiality, IP ownership, etc.**
-
-Briefly describe which option you have agreed to.
-
-We have agreed that until the project is completed, source code, repository will be private, and restrict sharing to the public.
-Once the project is completed, we will completely open source everything without license, so everyone can access the source code. We will keep hosting the frontend and backend but the API cost won’t be handled by the partner. So we will most likely just host it ourselves unless they decide to continue the project and handle the infrastructure cost.
-We will own the work that we do as part of the course and we will not be signing any legal agreements, IP ownership, etc.
+We have agreed that until the project is completed, our work will not be available to the public. As such, the source code and repository will be private.
+Once the project is completed, we will completely open source our code with an MIT license, so that the public can access our work. We will keep hosting the frontend and backend but the API cost won’t be handled by the partner. As a result, we will most likely host it ourselves unless they decide to continue the project and handle the infrastructure cost.
+We will own the work that we do as part of the course and we will not be signing any legal agreements, IP ownership, etc as per course requirements.
 
 ----
 

@@ -4,6 +4,7 @@
 - Contributed to Q4, Q6, Q8 and Q13 on D1/planning.md
 - Made minor format changes to D1/planning.md
 - Reviewed pull requests
+- Worked on formatting and responses on README.md file
 
 ### Jasjot Benipal:
 - Answered Q11, Q12, and Q14 on D1/planning.md

@@ -106,4 +106,4 @@ The Problems we’re solving make it easy for researchers to make judgement in o
 
  ## Licenses 
  
- As of right now, we have decided that once the project is completed, we will completely open source everything without license so that everyone can access the source code. We will keep hosting the frontend and backend but the API cost won’t be handled by the partner. So we will most likely just host it ourselves unless they decide to continue the project and handle the infrastructure cost. As such, we will own all the work we do during this course.
+ As of right now, we have decided that once the project is completed, we will completely open source our code with an MIT license, so that the public can access our work. We will keep hosting the frontend and backend but the API cost won’t be handled by the partner. We will most likely host it ourselves unless they decide to continue the project and handle the infrastructure cost. 
