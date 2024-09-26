@@ -106,7 +106,7 @@ As a researcher, I want to send the results that the AI agent sent me and share 
 - The shared link should provide read-only access to the full chat history.
 
 Here's proof that we've discussed these user stories with our partner and they've approved them:
-<img src="./images/approval-of-user-stories.png" width="600" height="260">
+<img src="./images/approval-of-user-stories.png" width="600">
 
 #### Q5: Have you decided on how you will build it? Share what you know now or tell us the options you are considering.
 
@@ -139,6 +139,11 @@ Stack:
   - **Jira**
 
 Most of these are flexible for changes. We will make an update in our README file for the latest stack. So far, they have been approved by our partner.
+
+
+Following diagram by Yehyun will give a rough idea of the stack:
+
+<img src="./images/stack-overview.png" width="600">
 
 ----
 ## Intellectual Property Confidentiality Agreement 
