@@ -38,11 +38,14 @@ Project team leads:
   <img src="./images/mockup(4).png">
 
   Below is a Figma design created by Irene that visually represents the layout and functionality of our website. It captures some of they key elements and overall user experience we're aiming for.\
-  <img src="./images/login-page.png" width="600" height="360">
-  <img src="./images/login-page-google.png" width="600" height="360">
-  <img src="./images/login-page-account-chosen.png" width="600" height="360">
-  <img src="./images/article-expansion.png" width="600" height="360">
-  <img src="./images/toggle-red-off.png" width="600" height="360">
+  <img src="./images/figma/login.png" width="600">
+  <img src="./images/figma/login-sign-in-with-google.png" width="600">
+  <img src="./images/figma/login-sign-in-with-google-account-chosen.png" width="600">
+  <img src="./images/figma/article-1.png" width="600">
+  <img src="./images/figma/article-1-red-off.png" width="600">
+  <img src="./images/figma/article-1-red-off-purple-off.png" width="600">
+  <img src="./images/figma/article-2.png" width="600">
+  <img src="./images/figma/article-2-more-metrics.png" width="600">
 
 
 #### Q2: Who are your target users?
@@ -170,7 +173,7 @@ We met with partner Sheldon Huang, Yuchen, and the whole team at the MaRS buildi
 
 Here's a picture of a proof!
 
-<img src="./images/team-building.jpg" width="600" height="260"> 
+<img src="./images/team-building.jpg" width="600"> 
 
 #### Fun Facts:
 
