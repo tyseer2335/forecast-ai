@@ -37,6 +37,10 @@ Project team leads:
   *This was made by Yehyun before meeting the partner, but this gives rough idea on what the heatmap will look.
   <img src="./images/mockup(4).png">
 
+  Here is an very rough idea on how the hovering would display data, and further links. Made by Jasjot.
+  <img src="./images/mockup(hover).png">
+
+
   Below is a Figma design created by Irene that visually represents the layout and functionality of our website. It captures some of they key elements and overall user experience we're aiming for.\
   <img src="./images/figma/login.png" width="600">
   <img src="./images/figma/login-sign-in-with-google.png" width="600">
@@ -183,6 +187,7 @@ Here's a picture of a proof!
 - **Yehyun** just joined a book club!
 - **Tyseer** likes collecting watches.
 - **Aditya** is a visiting student from UC Berkeley and plays tennis!
+- **Jasjot** is going to start going to the gym again...
 
 #### Q7: What are the roles & responsibilities on the team?
 
@@ -292,7 +297,9 @@ For partner meetings, we’re meeting every Friday at 4PM with Discord.
 
 #### Q11. How does your team fit within the overall team organisation of the partner?
 
-Our team plays a vital role in the **product development** and enhancement of the Machine Learning Group's project, specifically focusing on visualizing the outputs of their LLM model to forecast future events and its biases. This visualization is crucial because it allows both researchers and general users to understand and analyze the model’s results more effectively. We fit into the product development cycle by creating and refining the tools that display this complex data in an accessible and informative way. 
+Our team plays a vital role in the **product development** and enhancement of the Machine Learning Group's project, specifically focusing on visualizing the outputs of their LLM model to forecast future events and its biases. This visualization is crucial because it allows both researchers and general users to understand and analyze the model’s results more effectively. 
+
+We fit into the product development cycle by creating and refining the tools that display this complex data in an accessible and informative way. 
 
 Examples of this are given from our team skills, such as:
  - The development of a heatmap visualization by our frontend team
@@ -307,9 +314,13 @@ This dynamic group fits well with the organization of the partner as they expect
 
 #### Q12. How does your project fit within the overall product from the partner?
 
-Our project is the core frontend visualization component and user backend for the Machine Learning Group’s product, which involves using their LLM to forecast future events. The big picture of the product is a system that provides accurate, transparent, and bias-aware forecasts of significant events. The role of our team is to ensure that these complex outputs are visually represented in an accessible way that both researchers and general users can interact with. 
+Our project is the core frontend visualization component and user backend for the Machine Learning Group’s product, which involves using their LLM to forecast future events. The big picture of the product is a system that provides accurate, transparent, and bias-aware forecasts of significant events. 
 
-Our project is the frontend/backend of the Web App, visualizing the output of the LLM model, while the AI data is handled by the partner (the Machine Learning Group). This allows us to focus solely on the user experience, interface, while the partner ensures the model’s functionality and data accuracy. Specifically, our work can be seen as the first major step toward a user-ready product. Without our visualizations, the model's predictions would remain abstract, making it harder for researchers to interpret them and for users to gain any meaningful insights.
+The role of our team is to ensure that these complex outputs are visually represented in an accessible way that both researchers and general users can interact with. 
+
+Our project is the frontend/backend of the Web App, visualizing the output of the LLM model, while the AI data is handled by the partner (the Machine Learning Group). This allows us to focus solely on the user experience, interface, while the partner ensures the model’s functionality and data accuracy. 
+
+Specifically, our work can be seen as the first major step toward a user-ready product. Without our visualizations, the model's predictions would remain abstract, making it harder for researchers to interpret them and for users to gain any meaningful insights.
 
 ## Potential Risks
 
@@ -318,6 +329,8 @@ Our project is the frontend/backend of the Web App, visualizing the output of th
 -  Uncertainty regarding visuals. We have a good idea on what the partner wants and were given reference code, but there are specifics we are not sure about like what would be appropriate to display to the user interacting with the bot.
 
 - Filtering through various news articles seems like a hard task. Also a bit unclear how we can scrap through several “relevant news articles”, and how we can determine what is considered good data vs bad data. We also discussed using Twitter API for news but the Twitter API is very expensive so we will need to work around this.
+
+- User experience issues. If we fail to create intuitive visualizations and interfaces, users, researchers might find it difficult to interact with or understand the data provided by the LLM model. This could reduce the effectiveness and usefulness of the project in helping researchers identify bias and forecast events.
 
 #### Q14. What are some potential mitigation strategies for the risks you identified?
 
