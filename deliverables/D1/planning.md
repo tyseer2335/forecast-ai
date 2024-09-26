@@ -37,7 +37,7 @@ Project team leads:
   *This was made by Yehyun before meeting the partner, but this gives rough idea on what the heatmap will look.
   <img src="./images/mockup(4).png">
 
-  Below is a Figma design created by Irene that visually represents the layout and functionality of our website. It captures some of they key elements and overall user experience we're aiming for.
+  Below is a Figma design created by Irene that visually represents the layout and functionality of our website. It captures some of they key elements and overall user experience we're aiming for.\
   <img src="./images/login-page.png" width="600" height="360">
   <img src="./images/login-page-google.png" width="600" height="360">
   <img src="./images/login-page-account-chosen.png" width="600" height="360">
