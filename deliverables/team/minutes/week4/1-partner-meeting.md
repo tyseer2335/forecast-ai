@@ -1,6 +1,6 @@
 Meeting Title
 
-        Partner Meeting	
+    Partner Meeting	
 
 Meeting Date
 
@@ -40,9 +40,9 @@ Attendance
 3. [Search/News API and Metrics API](#searchnews-api-and-metrics-api)
 4. [Design](#design)
 
+---
 
-
-# Notes
+# Meeting Notes
 
 ## Updates
 
