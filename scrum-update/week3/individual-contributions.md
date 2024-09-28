@@ -8,8 +8,10 @@
 
 ### Jasjot Benipal:
 - Answered Q11, Q12, and Q14 on D1/planning.md
-- Contributed to Q13, adding more
-- May add a mockup
+- Contributed to Q13, adding more to Q1
+- Added a mockup for hover
+- Reviewed some PRs
+- Organizing the formatting of the answers
 
 ### Irene Kang:
 - Added Q3, Q8, Q9, and Q10(Collaboration) on D1/planning.md
@@ -17,6 +19,7 @@
 - Added mockup images drawn by Tyseer
 - Reviewed some PRs
 - Added a rough draft for the key features on README.md
+- Created and refined the design through a Figma prototype
 
 ### Yehyun Lee:
 - Conducted 2 team meetings, 2 partner meetings, and markdown minutes/notes.
