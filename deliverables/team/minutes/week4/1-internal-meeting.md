@@ -36,6 +36,8 @@ Attendance
 5. [Team Responsibilities](#team-responsibilities)
 6. [Design (Figma & MVP Focus)](#design-figma--mvp-focus)
 
+---
+
 # Meeting Notes
 
 **Participants**: Yehyun, Edison, Irene, Muaj, Aditya
