@@ -24,3 +24,6 @@
 
 
 ### Tyseer Toufiq: 
+- Worked on D1 review
+- Helped make TA slides
+- Contributed a little bit to further planing
