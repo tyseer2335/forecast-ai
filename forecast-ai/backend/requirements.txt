@@ -1,2 +1,4 @@
 fastapi==0.115.0
 uvicorn==0.31.0
+gnews==0.3.7
+openai==1.51.0
