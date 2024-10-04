@@ -1,17 +1,37 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
+from openai import OpenAI
 from gnews import GNews
+from pydantic import BaseModel
+from typing import List, Optional
+from datetime import date
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
+
 app = FastAPI()
+client = OpenAI()
+
+OPENAI_API_KEY = os.getenv('OPENAPI_API_KEY')
 
 
-@app.get("/")
-def root():
-    return {"message": "Welcome to the API"}
+class ForecastRequest(BaseModel):
+    question: str
+    num_articles: Optional[int] = 5
+    start_date: Optional[date] = None
+    end_date: Optional[date] = None
 
+def generate_search_queries(question: str) -> List[str]:
+    prompt = f"Break down the following forecast question into 5 key search queries: {question}"
+    response = client.chat.completions.create(
+        model="gpt-4o-mini", 
+        messages=[{ "role": "user", "content": prompt }]
+    )
+    return [query.strip() for query in response.choices[0].message.split('\n') if query.strip()]
 
-@app.get("/get/forecasting_news/")
-def get_forecasting_news(queries: [str], max_results: int = 10, language: str = 'en', country: str = 'US',
+def get_forecasting_news(queries: List[str], max_results: int = 10, language: str = 'en', country: str = 'US',
                          period: str = '7d', start_date: str = None, end_date: str = None,
-                         exclude_websites: [str] or None = None,
+                         exclude_websites: List[str] = None,
                          proxy: str = None):
     """
     Assumption:
@@ -30,6 +50,18 @@ def get_forecasting_news(queries: [str], max_results: int = 10, language: str = 
     for query in queries:
         all_news_per_query[query] = google_news.get_news(query)
     return all_news_per_query
+
+@app.get("/")
+def root():
+    return {"message": "Welcome to the API"}
+
+@app.post("/forecast")
+def forecast(request: ForecastRequest):
+    try:
+        search_queries = generate_search_queries(request.question)
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error generating search queries: {str(e)}")
+    return search_queries
 
 # pip install "uvicorn[standard]"
 # uvicorn main:app
