@@ -1,12 +1,11 @@
-from fastapi import FastAPI 
+from fastapi import FastAPI, HTTPException
 from openai import OpenAI
-from dotenv import load_dotenv
-import os
-from query_to_answer import break_down_query, collect_news, generate_forecast
-from query_to_answer.break_down_query import ForecastRequest
 from pydantic import BaseModel
 from typing import Optional
 from datetime import date
+from dotenv import load_dotenv
+from query_to_answer import break_down_query, collect_news, generate_forecast
+import os
 
 # [Initialize FastAPI app]
 # pip install "uvicorn[standard]"
@@ -26,24 +25,10 @@ class ForecastRequest(BaseModel):
 
 @app.post("/query_to_answer")
 def query_to_answer(request: ForecastRequest):
-    search_queries = break_down_query.generate_search_queries(request.question)
-    news = collect_news.collect_news(search_queries, max_results=request.num_articles, start_date=request.start_date, end_date=request.end_date)
-    answer = generate_forecast.generate_forecast(news)
-    return answer
-
-# def generate_search_queries(question: str) -> List[str]:
-#     prompt = f"Break down the following forecast question into 5 key search queries: {question}"
-#     response = client.chat.completions.create(
-#         model="gpt-4o-mini", 
-#         messages=[{ "role": "user", "content": prompt }]
-#     )
-#     return [query.strip() for query in response.choices[0].message.split('\n') if query.strip()]
-
-
-# @app.post("/forecast")
-# def forecast(request: ForecastRequest):
-#     try:
-#         search_queries = generate_search_queries(request.question)
-#     except Exception as e:
-#         raise HTTPException(status_code=500, detail=f"Error generating search queries: {str(e)}")
-#     return search_queries
+    try:
+        search_queries = break_down_query.generate_search_queries(client, request.question)
+        news = collect_news.collect_news(search_queries, max_results=request.num_articles, start_date=request.start_date, end_date=request.end_date)
+        answer = generate_forecast.generate_forecast(news)
+        return answer
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error generating answer to query: {str(e)}")
