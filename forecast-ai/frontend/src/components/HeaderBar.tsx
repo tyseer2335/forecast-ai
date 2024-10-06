@@ -3,11 +3,15 @@ import React from "react";
 import BookmarkButton from "../assets/bookmark-button.svg";
 import ShareButton from "../assets/share-button.svg";
 
-const HeaderBar = () => {
+type HeaderBarProps = {
+    title?: string;
+}
+
+const HeaderBar: React.FC<HeaderBarProps> = ({ title }) => {
   return (
-    <header className="bg-screen-black text-header-bar-text px-6 py-6 w-full h-[8vh] flex justify-between items-center">
-        <h3 className="flex-1 font-bold text-center text-sm">Who will win the election 2024?</h3>
-        <div className="flex justify-between items-center space-x-5">
+    <header className="bg-screen-black text-header-bar-text px-6 py-6 w-full h-[8vh] flex items-center">
+        {title && <h3 className="flex-grow font-bold text-center text-sm">{title}</h3>}
+        <div className="flex justify-between items-center space-x-5 ml-auto">
             <button>
                 <img src={BookmarkButton} alt="bookmark-btn" className="w-5 h-7" />
             </button>

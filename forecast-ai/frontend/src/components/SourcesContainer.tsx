@@ -1,14 +1,21 @@
-// src/components/SourcesSection.tsx
+// src/components/SourcesContainer.tsx
 import React from "react";
 import ScrollLeftButton from "../assets/scroll-left-button.svg";
 import ScrollRightButton from "../assets/scroll-right-button.svg";
-import SourceCard from "./SourceCard";
+import SourceSection from "./SourceSection";
+import { Source } from "./MainContainer";
 
-const SourcesSection: React.FC = () => {
+type SourcesContainerProps = {
+    sources: Source[];
+}
+
+const SourcesContainer: React.FC<SourcesContainerProps> = ({ sources }) => {
     return (
         <div className="w-full flex-grow space-y-4 bg-screen-black flex flex-col h-[90%] relative">
             <h1 className="font-bold text-chat-message-text text-xl">Sources</h1>
-            <SourceCard />
+            {sources.map(source => (
+                <SourceSection source={source} />
+            ))}
             <button className="absolute left-0 top-1/2">
                 <img src={ScrollLeftButton} alt="scroll-left-btn" className="w-5 h-5" />
             </button>
@@ -19,4 +26,4 @@ const SourcesSection: React.FC = () => {
     )
 }
 
-export default SourcesSection;
+export default SourcesContainer;

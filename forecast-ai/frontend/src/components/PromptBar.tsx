@@ -3,12 +3,16 @@ import React, { useState } from "react";
 import OptionsButton from "../assets/options-button.svg";
 import SubmitButton from "../assets/submit-button.svg";
 
-const PromptBar = () => {
+type PromptBarProps = {
+  addQuery: (query: string) => void;
+}
+
+const PromptBar: React.FC<PromptBarProps> = ({ addQuery }) => {
   const [input, setInput] = useState("");
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log("Query submitted: ", input);
+    addQuery(input);
     setInput("");
   };
 
@@ -23,7 +27,7 @@ const PromptBar = () => {
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
                 placeholder="Ask query"
-                className="px-4 p-2 rounded-md bg-mid-dark-grey text-mid-light-grey rounded-2xl focus:outline-none w-full"
+                className="px-4 p-2 rounded-md bg-mid-dark-grey text-title-light-grey rounded-2xl focus:outline-none w-full"
             />
         </div>
         <button
