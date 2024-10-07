@@ -1,5 +1,6 @@
 // components/PromptBar.js
 import React, { useState } from "react";
+import axios from "axios";
 import OptionsButton from "../assets/options-button.svg";
 import SubmitButton from "../assets/submit-button.svg";
 
@@ -12,14 +13,22 @@ const PromptBar: React.FC<PromptBarProps> = ({ addQuery }) => {
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    addQuery(input);
-    setInput("");
+    if (input) {
+      axios.post(`${process.env.REACT_APP_BACKEND_URL}/query_to_answer`, { 
+        question: input, 
+        num_queries: 5, 
+        num_articles: 5 
+      }).then(response => {
+        addQuery(input);
+        setInput("");
+      });
+    }
   };
 
   return (
     <form onSubmit={handleSubmit} className="bg-mid-dark-grey px-6 py-3 flex justify-between items-center rounded-full">
         <div className="flex justify-center items-center w-[95%]">
-            <button>
+            <button type="button">
                 <img src={OptionsButton} alt="options-btn"/>
             </button>
             <input
