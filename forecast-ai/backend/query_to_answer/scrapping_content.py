@@ -6,7 +6,7 @@ from bs4 import BeautifulSoup
 import html2text
 
 
-def scrape_content(url: str) -> dict:
+def _single_scrape_content(url: str) -> dict:
     response = requests.get(url)
     soup = BeautifulSoup(response.content, 'html.parser')
 
@@ -23,6 +23,14 @@ def scrape_content(url: str) -> dict:
     media = [img['src'] for img in soup.find_all('img')]
 
     return {
-        'Text': clean_text,
-        'Media': media
+        'text': clean_text,
+        'media': media
     }
+
+
+def multiple_scrape_content(urls: dict) -> dict:
+    # Add 'content' key to each news
+    for _, news in urls.items():
+        for article in news:
+            article['content'] = _single_scrape_content(article['url'])
+    return urls
