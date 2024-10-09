@@ -32,7 +32,7 @@ const PromptBar: React.FC<PromptBarProps> = ({ addQuery }) => {
         {isMenuOpen && <AdvancedQueryOptionsMenu setIsMenuOpen={setIsMenuOpen} />}
         <div className="flex justify-center items-center w-[95%]">
             <button type="button">
-                <img src={OptionsButton} alt="options-btn" onClick={e => setIsMenuOpen(true)} />
+                <img src={OptionsButton} alt="options-btn" onClick={e => setIsMenuOpen(!isMenuOpen)} />
             </button>
             <input
                 type="text"
