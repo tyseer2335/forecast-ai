@@ -8,7 +8,7 @@ type SourceCardProps = {
 
 const SourceCard: React.FC<SourceCardProps> = ({ source }) => {
     return (
-        <div className="bg-sidebar-bg px-4 py-6 rounded-md flex space-x-4 h-full pr-20 max-w-[800px] relative overflow-y-scroll">
+        <div className="bg-sidebar-bg px-4 py-6 rounded-md flex space-x-4 h-full pr-20 max-w-[800px] relative overflow-y-auto">
             <img src={source.logo} alt="source-logo" className="w-12 h-12 rounded-full" />
             <div className="space-y-6 h-full flex flex-col justify-start w-[95%]">
                 <h3 className="font-semibold text-lg text-metrics-text">{source.title}</h3>
