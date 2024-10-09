@@ -1,11 +1,13 @@
 from gnews import GNews
 from datetime import date
 from typing import List
+from main import ForecastRequest
+
 
 def _get_forecasting_news(queries: List[str], max_results: int = 10, language: str = 'en', country: str = 'US',
-                         period: str = '7d', start_date: str = None, end_date: str = None,
-                         exclude_websites: List[str] = None,
-                         proxy: str = None) -> dict:
+                          period: str = '7d', start_date: str = None, end_date: str = None,
+                          exclude_websites: List[str] = None,
+                          proxy: str = None) -> dict:
     """
     Assumption:
     User typed forecasting question.
@@ -25,5 +27,6 @@ def _get_forecasting_news(queries: List[str], max_results: int = 10, language: s
     return all_news_per_query
 
 
-def collect_news(queries: List[str], max_results: int = 10, start_date: date = None, end_date: date = None) -> dict:
+def collect_news(queries: List[str], ForecastRequest) -> dict:
+
     return _get_forecasting_news(...)
