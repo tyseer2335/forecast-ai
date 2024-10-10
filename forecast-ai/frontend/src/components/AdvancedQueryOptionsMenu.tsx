@@ -1,6 +1,8 @@
 // src/components/AdvancedQueryOptionsMenu.tsx
-import React, { ChangeEvent, useState } from "react";
+import React, { useEffect, useState } from "react";
 import CloseMenuButton from "../assets/close-menu-button.svg";
+import { DayPicker } from "react-day-picker";
+import "react-day-picker/style.css";
 import "../css/advanced-query-options-menu-custom-css.css";
 
 type AdvancedQueryOptionsMenuProps = {
@@ -12,6 +14,8 @@ const AdvancedQueryOptionsMenu: React.FC<AdvancedQueryOptionsMenuProps> = ({ set
     const [newsRatio, setNewsRatio] = useState<number>(90);
     const [xRatio, setXRatio] = useState<number>(10);
     const [redditRatio, setRedditRatio] = useState<number>(0);
+    const [fromDate, setFromDate] = useState<Date>();
+    const [toDate, setToDate] = useState<Date>();
     const [totalSourcesToDisplay, setTotalSourcesToDisplay] = useState<number>(10);
     const [minNewsSourcesToDisplay, setMinNewsSourcesToDisplay] = useState<number>(0);
     const [maxNewsSourcesToDisplay, setMaxNewsSourcesToDisplay] = useState<number>(0);
@@ -23,6 +27,18 @@ const AdvancedQueryOptionsMenu: React.FC<AdvancedQueryOptionsMenuProps> = ({ set
     const handleApply = (e: React.MouseEvent<HTMLButtonElement>) => {
         setIsMenuOpen(false);
     }
+
+    useEffect(() => {
+        if (fromDate && toDate && fromDate.getTime() > toDate.getTime()) {
+            setFromDate(undefined);
+        }
+    }, [fromDate]);
+
+    useEffect(() => {
+        if (fromDate && toDate && toDate.getTime() < fromDate.getTime()) {
+            setToDate(undefined);
+        }
+    }, [toDate]);
 
     return (
         <div className="w-[480px] h-[40vh] bg-query-options-menu-bg py-5 px-4 pb-10 flex flex-col space-y-4 justify-center items-center absolute top-[-41vh] overflow-y-auto">
@@ -38,7 +54,7 @@ const AdvancedQueryOptionsMenu: React.FC<AdvancedQueryOptionsMenuProps> = ({ set
                     <div className="w-full px-2 space-y-5">
                         <div className="w-full space-y-2">
                             <h4 className="text-xs text-metrics-text">Total Sources to Collect</h4>
-                            <input type="number" className="bg-query-options-input-bg border border-metrics-text rounded-sm w-[100px] h-[40px] p-2 px-3 text-sm" value={totalSourcesToCollect} onChange={e => setTotalSourcesToCollect(Number(e.target.value))} />
+                            <input type="number" min='1' className="bg-query-options-input-bg border border-metrics-text rounded-sm w-[100px] h-[40px] p-2 px-3 text-sm" value={totalSourcesToCollect} onChange={e => setTotalSourcesToCollect(Number(e.target.value))} />
                         </div>
                         <div className="w-full space-y-2">
                             <h4 className="text-xs text-metrics-text">Sources Percentage Allocation</h4>
@@ -114,13 +130,15 @@ const AdvancedQueryOptionsMenu: React.FC<AdvancedQueryOptionsMenuProps> = ({ set
                         <div className="w-full space-y-2">
                             <h4 className="text-xs text-metrics-text">Date Range</h4>
                             <div className="w-full flex justify-between">
-                                <div className="w-[45%] space-y-2">
+                                <div className="w-[45%] space-y-3">
                                     <p className="text-center text-xs text-header-bar-text">From</p>
-                                    <button className="w-full rounded-lg h-9 text-query-options-date-picker-color border border-query-options-date-picker-color text-[10px] active:text-query-options-date-picker-active-color active:border-query-options-date-picker-active-color active:bg-query-options-date-picker-bg">Unspecifed</button>
+                                    <button className={`w-full rounded-lg h-9 text-[10px] border ${!fromDate? 'text-query-options-date-picker-active-color border-query-options-date-picker-active-color bg-query-options-date-picker-bg' : 'text-query-options-date-picker-color border-query-options-date-picker-color'}`} onClick={e => setFromDate(undefined)}>Unspecifed</button>
+                                    <DayPicker mode="single" captionLayout="dropdown" selected={fromDate} onSelect={setFromDate} />
                                 </div>
-                                <div className="w-[45%] space-y-2">
+                                <div className="w-[45%] space-y-3">
                                     <p className="text-center text-xs text-header-bar-text">To</p>
-                                    <button className="w-full rounded-lg h-9 text-query-options-date-picker-color border border-query-options-date-picker-color text-[10px] active:text-query-options-date-picker-active-color active:border-query-options-date-picker-active-color active:bg-query-options-date-picker-bg">Unspecifed</button>
+                                    <button className={`w-full rounded-lg h-9 text-[10px] border ${!toDate? 'text-query-options-date-picker-active-color border-query-options-date-picker-active-color bg-query-options-date-picker-bg' : 'text-query-options-date-picker-color border-query-options-date-picker-color'}`}  onClick={e => setToDate(undefined)}>Unspecifed</button>
+                                    <DayPicker mode="single" captionLayout="dropdown" selected={toDate} onSelect={setToDate} />
                                 </div>
                             </div>
                         </div>
@@ -131,7 +149,7 @@ const AdvancedQueryOptionsMenu: React.FC<AdvancedQueryOptionsMenuProps> = ({ set
                     <div className="w-full px-2 space-y-5">
                         <div className="w-full space-y-2">
                             <h4 className="text-xs text-metrics-text">Total Sources to Display</h4>
-                            <input type="number" className="bg-query-options-input-bg border border-metrics-text rounded-sm w-[100px] h-[40px] p-2 px-3 text-sm" value={totalSourcesToDisplay} onChange={e => setTotalSourcesToDisplay(Number(e.target.value))} />
+                            <input type="number" min='1' className="bg-query-options-input-bg border border-metrics-text rounded-sm w-[100px] h-[40px] p-2 px-3 text-sm" value={totalSourcesToDisplay} onChange={e => setTotalSourcesToDisplay(Number(e.target.value))} />
                         </div>
                         <div className="w-full space-y-2">
                             <h4 className="text-xs text-metrics-text">Customize Display for Source Types</h4>
@@ -140,11 +158,11 @@ const AdvancedQueryOptionsMenu: React.FC<AdvancedQueryOptionsMenuProps> = ({ set
                                     <div className="flex justify-between items-center space-x-1">
                                         <div className="w-full space-y-1">
                                             <p className="text-[10px] text-metrics-text">Min</p>
-                                            <input type="number" className="bg-query-options-input-bg border border-metrics-text rounded-sm w-[60px] h-[40px] p-2 text-sm" value={minNewsSourcesToDisplay} onChange={e => setMinNewsSourcesToDisplay(Number(e.target.value))} />
+                                            <input type="number" min='0' className="bg-query-options-input-bg border border-metrics-text rounded-sm w-[60px] h-[40px] p-2 text-sm" value={minNewsSourcesToDisplay} onChange={e => setMinNewsSourcesToDisplay(Number(e.target.value))} />
                                         </div>
                                         <div className="w-full space-y-1">
                                             <p className="text-[10px] text-metrics-text">Max</p>
-                                            <input type="number" className="bg-query-options-input-bg border border-metrics-text rounded-sm w-[60px] h-[40px] p-2 text-sm" value={maxNewsSourcesToDisplay} onChange={e => setMaxNewsSourcesToDisplay(Number(e.target.value))} />
+                                            <input type="number" min='0' className="bg-query-options-input-bg border border-metrics-text rounded-sm w-[60px] h-[40px] p-2 text-sm" value={maxNewsSourcesToDisplay} onChange={e => setMaxNewsSourcesToDisplay(Number(e.target.value))} />
                                         </div>
                                     </div>
                                     <p className="text-[9px] text-metrics-text">Number of News Sources to Display</p>
@@ -153,11 +171,11 @@ const AdvancedQueryOptionsMenu: React.FC<AdvancedQueryOptionsMenuProps> = ({ set
                                     <div className="flex justify-between items-center space-x-1">
                                         <div className="w-full space-y-1">
                                             <p className="text-[10px] text-metrics-text">Min</p>
-                                            <input type="number" className="bg-query-options-input-bg border border-metrics-text rounded-sm w-[60px] h-[40px] p-2 text-sm" value={minXSourcesToDisplay} onChange={e => setMinXSourcesToDisplay(Number(e.target.value))} />
+                                            <input type="number" min='0' className="bg-query-options-input-bg border border-metrics-text rounded-sm w-[60px] h-[40px] p-2 text-sm" value={minXSourcesToDisplay} onChange={e => setMinXSourcesToDisplay(Number(e.target.value))} />
                                         </div>
                                         <div className="w-full space-y-1">
                                             <p className="text-[10px] text-metrics-text">Max</p>
-                                            <input type="number" className="bg-query-options-input-bg border border-metrics-text rounded-sm w-[60px] h-[40px] p-2 text-sm" value={maxXSourcesToDisplay} onChange={e => setMaxXSourcesToDisplay(Number(e.target.value))} />
+                                            <input type="number" min='0' className="bg-query-options-input-bg border border-metrics-text rounded-sm w-[60px] h-[40px] p-2 text-sm" value={maxXSourcesToDisplay} onChange={e => setMaxXSourcesToDisplay(Number(e.target.value))} />
                                         </div>
                                     </div>
                                     <p className="text-[9px] text-metrics-text">Number of X Sources to Display</p>
@@ -166,11 +184,11 @@ const AdvancedQueryOptionsMenu: React.FC<AdvancedQueryOptionsMenuProps> = ({ set
                                     <div className="flex justify-between items-center space-x-1">
                                         <div className="w-full space-y-1">
                                             <p className="text-[10px] text-metrics-text">Min</p>
-                                            <input type="number" className="bg-query-options-input-bg border border-metrics-text rounded-sm w-[60px] h-[40px] p-2 text-sm" value={minRedditSourcesToDisplay} onChange={e => setMinRedditSourcesToDisplay(Number(e.target.value))} />
+                                            <input type="number" min='0' className="bg-query-options-input-bg border border-metrics-text rounded-sm w-[60px] h-[40px] p-2 text-sm" value={minRedditSourcesToDisplay} onChange={e => setMinRedditSourcesToDisplay(Number(e.target.value))} />
                                         </div>
                                         <div className="w-full space-y-1">
                                             <p className="text-[10px] text-metrics-text">Max</p>
-                                            <input type="number" className="bg-query-options-input-bg border border-metrics-text rounded-sm w-[60px] h-[40px] p-2 text-sm" value={maxRedditSourcesToDisplay} onChange={e => setMaxRedditSourcesToDisplay(Number(e.target.value))} />
+                                            <input type="number" min='0' className="bg-query-options-input-bg border border-metrics-text rounded-sm w-[60px] h-[40px] p-2 text-sm" value={maxRedditSourcesToDisplay} onChange={e => setMaxRedditSourcesToDisplay(Number(e.target.value))} />
                                         </div>
                                     </div>
                                     <p className="text-[9px] text-metrics-text">Number of Reddit Sources to Display</p>
