@@ -1,5 +1,5 @@
 // components/PromptBar.js
-import React, { ChangeEvent, useState } from "react";
+import React, { useState } from "react";
 import axios from "axios";
 import OptionsButton from "../assets/options-button.svg";
 import SubmitButton from "../assets/submit-button.svg";
