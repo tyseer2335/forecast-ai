@@ -80,4 +80,5 @@ input[type="range"]::-moz-range-thumb {
 
 .rdp-weekday {
     color: #B0B1AF;
+    font-size: 12px;
 }
