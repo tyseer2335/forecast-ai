@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { getFirestore, collection, query, orderBy, getDocs } from 'firebase/firestore'; 
+import { getFirestore, collection, query, orderBy, onSnapshot } from 'firebase/firestore'; 
 import OwlLogo from '../assets/owl.svg';
 import SettingsLogo from '../assets/settings.svg';
 import { auth } from './firebase';
@@ -13,30 +13,28 @@ const Sidebar: React.FC = () => {
   const userId = auth.currentUser?.uid;
   const [selectedChatId, setSelectedChatId] = useState<string | null>(null);
 
-  // Fetch chats on component mount
   useEffect(() => {
-    const fetchChats = async () => {
-      if (!userId) {
-        navigate('/login');
-        return;
-      }
-      const q = query(collection(db, 'Users', userId, 'Chats'), orderBy('updatedAt', 'desc'));
-      const querySnapshot = await getDocs(q);
+    if (!userId) {
+      navigate('/login');
+      return;
+    }
 
+    const q = query(collection(db, 'Users', userId, 'Chats'), orderBy('updated_at', 'desc'));
+    const unsubscribe = onSnapshot(q, (querySnapshot) => {
       const chatList = querySnapshot.docs.map(doc => ({
         id: doc.id,
         ...doc.data(),
       }));
       setChats(chatList);
-    };
+    });
 
-    fetchChats();
-  
-  const savedChatId = localStorage.getItem('selectedChatId');
+    const savedChatId = localStorage.getItem('selectedChatId');
     if (savedChatId) {
       setSelectedChatId(savedChatId);
     }
-  }, [userId, navigate]);
+
+    return () => unsubscribe();
+  }, [userId, navigate, db]);
 
   // Helper function to categorize chats by time period
   const categorizeChats = (chatList: any[]) => {
@@ -59,8 +57,8 @@ const Sidebar: React.FC = () => {
     const thirtyDaysAgo = today - oneDay * 30;
 
     chatList.forEach((chat) => {
-      const updatedAt = chat.updatedAt.toDate();
-      const updatedAtTime = updatedAt.getTime();
+      console.log(chat);
+      const updatedAtTime = chat.updated_at.toDate().getTime();
 
       if (updatedAtTime >= today) {
         categories.todayChats.push(chat);
@@ -86,10 +84,10 @@ const Sidebar: React.FC = () => {
           <h3 className="p-1 text-sm text-light-grey mt-4">{title}</h3>
           {chatList.map((chat) => (
             <div
-            key={chat.id}
-            className={`p-2 hover:bg-button-hover rounded-md cursor-pointer ${chat.id === selectedChatId ? 'bg-button-hover font-bold' : ''}`} // Highlight selected chat
-            onClick={() => handleChatClick(chat.id)}
-          >
+              key={chat.id}
+              className={`p-2 hover:bg-button-hover rounded-md cursor-pointer ${chat.id === selectedChatId ? 'bg-button-hover font-bold' : ''}`} // Highlight selected chat
+              onClick={() => handleChatClick(chat.id)}
+            >
               {chat.title || `Chat ${chat.id}`}
             </div>
           ))}
@@ -110,7 +108,7 @@ const Sidebar: React.FC = () => {
     }
     setSelectedChatId(chatId);
     localStorage.setItem('selectedChatId', chatId);
-    // navigate(`/chat/${chatId}`); Not sure how chat page is implemented -- Will be tested later
+    // navigate(`/chat/${chatId}`); TODO: Not sure how chat page is implemented -- Will be tested later
   };
 
   return (
