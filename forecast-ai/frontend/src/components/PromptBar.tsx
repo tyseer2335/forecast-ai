@@ -23,23 +23,26 @@ const PromptBar: React.FC<PromptBarProps> = ({ addQuery }) => {
   const [input, setInput] = useState("");
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [request, setRequest] = useState<Request>({});
+  const [submitRequest, setSubmitRequest] = useState(false);
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (input) {
       const updatedRequest = { ...request, question: input };
       setRequest(updatedRequest);
+      setSubmitRequest(true);
       axios.post(`${process.env.REACT_APP_BACKEND_URL}/query_to_answer`, updatedRequest).then(response => {
         addQuery(input);
         setInput("");
         setRequest({});
+        setSubmitRequest(false);
       });
     }
   };
 
   return (
     <form onSubmit={handleSubmit} className="bg-mid-dark-grey px-6 py-3 flex justify-between items-center rounded-full relative">
-        <AdvancedQueryOptionsMenu isMenuOpen={isMenuOpen} setIsMenuOpen={setIsMenuOpen} setRequest={setRequest} />
+        <AdvancedQueryOptionsMenu isMenuOpen={isMenuOpen} setIsMenuOpen={setIsMenuOpen} setRequest={setRequest} submitRequest={submitRequest} />
         <div className="flex justify-center items-center w-[95%]">
             <button type="button">
                 <img src={OptionsButton} alt="options-btn" onClick={e => setIsMenuOpen(!isMenuOpen)} />

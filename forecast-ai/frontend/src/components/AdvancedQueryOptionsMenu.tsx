@@ -10,9 +10,10 @@ type AdvancedQueryOptionsMenuProps = {
     isMenuOpen: boolean;
     setIsMenuOpen: React.Dispatch<React.SetStateAction<boolean>>;
     setRequest: React.Dispatch<React.SetStateAction<Request>>;
+    submitRequest: boolean;
 }
 
-const AdvancedQueryOptionsMenu: React.FC<AdvancedQueryOptionsMenuProps> = ({ isMenuOpen, setIsMenuOpen, setRequest }) => {
+const AdvancedQueryOptionsMenu: React.FC<AdvancedQueryOptionsMenuProps> = ({ isMenuOpen, setIsMenuOpen, setRequest, submitRequest }) => {
     const [totalSourcesToCollect, setTotalSourcesToCollect] = useState<number>(10);
     const [newsRatio, setNewsRatio] = useState<number>(60);
     const [xRatio, setXRatio] = useState<number>(20);
@@ -38,6 +39,19 @@ const AdvancedQueryOptionsMenu: React.FC<AdvancedQueryOptionsMenuProps> = ({ isM
         }))
         setIsMenuOpen(false);
     }
+
+    useEffect(() => {
+        if (submitRequest) {
+            setTotalSourcesToCollect(10);
+            setNewsRatio(60);
+            setXRatio(20);
+            setFacebookRatio(20);
+            setFromDate(undefined);
+            setToDate(undefined);
+            setTotalSourcesToDisplay(5);
+            setIsMenuOpen(false);
+        }
+    }, [submitRequest])
 
     useEffect(() => {
         const total = newsRatio + xRatio + facebookRatio;
