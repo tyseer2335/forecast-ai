@@ -103,6 +103,11 @@ const Sidebar: React.FC = () => {
   };
 
   const handleChatClick = (chatId: string) => {
+    if (chatId === selectedChatId) {
+      setSelectedChatId(null);
+      localStorage.removeItem('selectedChatId');
+      return;
+    }
     setSelectedChatId(chatId);
     localStorage.setItem('selectedChatId', chatId);
     // navigate(`/chat/${chatId}`); Not sure how chat page is implemented -- Will be tested later
