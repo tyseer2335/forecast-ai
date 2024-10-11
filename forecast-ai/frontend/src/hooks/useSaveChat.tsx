@@ -2,7 +2,7 @@
 import { doc, collection, addDoc, updateDoc, arrayUnion, serverTimestamp, getFirestore, setDoc } from "firebase/firestore";  // Firestore imports
 
 
-const useSaveChat = (userId: string, chatId?: string) => {
+const useSaveChat = (userId: string, chatId: string | null) => {
   const db = getFirestore();
   const saveQuery = async (messageContent: string) => {
     try {
