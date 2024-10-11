@@ -14,8 +14,8 @@ const useSaveChat = (userId: string, chatId: string | null) => {
         : await addDoc(collection(db, "Users", userId, "Chats"), {
             title: messageContent,
             messages: [],
-            createdAt: serverTimestamp(),
-            updatedAt: serverTimestamp(),
+            created_at: new Date(),
+            updated_at: new Date(),
           });
 
       console.log("Chat document found.");
@@ -28,11 +28,10 @@ const useSaveChat = (userId: string, chatId: string | null) => {
           timestamp: new Date(), // Use a regular timestamp here
         }),
       });
-  
-      // Then update the 'updated_at' field with serverTimestamp
-      await updateDoc(chatRef, {
-        updated_at: serverTimestamp(),
+        await updateDoc(chatRef, {
+        updated_at: new Date(),
       });
+      
       console.log("Chat document updated.");
     } catch (e) {
       console.error("Error updating chat document: ", e);
