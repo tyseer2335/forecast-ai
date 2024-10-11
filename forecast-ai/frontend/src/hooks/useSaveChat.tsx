@@ -12,6 +12,7 @@ const useSaveChat = (userId: string, chatId: string | null) => {
       const chatRef = chatId 
         ? doc(db, "Users", userId, "Chats", chatId) 
         : await addDoc(collection(db, "Users", userId, "Chats"), {
+            title: messageContent,
             messages: [],
             createdAt: serverTimestamp(),
             updatedAt: serverTimestamp(),

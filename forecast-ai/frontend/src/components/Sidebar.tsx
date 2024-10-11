@@ -90,7 +90,7 @@ const Sidebar: React.FC = () => {
             className={`p-2 hover:bg-button-hover rounded-md cursor-pointer ${chat.id === selectedChatId ? 'bg-button-hover font-bold' : ''}`} // Highlight selected chat
             onClick={() => handleChatClick(chat.id)}
           >
-              {chat.name || `Chat ${chat.id}`}
+              {chat.title || `Chat ${chat.id}`}
             </div>
           ))}
         </>
