@@ -1,12 +1,14 @@
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { auth } from './firebase';
 
 const Logout = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    localStorage.removeItem('selectedChatId');
-    // localStorage.clear(); // Uncomment this if you want to clear all localStorage
+    localStorage.clear();
+    auth.signOut();
+
     navigate('/login');
   }, [navigate]);
 
