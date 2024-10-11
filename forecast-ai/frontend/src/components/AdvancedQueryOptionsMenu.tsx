@@ -1,5 +1,5 @@
 // src/components/AdvancedQueryOptionsMenu.tsx
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import CloseMenuButton from "../assets/close-menu-button.svg";
 import { DayPicker } from "react-day-picker";
 import { Request } from "./PromptBar";
@@ -7,11 +7,13 @@ import "react-day-picker/style.css";
 import "../css/advanced-query-options-menu-custom-css.css";
 
 type AdvancedQueryOptionsMenuProps = {
+    isMenuOpen: boolean;
     setIsMenuOpen: React.Dispatch<React.SetStateAction<boolean>>;
     setRequest: React.Dispatch<React.SetStateAction<Request>>;
+    submitRequest: boolean;
 }
 
-const AdvancedQueryOptionsMenu: React.FC<AdvancedQueryOptionsMenuProps> = ({ setIsMenuOpen, setRequest }) => {
+const AdvancedQueryOptionsMenu: React.FC<AdvancedQueryOptionsMenuProps> = ({ isMenuOpen, setIsMenuOpen, setRequest, submitRequest }) => {
     const [totalSourcesToCollect, setTotalSourcesToCollect] = useState<number>(10);
     const [newsRatio, setNewsRatio] = useState<number>(60);
     const [xRatio, setXRatio] = useState<number>(20);
@@ -19,6 +21,8 @@ const AdvancedQueryOptionsMenu: React.FC<AdvancedQueryOptionsMenuProps> = ({ set
     const [fromDate, setFromDate] = useState<Date>();
     const [toDate, setToDate] = useState<Date>();
     const [totalSourcesToDisplay, setTotalSourcesToDisplay] = useState<number>(5);
+
+    const menuRef = useRef<HTMLDivElement | null>(null);
 
     const handleApply = (e: React.MouseEvent<HTMLButtonElement>) => {
         setRequest(prevRequest => ({
@@ -37,6 +41,40 @@ const AdvancedQueryOptionsMenu: React.FC<AdvancedQueryOptionsMenuProps> = ({ set
     }
 
     useEffect(() => {
+        if (submitRequest) {
+            setTotalSourcesToCollect(10);
+            setNewsRatio(60);
+            setXRatio(20);
+            setFacebookRatio(20);
+            setFromDate(undefined);
+            setToDate(undefined);
+            setTotalSourcesToDisplay(5);
+            setIsMenuOpen(false);
+        }
+    }, [submitRequest])
+
+    useEffect(() => {
+        const total = newsRatio + xRatio + facebookRatio;
+        if (total > 100) {
+            setNewsRatio(100 - xRatio - facebookRatio);
+        }
+    }, [newsRatio]);
+
+    useEffect(() => {
+        const total = newsRatio + xRatio + facebookRatio;
+        if (total > 100) {
+            setXRatio(100 - newsRatio - facebookRatio);
+        }
+    }, [xRatio]);
+
+    useEffect(() => {
+        const total = newsRatio + xRatio + facebookRatio;
+        if (total > 100) {
+            setFacebookRatio(100 - newsRatio - xRatio);
+        }
+    }, [facebookRatio]);
+
+    useEffect(() => {
         if (fromDate && toDate && fromDate.getTime() > toDate.getTime()) {
             setFromDate(undefined);
         }
@@ -48,8 +86,14 @@ const AdvancedQueryOptionsMenu: React.FC<AdvancedQueryOptionsMenuProps> = ({ set
         }
     }, [toDate]);
 
+    useEffect(() => {
+        if (isMenuOpen && menuRef.current) {
+            menuRef.current.scrollTop = 0;
+        }
+    }, [isMenuOpen]);
+
     return (
-        <div className="w-[480px] h-[40vh] bg-query-options-menu-bg py-5 px-4 pb-10 flex flex-col space-y-4 justify-center items-center absolute top-[-41vh] overflow-y-auto">
+        <div ref={menuRef} className={`w-[480px] h-[40vh] bg-query-options-menu-bg py-5 px-4 pb-10 flex flex-col space-y-4 justify-center items-center absolute top-[-41vh] overflow-y-auto ${!isMenuOpen && 'opacity-0'}`}>
             <div className="w-full h-[10%] flex justify-between items-center">
                 <h1 className="text-sm text-metrics-text font-bold">Advanced Query Options</h1>
                 <button onClick={e => setIsMenuOpen(false)}>
