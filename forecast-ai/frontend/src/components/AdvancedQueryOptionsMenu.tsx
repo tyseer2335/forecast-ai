@@ -40,6 +40,27 @@ const AdvancedQueryOptionsMenu: React.FC<AdvancedQueryOptionsMenuProps> = ({ isM
     }
 
     useEffect(() => {
+        const total = newsRatio + xRatio + facebookRatio;
+        if (total > 100) {
+            setNewsRatio(100 - xRatio - facebookRatio);
+        }
+    }, [newsRatio]);
+
+    useEffect(() => {
+        const total = newsRatio + xRatio + facebookRatio;
+        if (total > 100) {
+            setXRatio(100 - newsRatio - facebookRatio);
+        }
+    }, [xRatio]);
+
+    useEffect(() => {
+        const total = newsRatio + xRatio + facebookRatio;
+        if (total > 100) {
+            setFacebookRatio(100 - newsRatio - xRatio);
+        }
+    }, [facebookRatio]);
+
+    useEffect(() => {
         if (fromDate && toDate && fromDate.getTime() > toDate.getTime()) {
             setFromDate(undefined);
         }
