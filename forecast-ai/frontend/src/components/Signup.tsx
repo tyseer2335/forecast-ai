@@ -26,7 +26,7 @@ const Signup = () => {
             // Create a document in the Users collection
             await setDoc(doc(db, 'Users', user.uid), {
                 email: user.email,
-                // You can add more fields here if needed
+                Chats: [],
                 createdAt: new Date(), // Adding a timestamp field
             });
 
