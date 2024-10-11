@@ -11,6 +11,7 @@ const Sidebar: React.FC = () => {
   const [chats, setChats] = useState<any[]>([]);
   const navigate = useNavigate();
   const userId = auth.currentUser?.uid;
+  const [selectedChatId, setSelectedChatId] = useState<string | null>(null);
 
   // Fetch chats on component mount
   useEffect(() => {
@@ -30,7 +31,12 @@ const Sidebar: React.FC = () => {
     };
 
     fetchChats();
-  }, [userId, navigate, db]);
+  
+  const savedChatId = localStorage.getItem('selectedChatId');
+    if (savedChatId) {
+      setSelectedChatId(savedChatId);
+    }
+  }, [userId, navigate]);
 
   // Helper function to categorize chats by time period
   const categorizeChats = (chatList: any[]) => {
@@ -53,7 +59,7 @@ const Sidebar: React.FC = () => {
     const thirtyDaysAgo = today - oneDay * 30;
 
     chatList.forEach((chat) => {
-      const updatedAt = chat.updatedAt.toDate(); // Convert Firestore timestamp to JS Date
+      const updatedAt = chat.updatedAt.toDate();
       const updatedAtTime = updatedAt.getTime();
 
       if (updatedAtTime >= today) {
@@ -79,7 +85,11 @@ const Sidebar: React.FC = () => {
         <>
           <h3 className="p-1 text-sm text-light-grey mt-4">{title}</h3>
           {chatList.map((chat) => (
-            <div key={chat.id} className="p-2 hover:bg-button-hover rounded-md cursor-pointer">
+            <div
+            key={chat.id}
+            className={`p-2 hover:bg-button-hover rounded-md cursor-pointer ${chat.id === selectedChatId ? 'bg-button-hover font-bold' : ''}`} // Highlight selected chat
+            onClick={() => handleChatClick(chat.id)}
+          >
               {chat.name || `Chat ${chat.id}`}
             </div>
           ))}
@@ -90,6 +100,12 @@ const Sidebar: React.FC = () => {
 
   const toggleSettings = () => {
     setIsSettingsOpen(!isSettingsOpen);
+  };
+
+  const handleChatClick = (chatId: string) => {
+    setSelectedChatId(chatId);
+    localStorage.setItem('selectedChatId', chatId);
+    // navigate(`/chat/${chatId}`); Not sure how chat page is implemented -- Will be tested later
   };
 
   return (
