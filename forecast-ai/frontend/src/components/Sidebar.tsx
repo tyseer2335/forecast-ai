@@ -1,10 +1,72 @@
 // src/components/Sidebar.tsx
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { getFirestore, collection, query, orderBy, getDocs } from 'firebase/firestore'; 
 import OwlLogo from '../assets/owl.svg';
 import SettingsLogo from '../assets/settings.svg';
+import { auth } from './firebase';
 
 const Sidebar: React.FC = () => {
+  const db = getFirestore();
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
+  const [chats, setChats] = useState<any[]>([]);
+  const navigate = useNavigate();
+  const userId = auth.currentUser?.uid;
+
+  
+
+  // Fetch chats on component mount
+  useEffect(() => {
+    const fetchChats = async () => {
+      if (!userId) {
+        navigate('/login');
+        return;
+      }
+      const q = query(collection(db, 'Users', userId, 'Chats'), orderBy('updatedAt', 'desc'));
+      const querySnapshot = await getDocs(q);
+
+      const chatList = querySnapshot.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+      setChats(chatList);
+    };
+
+    fetchChats();
+  }, []);
+
+  // Helper function to categorize chats by time period
+  const categorizeChats = (chatList: any[]) => {
+    const todayChats: any[] = [];
+    const last7DaysChats: any[] = [];
+    const last30DaysChats: any[] = [];
+    const earlierChats: any[] = [];
+
+    const now = new Date();
+    const today = now.setHours(0, 0, 0, 0);
+    const oneDay = 1000 * 60 * 60 * 24;
+    const sevenDaysAgo = today - oneDay * 7;
+    const thirtyDaysAgo = today - oneDay * 30;
+
+    chatList.forEach((chat) => {
+      const updatedAt = chat.updatedAt.toDate(); // Convert Firestore timestamp to JS Date
+      const updatedAtTime = updatedAt.getTime();
+
+      if (updatedAtTime >= today) {
+        todayChats.push(chat);
+      } else if (updatedAtTime >= sevenDaysAgo) {
+        last7DaysChats.push(chat);
+      } else if (updatedAtTime >= thirtyDaysAgo) {
+        last30DaysChats.push(chat);
+      } else {
+        earlierChats.push(chat);
+      }
+    });
+
+    return { todayChats, last7DaysChats, last30DaysChats, earlierChats };
+  };
+
+  const { todayChats, last7DaysChats, last30DaysChats, earlierChats } = categorizeChats(chats);
 
   const toggleSettings = () => {
     setIsSettingsOpen(!isSettingsOpen);
@@ -25,34 +87,53 @@ const Sidebar: React.FC = () => {
 
       {/* Chat history */}
       <div className="overflow-y-auto mt-16 px-4 pb-20">
-        {/* Placeholder for 'Today' */}
-        <h3 className="p-1 text-sm text-light-grey mt-4">Today</h3>
-        <div >
-          <div className="p-2 hover:bg-button-hover rounded-md cursor-pointer">Chat 1</div>
-          <div className="p-2 hover:bg-button-hover rounded-md cursor-pointer">Chat 2</div>
-        </div>
+        {/* Today */}
+        {todayChats.length > 0 && (
+          <>
+            <h3 className="p-1 text-sm text-light-grey mt-4">Today</h3>
+            {todayChats.map((chat) => (
+              <div key={chat.id} className="p-2 hover:bg-button-hover rounded-md cursor-pointer">
+                {chat.name || `Chat ${chat.id}`}
+              </div>
+            ))}
+          </>
+        )}
 
-        {/* Placeholder for 'Previous 7 days(This Week)' */}
-        <h3 className="p-1 text-sm text-light-grey mt-4">Previous 7 days</h3>
-        <div >
-          <div className="p-2 hover:bg-button-hover rounded-md cursor-pointer">Chat 1</div>
-          <div className="p-2 hover:bg-button-hover rounded-md cursor-pointer">Chat 2</div>
-        </div>
+        {/* Previous 7 days */}
+        {last7DaysChats.length > 0 && (
+          <>
+            <h3 className="p-1 text-sm text-light-grey mt-4">Previous 7 days</h3>
+            {last7DaysChats.map((chat) => (
+              <div key={chat.id} className="p-2 hover:bg-button-hover rounded-md cursor-pointer">
+                {chat.name || `Chat ${chat.id}`}
+              </div>
+            ))}
+          </>
+        )}
 
-        {/* Placeholder for 'Previous 30 days(This Month)' */}
-        <h3 className="p-1 text-sm text-light-grey mt-4">Previous 30 days</h3>
-        <div >
-          <div className="p-2 hover:bg-button-hover rounded-md cursor-pointer">Chat 1</div>
-          <div className="p-2 hover:bg-button-hover rounded-md cursor-pointer">Chat 2</div>
-        </div>
-        
-        {/* Placeholder for 'Earlier'*/}
-        <h3 className="p-1 text-sm text-light-grey mt-4">Earlier</h3>
-        <div >
-          <div className="p-2 hover:bg-button-hover rounded-md cursor-pointer">Chat 1</div>
-          <div className="p-2 hover:bg-button-hover rounded-md cursor-pointer">Chat 2</div>
-        </div>
-        
+        {/* Previous 30 days */}
+        {last30DaysChats.length > 0 && (
+          <>
+            <h3 className="p-1 text-sm text-light-grey mt-4">Previous 30 days</h3>
+            {last30DaysChats.map((chat) => (
+              <div key={chat.id} className="p-2 hover:bg-button-hover rounded-md cursor-pointer">
+                {chat.name || `Chat ${chat.id}`}
+              </div>
+            ))}
+          </>
+        )}
+
+        {/* Earlier */}
+        {earlierChats.length > 0 && (
+          <>
+            <h3 className="p-1 text-sm text-light-grey mt-4">Earlier</h3>
+            {earlierChats.map((chat) => (
+              <div key={chat.id} className="p-2 hover:bg-button-hover rounded-md cursor-pointer">
+                {chat.name || `Chat ${chat.id}`}
+              </div>
+            ))}
+          </>
+        )}
       </div>
 
       {/* Settings button */}
@@ -67,7 +148,7 @@ const Sidebar: React.FC = () => {
         </button>
       </div>
 
-      {/* Popup settings panel (conditionally rendered) */}
+      {/* Popup settings panel */}
       {isSettingsOpen && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-20">
           <div className="bg-[#282C2C] p-6 rounded-lg w-[400px]">
@@ -76,27 +157,22 @@ const Sidebar: React.FC = () => {
               <button
                 onClick={toggleSettings}
                 className="absolute top-2 right-2">
+              </button>
 
-                </button>
-            
-            {/* Settings content goes here! */}
-
-            {/* Bottom right "Press ENTER to apply" text */}
+            {/* Settings content goes here */}
             <p className="text-right bottom-2 right-2 italic text-[#9A9A9A] text-sm"
                 onKeyDown={(e) => {
                     if (e.key === "Enter") {
                         toggleSettings();
                     }
-                }
-            }
+                }}
             >
                 Press ENTER to apply
             </p>
           </div>
         </div>
       </div>
-      )
-      }
+      )}
     </div>
   );
 };
