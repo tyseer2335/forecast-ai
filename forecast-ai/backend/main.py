@@ -32,14 +32,11 @@ def query_to_answer(request: ForecastRequest):
         search_queries = break_down_query.generate_search_queries(client, request)
 
         # return dict; key as query, value as list of dict with title, description, published date, url, publisher
-        news = collect_news.collect_news(search_queries, max_results=request.num_articles,
-                                         start_date=request.start_date, end_date=request.end_date)
+        news = collect_news.collect_news(search_queries, request)
 
         # content added to each news
-
         # return dict; key as query, value as list of dict with title, description, published date, url, publisher,
         # content: dict with text and media
-
         # Example:
         # {'query1':
         # [{'title1': '...', 'description': '...', 'published date': '...', 'url': '...', 'publisher': '...',

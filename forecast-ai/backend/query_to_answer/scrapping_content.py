@@ -16,7 +16,7 @@ def _single_scrape_content(url: str) -> dict:
     clean_text = cleaner.handle(str(soup))
 
     # Extract text content from common tags
-    text_elements = soup.find_all(['p', 'h1', 'h2', 'h3', 'span', 'div'])
+    text_elements = soup.find_all(['p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'li', 'ol', 'ul', 'blockquote', 'a', 'b', 'i', 'strong', 'em', 'mark', 'small', 'del', 'ins', 'sub', 'sup', 'code', 'pre', 'abbr', 'address', 'bdo', 'br', 'cite', 'dfn', 'kbd', 'q', 'samp', 'var', 'time', 'ruby', 'rt', 'rp', 'bdi', 'wbr', 'span', 'div'])
     clean_text = ' '.join([elem.get_text(strip=True) for elem in text_elements])
 
     # Extract media content
