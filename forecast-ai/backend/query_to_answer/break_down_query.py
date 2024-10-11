@@ -1,5 +1,6 @@
 from typing import List
-from main import ForecastRequest
+from model.forecast_request import ForecastRequest
+from utils.process_date import convert_str_to_datetime
 
 
 def generate_search_queries(client: any, metric_eval_ranking: ForecastRequest) -> List[str]:
@@ -12,8 +13,8 @@ def generate_search_queries(client: any, metric_eval_ranking: ForecastRequest) -
     # before_ranking_num_articles = metric_eval_ranking.before_ranking_num_articles
     # after_ranking_num_articles = metric_eval_ranking.after_ranking_num_articles
 
-    # start_date = metric_eval_ranking.start_date
-    # end_date = metric_eval_ranking.end_date
+    # start_date = convert_str_to_datetime(metric_eval_ranking.start_date)
+    # end_date = convert_str_to_datetime(metric_eval_ranking.end_date)
 
     num_of_queries_per_source = {source: int(num_queries * perc) for source, perc in perc_of_each_source.items()}
     num_of_queries_per_automatic = num_of_queries_per_source.pop('automatic')

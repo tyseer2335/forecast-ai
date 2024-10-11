@@ -1,7 +1,7 @@
 from gnews import GNews
-from datetime import date
 from typing import List
-from main import ForecastRequest
+from model.forecast_request import ForecastRequest
+from utils.process_date import convert_str_to_datetime
 
 
 def _get_forecasting_news(queries: List[str], max_results: int = 10, language: str = 'en', country: str = 'US',
@@ -19,7 +19,7 @@ def _get_forecasting_news(queries: List[str], max_results: int = 10, language: s
     By default, we return 10 results for each query.
     User can specify the number of results to return.
     """
-    google_news = GNews(language=language, country=country, period=period, start_date=start_date, end_date=end_date,
+    google_news = GNews(language=language, country=country, period=period, start_date=convert_str_to_datetime(start_date), end_date=convert_str_to_datetime(end_date),
                         exclude_websites=exclude_websites, proxy=proxy, max_results=max_results)
     all_news_per_query = {}
     for query in queries:

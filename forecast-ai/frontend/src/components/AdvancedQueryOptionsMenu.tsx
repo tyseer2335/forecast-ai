@@ -2,29 +2,37 @@
 import React, { useEffect, useState } from "react";
 import CloseMenuButton from "../assets/close-menu-button.svg";
 import { DayPicker } from "react-day-picker";
+import { Request } from "./PromptBar";
 import "react-day-picker/style.css";
 import "../css/advanced-query-options-menu-custom-css.css";
 
 type AdvancedQueryOptionsMenuProps = {
-    setIsMenuOpen: React.Dispatch<React.SetStateAction<boolean>>
+    setIsMenuOpen: React.Dispatch<React.SetStateAction<boolean>>;
+    setRequest: React.Dispatch<React.SetStateAction<Request>>;
 }
 
-const AdvancedQueryOptionsMenu: React.FC<AdvancedQueryOptionsMenuProps> = ({ setIsMenuOpen }) => {
-    const [totalSourcesToCollect, setTotalSourcesToCollect] = useState<number>(50);
-    const [newsRatio, setNewsRatio] = useState<number>(90);
-    const [xRatio, setXRatio] = useState<number>(10);
-    const [redditRatio, setRedditRatio] = useState<number>(0);
+const AdvancedQueryOptionsMenu: React.FC<AdvancedQueryOptionsMenuProps> = ({ setIsMenuOpen, setRequest }) => {
+    const [totalSourcesToCollect, setTotalSourcesToCollect] = useState<number>(10);
+    const [newsRatio, setNewsRatio] = useState<number>(60);
+    const [xRatio, setXRatio] = useState<number>(20);
+    const [facebookRatio, setFacebookRatio] = useState<number>(20);
     const [fromDate, setFromDate] = useState<Date>();
     const [toDate, setToDate] = useState<Date>();
-    const [totalSourcesToDisplay, setTotalSourcesToDisplay] = useState<number>(10);
-    const [minNewsSourcesToDisplay, setMinNewsSourcesToDisplay] = useState<number>(0);
-    const [maxNewsSourcesToDisplay, setMaxNewsSourcesToDisplay] = useState<number>(0);
-    const [minXSourcesToDisplay, setMinXSourcesToDisplay] = useState<number>(0);
-    const [maxXSourcesToDisplay, setMaxXSourcesToDisplay] = useState<number>(0);
-    const [minRedditSourcesToDisplay, setMinRedditSourcesToDisplay] = useState<number>(0);
-    const [maxRedditSourcesToDisplay, setMaxRedditSourcesToDisplay] = useState<number>(0);
+    const [totalSourcesToDisplay, setTotalSourcesToDisplay] = useState<number>(5);
 
     const handleApply = (e: React.MouseEvent<HTMLButtonElement>) => {
+        setRequest(prevRequest => ({
+            ...prevRequest,
+            before_ranking_num_articles: totalSourcesToCollect,
+            perc_of_each_source: {
+                automatic: newsRatio / 100,
+                'x.com': xRatio / 100,
+                'facebook.com': facebookRatio / 100
+            },
+            start_date: fromDate? fromDate.toISOString() : fromDate,
+            end_date: toDate ? toDate.toISOString() : toDate,
+            after_ranking_num_articles: totalSourcesToDisplay
+        }))
         setIsMenuOpen(false);
     }
 
@@ -106,9 +114,9 @@ const AdvancedQueryOptionsMenu: React.FC<AdvancedQueryOptionsMenuProps> = ({ set
                                 <div>
                                     <p className="text-[10px] text-header-bar-text mb-2">Reddit Ratio</p>
                                     <div className="w-full flex justify-start items-center space-x-2">
-                                        <input type="range" min='0' max='100' className="w-[50%] cursor-pointer range-slider" style={{background: `linear-gradient(to right, #AEB0FF ${redditRatio}%, #383838 ${redditRatio}%)`}} value={redditRatio} onChange={e => setRedditRatio(Number(e.target.value))} />
+                                        <input type="range" min='0' max='100' className="w-[50%] cursor-pointer range-slider" style={{background: `linear-gradient(to right, #AEB0FF ${facebookRatio}%, #383838 ${facebookRatio}%)`}} value={facebookRatio} onChange={e => setFacebookRatio(Number(e.target.value))} />
                                         <div className="bg-query-options-input-bg p-1 rounded-sm w-[35px]">
-                                            <p className="text-[10px]">{redditRatio}%</p>
+                                            <p className="text-[10px]">{facebookRatio}%</p>
                                         </div>
                                     </div>
                                     <div className="w-[50%] grid grid-cols-11 gap-4">
@@ -149,51 +157,7 @@ const AdvancedQueryOptionsMenu: React.FC<AdvancedQueryOptionsMenuProps> = ({ set
                     <div className="w-full px-2 space-y-5">
                         <div className="w-full space-y-2">
                             <h4 className="text-xs text-metrics-text">Total Sources to Display</h4>
-                            <input type="number" min='1' className="bg-query-options-input-bg border border-metrics-text rounded-sm w-[100px] h-[40px] p-2 px-3 text-sm" value={totalSourcesToDisplay} onChange={e => setTotalSourcesToDisplay(Number(e.target.value))} />
-                        </div>
-                        <div className="w-full space-y-2">
-                            <h4 className="text-xs text-metrics-text">Customize Display for Source Types</h4>
-                            <div className="flex justify-between w-full items-center w-full">
-                                <div className="flex flex-col space-y-1 w-[30%]">
-                                    <div className="flex justify-between items-center space-x-1">
-                                        <div className="w-full space-y-1">
-                                            <p className="text-[10px] text-metrics-text">Min</p>
-                                            <input type="number" min='0' className="bg-query-options-input-bg border border-metrics-text rounded-sm w-[60px] h-[40px] p-2 text-sm" value={minNewsSourcesToDisplay} onChange={e => setMinNewsSourcesToDisplay(Number(e.target.value))} />
-                                        </div>
-                                        <div className="w-full space-y-1">
-                                            <p className="text-[10px] text-metrics-text">Max</p>
-                                            <input type="number" min='0' className="bg-query-options-input-bg border border-metrics-text rounded-sm w-[60px] h-[40px] p-2 text-sm" value={maxNewsSourcesToDisplay} onChange={e => setMaxNewsSourcesToDisplay(Number(e.target.value))} />
-                                        </div>
-                                    </div>
-                                    <p className="text-[9px] text-metrics-text">Number of News Sources to Display</p>
-                                </div>
-                                <div className="flex flex-col space-y-1 w-[30%]">
-                                    <div className="flex justify-between items-center space-x-1">
-                                        <div className="w-full space-y-1">
-                                            <p className="text-[10px] text-metrics-text">Min</p>
-                                            <input type="number" min='0' className="bg-query-options-input-bg border border-metrics-text rounded-sm w-[60px] h-[40px] p-2 text-sm" value={minXSourcesToDisplay} onChange={e => setMinXSourcesToDisplay(Number(e.target.value))} />
-                                        </div>
-                                        <div className="w-full space-y-1">
-                                            <p className="text-[10px] text-metrics-text">Max</p>
-                                            <input type="number" min='0' className="bg-query-options-input-bg border border-metrics-text rounded-sm w-[60px] h-[40px] p-2 text-sm" value={maxXSourcesToDisplay} onChange={e => setMaxXSourcesToDisplay(Number(e.target.value))} />
-                                        </div>
-                                    </div>
-                                    <p className="text-[9px] text-metrics-text">Number of X Sources to Display</p>
-                                </div>
-                                <div className="flex flex-col space-y-1 w-[30%]">
-                                    <div className="flex justify-between items-center space-x-1">
-                                        <div className="w-full space-y-1">
-                                            <p className="text-[10px] text-metrics-text">Min</p>
-                                            <input type="number" min='0' className="bg-query-options-input-bg border border-metrics-text rounded-sm w-[60px] h-[40px] p-2 text-sm" value={minRedditSourcesToDisplay} onChange={e => setMinRedditSourcesToDisplay(Number(e.target.value))} />
-                                        </div>
-                                        <div className="w-full space-y-1">
-                                            <p className="text-[10px] text-metrics-text">Max</p>
-                                            <input type="number" min='0' className="bg-query-options-input-bg border border-metrics-text rounded-sm w-[60px] h-[40px] p-2 text-sm" value={maxRedditSourcesToDisplay} onChange={e => setMaxRedditSourcesToDisplay(Number(e.target.value))} />
-                                        </div>
-                                    </div>
-                                    <p className="text-[9px] text-metrics-text">Number of Reddit Sources to Display</p>
-                                </div>
-                            </div>
+                            <input type="number" min='1' max={totalSourcesToCollect} className="bg-query-options-input-bg border border-metrics-text rounded-sm w-[100px] h-[40px] p-2 px-3 text-sm" value={totalSourcesToDisplay} onChange={e => setTotalSourcesToDisplay(Number(e.target.value))} />
                         </div>
                     </div>
                 </div>
