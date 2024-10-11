@@ -15,7 +15,7 @@ const HeaderBar: React.FC<HeaderBarProps> = ({ title }) => {
             <button>
                 <img src={BookmarkButton} alt="bookmark-btn" className="w-5 h-7" />
             </button>
-            <button className="ml-auto bg-share-btn-bg py-2.5 px-3 flex space-x-1 justify-center items-center rounded-md">
+            <button className="ml-auto bg-share-btn-bg py-2.5 px-3 flex space-x-1 justify-center items-center rounded-md hover:bg-share-btn-hover-bg">
                 <img src={ShareButton} alt="export-btn" className="w-4 h-4" />
                 <p className="text-share-btn-text font-bold text-sm">Share</p>
             </button>

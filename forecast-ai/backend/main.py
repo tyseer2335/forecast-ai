@@ -1,14 +1,12 @@
 import os
-from datetime import date
-from typing import Optional
 
 from dotenv import load_dotenv
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from openai import OpenAI
-from pydantic import BaseModel
 
 from query_to_answer import break_down_query, collect_news, scrapping_content, metric_eval_ranking, generate_forecast
+from model.forecast_request import ForecastRequest
 
 # [Initialize FastAPI app]
 # pip install "uvicorn[standard]"
@@ -25,24 +23,6 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"]
 )
-
-
-class ForecastRequest(BaseModel):
-    """
-    num_queries: The number of queries to generate from the forecasting question
-    perc_of_each_source: The percentage of each source
-    before_ranking_num_articles: The number of articles to collect and rank in total
-    after_ranking_num_articles: The number of articles to use
-    """
-    question: str
-
-    num_queries: Optional[int] = 5
-    perc_of_each_source: dict[str, float] = {'automatic': 0.6, 'x.com': 0.2, 'facebook.com': 0.2}
-    before_ranking_num_articles: Optional[int] = 10
-    after_ranking_num_articles: Optional[int] = 5
-
-    start_date: Optional[date] = None
-    end_date: Optional[date] = None
 
 
 @app.post("/query_to_answer")
