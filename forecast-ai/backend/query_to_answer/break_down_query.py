@@ -66,7 +66,17 @@ forecasting question: `{question}`.
 
     # Convert string to dict. response is currently a string of a dict.
     response = eval(response)["queries"]
+    safe_res = ensure_response_success(response, num_of_queries_per_source, num_of_queries_per_automatic,
+                            perc_of_each_source)
+    safe_res["queries"] = response
+    return safe_res
 
+
+def ensure_response_success(response: list[str], num_of_queries_per_source: dict[str, int],
+                            num_of_queries_per_automatic: int, perc_of_each_source: dict[str, float]) -> dict:
+    """
+    Check if response is successful
+    """
     # Example:
     # response = ['2024 US election edge site:x.com',
     #  '2024 US election edge site:facebook.com',
@@ -127,4 +137,4 @@ forecasting question: `{question}`.
                 search_queries_by_source.items() if source != "automatic"):
         success = True
 
-    return {"queries": search_queries_by_source, "success": success}
+    return {"formatted_queries": search_queries_by_source, "success": success}
