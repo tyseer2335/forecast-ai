@@ -6,6 +6,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from openai import OpenAI
 
 from query_to_answer import break_down_query, collect_news, scrapping_content, metric_eval_ranking, generate_forecast
+import utils
 from model.forecast_request import ForecastRequest
 
 # [Initialize FastAPI app]
@@ -44,8 +45,9 @@ def query_to_answer(request: ForecastRequest):
         # {'query1': [{'title1': '...', 'description': '...', 'published date': '...', 'url': '...', 'publisher': '...',
         # 'content': {'text': '...', 'media': ['...']}}]}
         news_with_content = scrapping_content.multiple_scrape_content(news)
+        news_objects = utils.convert_to_article.dict_to_article(news_with_content)
 
-        ranked_news_with_content = metric_eval_ranking.metric_eval_ranking(news_with_content)
+        ranked_news_with_content = metric_eval_ranking.metric_eval_ranking(news_objects)
 
         answer = generate_forecast.generate_forecast(ranked_news_with_content)
         return answer

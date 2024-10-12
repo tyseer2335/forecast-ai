@@ -60,6 +60,7 @@ def advanced_selenium_scrape_content(driver: webdriver.Chrome, url: str) -> dict
 
 
 def multiple_scrape_content(urls: dict) -> dict:
+    urls = urls.copy()
     driver = init_driver()
 
     # Add 'content' key to each news
