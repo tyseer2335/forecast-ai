@@ -1,4 +1,3 @@
-from typing import List
 from model.forecast_request import ForecastRequest
 from utils.process_date import convert_str_to_datetime
 import datetime
@@ -20,6 +19,12 @@ def generate_search_queries(client: any, metric_eval_ranking: ForecastRequest) -
     num_of_queries_per_source = {source: int(num_queries * perc) for source, perc in perc_of_each_source.items()}
     num_of_queries_per_automatic = num_of_queries_per_source.pop('automatic')
 
+    start_date, end_date = "October 2023", datetime.datetime.now().strftime('%B %d, %Y')
+    if metric_eval_ranking.start_date is not None:
+        start_date = metric_eval_ranking.start_date
+    if metric_eval_ranking.end_date is not None:
+        end_date = metric_eval_ranking.end_date
+
     prompt = f"""
         You are an AI that is superhuman at forecasting and helps humans make predictions of future world events. 
         You are being monitored for your calibration, scored by the Brier score.
@@ -28,7 +33,7 @@ def generate_search_queries(client: any, metric_eval_ranking: ForecastRequest) -
 forecasting question: `{question}`.
 
         RULES:
-        0. Your knowledge cutoff is October 2023. The current date is {datetime.datetime.now().strftime('%B %d, %Y')}.
+        0. Your knowledge cutoff is {start_date}. The current date is {end_date}.
         1. Please only return a list of exactly {num_queries} search engine queries. No extra descriptions!
         2. Your queries should include both news (prefix with "News") and opinions (prefix with "Opinion") keywords.
         3. Return the search engine queries in a numbered list starting from 1.
@@ -67,7 +72,7 @@ forecasting question: `{question}`.
     # Convert string to dict. response is currently a string of a dict.
     response = eval(response)["queries"]
     safe_res = ensure_response_success(response, num_of_queries_per_source, num_of_queries_per_automatic,
-                            perc_of_each_source)
+                                       perc_of_each_source)
     safe_res["queries"] = response
     return safe_res
 
