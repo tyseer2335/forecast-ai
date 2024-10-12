@@ -31,12 +31,14 @@ def _single_scrape_content(url: str) -> dict:
     }
 
 
-options = Options()
-options.headless = True
-driver = webdriver.Chrome(options=options)
+def init_driver():
+    options = Options()
+    options.headless = True
+    driver = webdriver.Chrome(options=options)
+    return driver
 
 
-def advanced_selenium_scrape_content(url: str) -> dict:
+def advanced_selenium_scrape_content(driver: webdriver.Chrome, url: str) -> dict:
     driver.get(url)
     # once we get redirected to the page, we need to wait for the page to load
     # wait till news.google.com is not in the url
@@ -58,6 +60,8 @@ def advanced_selenium_scrape_content(url: str) -> dict:
 
 
 def multiple_scrape_content(urls: dict) -> dict:
+    driver = init_driver()
+
     # Add 'content' key to each news
     for _, news in urls.items():
         for article in news:
@@ -65,7 +69,7 @@ def multiple_scrape_content(urls: dict) -> dict:
     for _, news in urls.items():
         for article in news:
             if not article['content']['text']:
-                res = advanced_selenium_scrape_content(article['url'])
+                res = advanced_selenium_scrape_content(driver, article['url'])
                 article['content']['text'] = res['text']
                 if not article['content']['media']:
                     article['content']['media'] = res['media']
