@@ -28,5 +28,6 @@ def _get_forecasting_news(queries: list[str], max_results: int = 10, language: s
 
 
 def collect_news(queries: list[str], forecastRequest: ForecastRequest) -> dict:
-    return _get_forecasting_news(queries, max_results=forecastRequest.before_ranking_num_articles,
-                                 start_date=forecastRequest.start_date, end_date=forecastRequest.end_date)
+    num_news_per_query = forecastRequest.before_ranking_num_articles // forecastRequest.num_queries
+    return _get_forecasting_news(queries, max_results=num_news_per_query, start_date=forecastRequest.start_date,
+                                 end_date=forecastRequest.end_date)

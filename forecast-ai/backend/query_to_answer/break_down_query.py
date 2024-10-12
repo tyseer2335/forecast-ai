@@ -16,6 +16,7 @@ def generate_search_queries(client: any, metric_eval_ranking: ForecastRequest) -
     # start_date = convert_str_to_datetime(metric_eval_ranking.start_date)
     # end_date = convert_str_to_datetime(metric_eval_ranking.end_date)
 
+    # Using int() rounds down to the nearest whole number. 0.6 -> 0, 0.2 -> 0, 0.2 -> 0
     num_of_queries_per_source = {source: int(num_queries * perc) for source, perc in perc_of_each_source.items()}
     num_of_queries_per_automatic = num_of_queries_per_source.pop('automatic')
 
