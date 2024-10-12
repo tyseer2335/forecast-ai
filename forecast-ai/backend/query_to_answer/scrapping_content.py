@@ -4,6 +4,9 @@
 import requests
 from bs4 import BeautifulSoup
 import html2text
+from selenium import webdriver
+from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.common.by import By
 
 
 def _single_scrape_content(url: str) -> dict:
@@ -28,9 +31,43 @@ def _single_scrape_content(url: str) -> dict:
     }
 
 
+options = Options()
+options.headless = True
+driver = webdriver.Chrome(options=options)
+
+
+def advanced_selenium_scrape_content(url: str) -> dict:
+    driver.get(url)
+    # once we get redirected to the page, we need to wait for the page to load
+    # wait till news.google.com is not in the url
+    while 'news.google.com' in driver.current_url:
+        pass
+
+    # Extract text content
+    clean_text = driver.find_element(By.TAG_NAME, 'body').text
+
+    # Extract media content
+    media = [img.get_attribute('src') for img in driver.find_elements(By.TAG_NAME, 'img')]
+    # clean media: remove None and any text, only links
+    media = [link for link in media if link]
+
+    return {
+        'text': clean_text,
+        'media': media
+    }
+
+
 def multiple_scrape_content(urls: dict) -> dict:
     # Add 'content' key to each news
     for _, news in urls.items():
         for article in news:
             article['content'] = _single_scrape_content(article['url'])
+    for _, news in urls.items():
+        for article in news:
+            if not article['content']['text']:
+                res = advanced_selenium_scrape_content(article['url'])
+                article['content']['text'] = res['text']
+                if not article['content']['media']:
+                    article['content']['media'] = res['media']
+    driver.quit()
     return urls
