@@ -40,6 +40,7 @@ def dict_to_article(article_dict: dict) -> dict:
    We group by platform and have list of Article objects
     :return:
     """
+    article_dict = article_dict.copy()
     # in article_dict, replace "published date" to "published_date"
     res = {}
     for query, articles in article_dict.items():
