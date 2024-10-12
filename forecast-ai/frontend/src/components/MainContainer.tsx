@@ -65,3 +65,5 @@ const MainContainer: React.FC = () => {
       );
       
 }
+
+export default MainContainer;
