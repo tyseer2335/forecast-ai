@@ -17,6 +17,7 @@ const useSaveChat = (userId: string, chatId: string | null) => {
             created_at: new Date(),
             updated_at: new Date(),
           });
+      localStorage.setItem("selectedChatId", chatRef.id);
 
       console.log("Chat document found.");
     
