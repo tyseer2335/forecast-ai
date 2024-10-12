@@ -43,7 +43,7 @@ const PromptBar: React.FC<PromptBarProps> = ({ addQuery }) => {
   const formattedDate = (isoString: string) => {
     const date = new Date(isoString);
     return date.toLocaleDateString('en-US', {
-      month: 'long',
+      month: 'short',
       day: 'numeric',
       year: 'numeric'
     })
