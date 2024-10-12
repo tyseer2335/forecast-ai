@@ -1,0 +1,84 @@
+input[type="range"] {
+    -webkit-appearance: none;
+    height: 5px;
+    border-radius: 5px;
+    outline: none;
+    opacity: 0.7;
+    transition: opacity 0.2s;
+  }
+  
+input[type="range"]:hover {
+    opacity: 1;
+}
+  
+
+input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 16px;
+    height: 10px;
+    background: #AEB0FF;
+    border-radius: 40%;
+    cursor: pointer;
+}
+
+input[type="range"]::-moz-range-thumb {
+    width: 16px;
+    height: 10px;
+    background: #AEB0FF;
+    border-radius: 40%;
+    cursor: pointer;
+}
+
+.rdp-root {
+    --rdp-accent-color: #6A6CDB;
+    --rdp-accent-background-color: #6A6CDB;
+    --rdp-selected-border: 2px solid var(--rdp-accent-color);
+    --rdp-day-height: 24px;
+    --rdp-day-width: 24px;
+    --rdp-nav_button-height: 15px;
+    --rdp-nav_button-width: 15px;
+    --rdp-nav-height: 30px;
+    --rdp-month_caption-font: bold 11px var(--rdp-font-family);
+    border: 1px solid #AEB0FF;
+    border-radius: 10%;
+    padding: 3px;
+    background-color: #4A4A50;
+}
+
+.rdp-chevron {
+    fill: var(--rdp-accent-color);
+}
+
+.rdp-selected {
+    background-color: var(--rdp-accent-color);
+    border-radius: 50%;
+}
+
+.rdp-button_next,
+.rdp-button_previous {
+  width: var(--rdp-nav_button-width);
+  height: var(--rdp-nav_button-height);
+}
+
+.rdb-months {
+    justify-content: center;
+    align-items: center;
+}
+
+.rdp-month_caption {
+    justify-content: space-between;
+    align-items: center;
+    padding: 2px;
+    color: #BBBBB9;
+}
+
+.rdp-day_button {
+    font-size: 12px;
+    color: #BBBBB9;
+}
+
+.rdp-weekday {
+    color: #B0B1AF;
+    font-size: 12px;
+}

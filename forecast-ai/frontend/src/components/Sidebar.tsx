@@ -57,7 +57,6 @@ const Sidebar: React.FC = () => {
     const thirtyDaysAgo = today - oneDay * 30;
 
     chatList.forEach((chat) => {
-      console.log(chat);
       const updatedAtTime = chat.updated_at.toDate().getTime();
 
       if (updatedAtTime >= today) {
