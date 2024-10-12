@@ -44,16 +44,15 @@ const PromptBar: React.FC<PromptBarProps> = ({ addQuery }) => {
     if (input) {
       try {
         // === Backend Code ===
-        const updatedRequest = { ...request, question: input };
-        setRequest(updatedRequest);
-        setSubmitRequest(true);
-        axios.post(`${process.env.REACT_APP_BACKEND_URL}/query_to_answer`, updatedRequest).then(response => {
-          addQuery(input);
-          setInput("");
-          setRequest({});
-          setSubmitRequest(false);
-        });
-      
+        // const updatedRequest = { ...request, question: input };
+        // setRequest(updatedRequest);
+        // setSubmitRequest(true);
+        // axios.post(`${process.env.REACT_APP_BACKEND_URL}/query_to_answer`, updatedRequest).then(response => {
+        //   addQuery(input);
+        //   setInput("");
+        //   setRequest({});
+        //   setSubmitRequest(false);
+        // });
         // ====================
 
         // If the backend request succeeds, save the query to Firestore
