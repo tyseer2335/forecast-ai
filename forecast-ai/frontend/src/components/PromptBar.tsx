@@ -40,20 +40,44 @@ const PromptBar: React.FC<PromptBarProps> = ({ addQuery }) => {
     }
   };
 
+  const formattedDate = (isoString: string) => {
+    const date = new Date(isoString);
+    return date.toLocaleDateString('en-US', {
+      month: 'long',
+      day: 'numeric',
+      year: 'numeric'
+    })
+  }
+
   return (
-    <form onSubmit={handleSubmit} className="bg-mid-dark-grey px-6 py-3 flex justify-between items-center rounded-full relative">
+    <form onSubmit={handleSubmit} className="bg-mid-dark-grey px-6 py-3 flex justify-between items-center rounded-full relative h-[64px]">
         <AdvancedQueryOptionsMenu isMenuOpen={isMenuOpen} setIsMenuOpen={setIsMenuOpen} setRequest={setRequest} submitRequest={submitRequest} />
-        <div className="flex justify-center items-center w-[95%]">
+        <div className="flex justify-start items-center w-[95%] space-x-2">
             <button type="button">
                 <img src={OptionsButton} alt="options-btn" onClick={e => setIsMenuOpen(!isMenuOpen)} />
             </button>
+            {(request.start_date || request.end_date) && (
+              <div className="flex justify-center items-center space-x-2">
+                  {request.start_date && (
+                      <div className="rounded-md h-[30px] px-3 py-2 text-metrics-text bg-prompt-bar-date-bg cursor-pointer">
+                        <p className="text-xs font-semibold">From: {formattedDate(request.start_date)}</p>
+                      </div>
+                  )}
+                  {request.end_date && (
+                      <div className="rounded-md h-[30px] px-3 py-2 text-metrics-text bg-prompt-bar-date-bg cursor-pointer">
+                        <p className="text-xs font-semibold">To: {formattedDate(request.end_date)}</p>
+                      </div>
+                  )}
+              </div>
+            )}
             <input
                 type="text"
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
+                autoComplete="off"
                 placeholder="Ask query"
                 disabled={isMenuOpen}
-                className="px-4 p-2 rounded-md bg-mid-dark-grey text-title-light-grey rounded-2xl focus:outline-none w-full"
+                className="px-4 p-2 rounded-md bg-mid-dark-grey text-title-light-grey rounded-2xl focus:outline-none flex-1"
             />
         </div>
         <button

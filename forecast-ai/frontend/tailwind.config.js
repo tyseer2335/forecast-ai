@@ -25,7 +25,8 @@ module.exports = {
         'query-options-date-picker-color': '#4A4E4E',
         'query-options-date-picker-active-color': '#AEB0FF',
         'query-options-date-picker-bg': '#4A4A50',
-        'query-options-date-picker-active-bg': '#6A6CDB'
+        'query-options-date-picker-active-bg': '#6A6CDB',
+        'prompt-bar-date-bg': '#767680'
       },
       fontFamily: {
         inter: ['Inter', 'sans-serif'],
