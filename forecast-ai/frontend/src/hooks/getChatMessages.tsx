@@ -1,4 +1,4 @@
-// src/hooks/getChatMessages.js
+// src/hooks/getChatMessages.tsx
 import { SourceObject, Message } from "./types";
 import { doc, collection, addDoc, getFirestore, getDoc } from "firebase/firestore";
   

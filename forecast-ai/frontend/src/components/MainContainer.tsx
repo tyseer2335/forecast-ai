@@ -3,18 +3,15 @@ import React, { useState } from "react";
 import HeaderBar from "./HeaderBar";
 import MainContent from "./MainContent";
 import Sidebar from "./Sidebar";
-import { Chat, dummySources, Message } from "../hooks/types";
-import { getChatMessages } from "../hooks/getChatMessages";
+import { dummySources, Message } from "../hooks/types";
 import { auth } from "./firebase";
-import { useEffect } from "react";
 import useSaveChat from "../hooks/saveChat/useSaveChat";
-import { doc, addDoc, collection, getDoc } from "firebase/firestore";
+import { doc, getDoc } from "firebase/firestore";
 import { getFirestore } from "firebase/firestore";
 import { DocumentReference, DocumentData } from "@firebase/firestore";
 import { useNavigate } from "react-router-dom";
 
 const MainContainer: React.FC = () => {
-    // const [chats, setChats] = useState<Chat[]>([]);
     const [messages, setMessages] = useState<Message[]>([]);
     const userId = auth.currentUser?.uid;
     const chatId = localStorage.getItem("selectedChatId");

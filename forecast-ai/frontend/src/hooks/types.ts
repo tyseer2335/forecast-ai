@@ -6,6 +6,28 @@ export type Metric = {
   region: string
 }
 
+export type Chat = {
+  query: string;
+  sources: SourceObject[];
+}
+
+// Example of a SourceObject:
+// const sources: SourceObject[] = [
+//   {
+//     title: "Who Is Favored To Win The 2024 US Election?",
+//     text: "Much like Democratic presidential candidates in 2016 and 2020, Vice President Kamala Harris has moved the needle in her favor on betting markets and in polling following last week's debate with former President Donald Trump. The shift in the 2024 presidential
+//     image: "https://via.placeholder.com/150",
+//     link: "-cnn.article.link.goes.here.com",
+//     logo: "https://via.placeholder.com/150",
+//     metrics: {
+//       viewsCount: 483,
+//       trendingRate: 22,
+//       region: 'Atlanta, USA'
+//   }, 
+//   { ... },
+//   { ... }
+// ];
+
 export type SourceObject = {
   title: string;
   text: string;
@@ -33,6 +55,7 @@ export const isSourceObjectArray = (content: any): content is SourceObject[] => 
   return content.every(isSourceObject);
 }
 
+
 export const dummySources = [
   { 
       title: "Who Is Favored To Win The 2024 US Election?",
@@ -51,30 +74,6 @@ export const dummySources = [
       metrics: { viewsCount: 762, trendingRate: 43, region: 'New York, USA' }
   }
 ];
-
-// Example of a SourceObject:
-// const sources: SourceObject[] = [
-//   {
-//     title: "Who Is Favored To Win The 2024 US Election?",
-//     text: "Much like Democratic presidential candidates in 2016 and 2020, Vice President Kamala Harris has moved the needle in her favor on betting markets and in polling following last week's debate with former President Donald Trump. The shift in the 2024 presidential
-//     image: "https://via.placeholder.com/150",
-//     link: "-cnn.article.link.goes.here.com",
-//     logo: "https://via.placeholder.com/150",
-//     metrics: {
-//       viewsCount: 483,
-//       trendingRate: 22,
-//       region: 'Atlanta, USA'
-//   }, 
-//   { ... },
-//   { ... }
-// ];
-
-
-
-export type Chat = {
-  query: string;
-  sources: SourceObject[];
-}
 
 // [DB] Message in the context of a chat message in DB
 // E.g.:

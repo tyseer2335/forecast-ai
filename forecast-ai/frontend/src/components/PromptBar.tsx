@@ -1,6 +1,5 @@
-// components/PromptBar.js
+// components/PromptBar.tsx
 import React, { useState } from "react";
-import axios from "axios";
 import OptionsButton from "../assets/options-button.svg";
 import SubmitButton from "../assets/submit-button.svg";
 import useSaveChat from "../hooks/saveChat/useSaveChat";
@@ -54,9 +53,6 @@ const PromptBar: React.FC<PromptBarProps> = ({ addQuery }) => {
         //   setSubmitRequest(false);
         // });
         // ====================
-
-        // If the backend request succeeds, save the query to Firestore
-        // await saveChat(input);
 
         // Update the UI
         addQuery(input);

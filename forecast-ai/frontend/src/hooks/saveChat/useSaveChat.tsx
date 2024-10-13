@@ -1,4 +1,4 @@
-// src/hooks/useSaveChat.js
+// src/hooks/useSaveChat.tsx
 import { _saveUserMessage } from "./_saveUserMessage";
 import { _saveAISourcesMessage } from "./_saveAISourcesMessage";
 import { SourceObject } from "../types";
