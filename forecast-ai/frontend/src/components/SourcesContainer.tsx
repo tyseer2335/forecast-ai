@@ -29,14 +29,14 @@ const SourcesContainer: React.FC<SourcesContainerProps> = ({ sources, error, loa
     }
 
     return (
-        <div className="w-full flex-grow space-y-4 bg-screen-black flex flex-col h-[90%] relative">
+        <div className="w-full flex-grow space-y-4 bg-screen-black flex flex-col h-[90%]">
             {loading ? (
                 <LoadingBar />
             ) : (
                 error ? (
                     <ErrorMessage error={error} />
                 ) : (
-                    <div className="w-full flex-grow space-y-4 bg-screen-black flex flex-col h-[90%] relative">
+                    <div className="w-full flex-grow space-y-4 bg-screen-black flex flex-col h-[604px] relative">
                         <h1 className="font-bold text-chat-message-text text-xl">Sources</h1>
                         <SourceSection source={sources[currentSource]} />
                         <button onClick={decrementCurrentSource} className="absolute left-0 top-1/2 cursor-pointer">
