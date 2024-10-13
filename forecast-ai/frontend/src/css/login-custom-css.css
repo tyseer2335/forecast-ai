@@ -53,5 +53,9 @@
         padding: 26px;  
       }
 
+      .confirm-placeholder::placeholder {
+        content: "Confirm";
+      }
   }
+  
   

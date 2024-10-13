@@ -84,7 +84,6 @@ const Login: React.FC = () => {
         </button>
 
 
-
         {/* Buttons Row */}
         <div className="flex justify-between w-full buttons-row">
           {/* Learn More Button */}  
