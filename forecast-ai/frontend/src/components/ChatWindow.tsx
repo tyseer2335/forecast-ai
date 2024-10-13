@@ -21,7 +21,7 @@ const ChatWindow: React.FC<ChatWindowProps> = ({ chats }) => {
                 <div className="flex flex-col space-y-4 h-[95%]">
                     <div ref={bottomRef} />
                     <ChatMessage query={chat.query} />
-                    <SourcesContainer sources={chat.sources} />
+                    <SourcesContainer sources={chat.sources} error={chat.error} loading={chat.loading} />
                 </div>
             ))}
         </div>
