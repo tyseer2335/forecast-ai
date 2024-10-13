@@ -1,10 +1,9 @@
-// src/components/Signup.tsx
 import React, { useState, useEffect } from 'react';
-import { createUserWithEmailAndPassword } from 'firebase/auth';
+import { createUserWithEmailAndPassword, sendEmailVerification, getAdditionalUserInfo } from 'firebase/auth';
 import { auth } from './firebase';
 import { useNavigate, NavLink } from 'react-router-dom'; 
 import zxcvbn from 'zxcvbn'; // Password strength checking
-import "../css/login-custom-css.css"; // Custom CSS File for responsiveness 
+import "../css/responsive-custom-css.css"; // Custom CSS File for responsiveness
 
 // Icons
 import OwlLogo from '../assets/owl.svg';
@@ -17,8 +16,9 @@ const Signup: React.FC = () => {
   // States to confirm and set password.
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
-  
+
   const [passwordError, setPasswordError] = useState(''); // State for error
+  const [successMessage, setSuccessMessage] = useState(''); // State for success message
   const [showPassword, setShowPassword] = useState(false); // State to toggle password visibility
   const [passwordStrength, setPasswordStrength] = useState(0); // State to track password strength
   const [confirmPasswordPlaceholder, setConfirmPasswordPlaceholder] = useState('Confirm Password'); // Placeholder state
@@ -56,50 +56,73 @@ const Signup: React.FC = () => {
     setPasswordStrength(strengthResult.score); // Score is between 0 and 4
   };
 
+  // Function to validate email format
+  const validateEmail = (email: string) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  };
+
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    // Clear previous messages
+    setPasswordError('');
+    setSuccessMessage('');
+
+    // Validate email format
+    if (!validateEmail(email)) {
+      setPasswordError('Please enter a valid email address.');
+      console.log('Fail: Invalid email format');
+      return;
+    }
 
     // Check if the passwords match
     if (password !== confirmPassword) {
       setPasswordError('Passwords do not match!');
-      console.log('Fail: Passwords do not match'); // Log "Fail" when passwords don't match
+      console.log('Fail: Passwords do not match');
       return;
     }
 
     // Check if password is strong enough (zxcvbn score of at least 3)
     if (passwordStrength < 3) {
       setPasswordError('Password is too weak! Please choose a stronger password.');
-      console.log('Fail: Password is too weak'); // Log "Fail" for weak password
+      console.log('Fail: Password is too weak');
       return;
     }
 
-    // If passwords match and strength is sufficient, proceed with Firebase signup
+    // If everything is valid, proceed with Firebase signup
     await createUserWithEmailAndPassword(auth, email, password)
-      .then((userCredential) => {
+      .then(async (userCredential) => {
         const user = userCredential.user;
-        console.log(user);
-        console.log('Success: User signed up successfully'); // Log "Success" when signup is successful
-        navigate('/');
+        console.log('Success: User signed up successfully');
+
+        // Send email verification
+        await sendEmailVerification(user).then(() => {
+          console.log('Email verification sent!');
+          // Set a custom message to notify the user to check their inbox
+          setSuccessMessage('Verification email sent. Please check your inbox.');
+        });
+
       })
       .catch((error) => {
         const errorCode = error.code;
         const errorMessage = error.message;
-        
+
         // Check if the error is due to email already in use
         if (errorCode === 'auth/email-already-in-use') {
-          setPasswordError('User already exists.');
+          setPasswordError('User already exists');
         } else {
           setPasswordError('Signup failed. Please try again.');
         }
 
-        console.log('Fail: Signup failed', errorCode, errorMessage); // Log "Fail" if Firebase signup fails
+        console.log('Fail: Signup failed', errorCode, errorMessage);
       });
   };
 
   return (
     <div className="min-h-screen bg-screen-black flex items-center justify-center font-inter">
       <div className="flex flex-col items-center space-y-6 w-1/3">
-        
+
         {/* Logo and Title */}
         <div className="flex items-center space-x-4 center-mobile">
           <img src={OwlLogo} alt="logo" className="w-12 h-12" />
@@ -118,7 +141,7 @@ const Signup: React.FC = () => {
             onChange={(e) => setEmail(e.target.value)}
             className="text-input-mobile px-4 py-3 input-fields-mobile bg-mid-dark-grey text-mid-light-grey rounded-2xl focus:outline-none w-full input-mobile"
           />
-          
+
           {/* Password Field with Toggle Visibility */}
           <div className="relative w-full">
             <input
@@ -144,6 +167,7 @@ const Signup: React.FC = () => {
               )}
             </button>
           </div>
+
           {/* Confirm Password Field with Dynamic Placeholder */}
           <div className="relative w-full">
             <input
@@ -168,23 +192,27 @@ const Signup: React.FC = () => {
                 <EyeIcon className="h-5 w-5" aria-hidden="true" />
               )}
             </button>
-          </div> 
+          </div>
 
-        {/* Password Strength Meter */}
-        {password && (
-        <div className="text-sm text-gray-400 text-center">
-          {passwordStrength === 0 && "Very Weak"}
-          {passwordStrength === 1 && "Weak"}
-          {passwordStrength === 2 && "Fair"}
-          {passwordStrength === 3 && "Good"}
-          {passwordStrength === 4 && "Strong"}
-        </div>
-      )}
-
+          {/* Password Strength Meter */}
+          {password && (
+            <div className="text-sm text-gray-400 text-center">
+              {passwordStrength === 0 && 'Very Weak'}
+              {passwordStrength === 1 && 'Weak'}
+              {passwordStrength === 2 && 'Fair'}
+              {passwordStrength === 3 && 'Good'}
+              {passwordStrength === 4 && 'Strong'}
+            </div>
+          )}
 
           {/* Password Error Message */}
           {passwordError && (
             <div className="text-red-600 text-sm text-center">{passwordError}</div>
+          )}
+
+          {/* Success Message */}
+          {successMessage && (
+            <div className="text-green-600 text-sm text-center">{successMessage}</div>
           )}
 
           {/* Signup Button */}
@@ -205,12 +233,13 @@ const Signup: React.FC = () => {
           >
             Sign in
           </NavLink>
-        </p>  
+        </p>
+
         {/* Rest Password */}
         <p className="text-base font-light text-title-light-grey mt-4">
           {' '}
           <NavLink
-            to="/recoverPassword"
+            to="/recover-password"
             className="font-semibold text-indigo-600 hover:text-indigo-500"
           >
             Forgot Password
