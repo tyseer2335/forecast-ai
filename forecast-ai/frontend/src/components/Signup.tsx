@@ -1,7 +1,9 @@
+// src/components/Signup.tsx
 import React, { useState, useEffect } from 'react';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { auth } from './firebase';
 import { useNavigate, NavLink } from 'react-router-dom'; 
+import zxcvbn from 'zxcvbn'; // Password strength checking
 import "../css/login-custom-css.css"; // Custom CSS File for responsiveness 
 
 // Icons
@@ -18,6 +20,7 @@ const Signup: React.FC = () => {
   
   const [passwordError, setPasswordError] = useState(''); // State for error
   const [showPassword, setShowPassword] = useState(false); // State to toggle password visibility
+  const [passwordStrength, setPasswordStrength] = useState(0); // State to track password strength
   const [confirmPasswordPlaceholder, setConfirmPasswordPlaceholder] = useState('Confirm Password'); // Placeholder state
 
   // Toggle password visibility
@@ -43,6 +46,16 @@ const Signup: React.FC = () => {
     };
   }, []);
 
+  // Handle password input and check its strength
+  const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const passwordValue = e.target.value;
+    setPassword(passwordValue);
+
+    // Check password strength using zxcvbn
+    const strengthResult = zxcvbn(passwordValue);
+    setPasswordStrength(strengthResult.score); // Score is between 0 and 4
+  };
+
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -53,7 +66,14 @@ const Signup: React.FC = () => {
       return;
     }
 
-    // If passwords match, proceed with Firebase signup
+    // Check if password is strong enough (zxcvbn score of at least 3)
+    if (passwordStrength < 3) {
+      setPasswordError('Password is too weak! Please choose a stronger password.');
+      console.log('Fail: Password is too weak'); // Log "Fail" for weak password
+      return;
+    }
+
+    // If passwords match and strength is sufficient, proceed with Firebase signup
     await createUserWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
         const user = userCredential.user;
@@ -67,7 +87,7 @@ const Signup: React.FC = () => {
         
         // Check if the error is due to email already in use
         if (errorCode === 'auth/email-already-in-use') {
-          setPasswordError('User already exists.'); // Set custom error message
+          setPasswordError('User already exists.');
         } else {
           setPasswordError('Signup failed. Please try again.');
         }
@@ -87,7 +107,7 @@ const Signup: React.FC = () => {
         </div>
 
         {/* Input Fields */}
-        <div className="flex flex-col space-y-4 w-full">
+        <form className="flex flex-col space-y-4 w-full" onSubmit={onSubmit}>
           <input
             id="email-address"
             name="email"
@@ -98,6 +118,7 @@ const Signup: React.FC = () => {
             onChange={(e) => setEmail(e.target.value)}
             className="text-input-mobile px-4 py-3 input-fields-mobile bg-mid-dark-grey text-mid-light-grey rounded-2xl focus:outline-none w-full input-mobile"
           />
+          
           {/* Password Field with Toggle Visibility */}
           <div className="relative w-full">
             <input
@@ -107,7 +128,7 @@ const Signup: React.FC = () => {
               required
               placeholder="Password"
               value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              onChange={handlePasswordChange} // Handle password change and check strength
               className="text-input-mobile px-4 py-3 input-fields-mobile bg-mid-dark-grey text-mid-light-grey rounded-2xl focus:outline-none w-full input-mobile"
             />
             {/* Toggle Button (Show/Hide Password) */}
@@ -123,7 +144,6 @@ const Signup: React.FC = () => {
               )}
             </button>
           </div>
-
           {/* Confirm Password Field with Dynamic Placeholder */}
           <div className="relative w-full">
             <input
@@ -131,7 +151,7 @@ const Signup: React.FC = () => {
               name="confirmPassword"
               type={showPassword ? 'text' : 'password'}
               required
-              placeholder={confirmPasswordPlaceholder} // Use the state for dynamic placeholder
+              placeholder={confirmPasswordPlaceholder}
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
               className="text-input-mobile px-4 py-3 pr-10 input-fields-mobile bg-mid-dark-grey text-mid-light-grey rounded-2xl focus:outline-none w-full input-mobile confirm-placeholder"
@@ -148,22 +168,33 @@ const Signup: React.FC = () => {
                 <EyeIcon className="h-5 w-5" aria-hidden="true" />
               )}
             </button>
-          </div>
+          </div> 
+
+        {/* Password Strength Meter */}
+        {password && (
+        <div className="text-sm text-gray-400 text-center">
+          {passwordStrength === 0 && "Very Weak"}
+          {passwordStrength === 1 && "Weak"}
+          {passwordStrength === 2 && "Fair"}
+          {passwordStrength === 3 && "Good"}
+          {passwordStrength === 4 && "Strong"}
         </div>
+      )}
 
-        {/* Password Error Message */}
-        {passwordError && (
-          <div className="text-red-600 text-sm text-center">{passwordError}</div>
-        )}
 
-        {/* Signup Button */}
-        <button
-          type="submit"
-          onClick={onSubmit}
-          className="px-4 py-2 signup-login-button-mobile font-bold text-white border border-white rounded-3xl transition-transform duration-300 transform hover:scale-105 hover:shadow-lg"
-        >
-          Sign up
-        </button>
+          {/* Password Error Message */}
+          {passwordError && (
+            <div className="text-red-600 text-sm text-center">{passwordError}</div>
+          )}
+
+          {/* Signup Button */}
+          <button
+            type="submit"
+            className="px-4 py-2 signup-login-button-mobile font-bold text-white border border-white rounded-3xl transition-transform duration-300 transform hover:scale-105 hover:shadow-lg"
+          >
+            Sign up
+          </button>
+        </form>
 
         {/* Sign In Link */}
         <p className="text-base font-light text-title-light-grey mt-4">
@@ -173,6 +204,16 @@ const Signup: React.FC = () => {
             className="font-semibold text-indigo-600 hover:text-indigo-500"
           >
             Sign in
+          </NavLink>
+        </p>  
+        {/* Rest Password */}
+        <p className="text-base font-light text-title-light-grey mt-4">
+          {' '}
+          <NavLink
+            to="/recoverPassword"
+            className="font-semibold text-indigo-600 hover:text-indigo-500"
+          >
+            Forgot Password
           </NavLink>
         </p>
       </div>
