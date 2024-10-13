@@ -2,7 +2,7 @@
 import React, { useEffect, useRef } from "react";
 import ChatMessage from "./ChatMessage";
 import SourcesContainer from "./SourcesContainer";
-import { Chat, Message, SourceObject, dummySources, isSourceObjectArray } from "../hooks/types";
+import { Chat, Message, SourceObject, isSourceObjectArray } from "../hooks/types";
 import { useState } from "react";
 
 type ChatWindowProps = {
@@ -21,13 +21,11 @@ const ChatWindow: React.FC<ChatWindowProps> = ({ messages }) => {
         // Divide messages into queries and sources
         const queries: string[] = [];
         var sources: SourceObject[][] = [];
-        for (const message of messages) { // (Irene) Want to refactor this
+        for (const message of messages) {
             if (typeof message.content === 'string' && message.sender === 'user') {
                 queries.push(message.content);
             } else if (message.sender === 'ai' && isSourceObjectArray(message.content)) {
                 console.log("source object", message.content);
-                // Type is = [ [Source1, Source2], [Source3, Source4], [Source5, Source6] ]
-                // message.content = [Source1, Source2]
                 sources.push(message.content);
             }
         }
@@ -40,9 +38,9 @@ const ChatWindow: React.FC<ChatWindowProps> = ({ messages }) => {
             {
                 messages.map((message, index) => {
                     if (typeof message.content === 'string') {
-                        return <ChatMessage key={index} query={message.content} />;
+                        return <ChatMessage query={message.content} />;
                     } else if (isSourceObjectArray(message.content)) {
-                        return <SourcesContainer key={index} sources={dummySources} />;
+                        return <SourcesContainer sources={message.content} />;
                     }
                 })
             }
