@@ -3,10 +3,10 @@ import React, { useState } from "react";
 import ScrollLeftButton from "../assets/scroll-left-button.svg";
 import ScrollRightButton from "../assets/scroll-right-button.svg";
 import SourceSection from "./SourceSection";
-import { Source } from "./MainContainer";
+import { SourceObject } from "../hooks/types";
 
 type SourcesContainerProps = {
-    sources: Source[];
+    sources: SourceObject[];
 }
 
 const SourcesContainer: React.FC<SourcesContainerProps> = ({ sources }) => {

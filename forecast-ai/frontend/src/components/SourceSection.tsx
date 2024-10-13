@@ -8,10 +8,10 @@ import RedToggleButton from "../assets/red-toggle-button.svg";
 import ViewsCountImage from "../assets/views-count-image.svg";
 import TrendingRateImage from "../assets/trending-rate-image.svg";
 import RegionImage from "../assets/region-image.svg";
-import { Source } from "./MainContainer";
+import { SourceObject } from "../hooks/types";
 
 type SourceSectionProps = {
-    source: Source;
+    source: SourceObject;
 }
 
 const SourceSection: React.FC<SourceSectionProps> = ({ source }) => {

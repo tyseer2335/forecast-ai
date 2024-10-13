@@ -8,53 +8,40 @@ import { getChatMessages } from "../hooks/getChatMessages";
 import { auth } from "./firebase";
 import { useEffect } from "react";
 import useSaveChat from "../hooks/saveChat/useSaveChat";
+import { doc, addDoc, collection, getDoc } from "firebase/firestore";
+import { getFirestore } from "firebase/firestore";
+import { DocumentReference, DocumentData } from "@firebase/firestore";
+import { useNavigate } from "react-router-dom";
 
 const MainContainer: React.FC = () => {
-    const [chats, setChats] = useState<Chat[]>([]);
+    // const [chats, setChats] = useState<Chat[]>([]);
     const [messages, setMessages] = useState<Message[]>([]);
     const userId = auth.currentUser?.uid;
     const chatId = localStorage.getItem("selectedChatId");
     const saveChat = useSaveChat(userId || "", chatId);
-    useEffect(() => {
-        const fetchMessages = async () => {
-            try {
-                const messagesFromDB: Message[] = await getChatMessages(userId, chatId);
-                console.log("Messages from DB:", messagesFromDB);
-                setMessages(messagesFromDB);
-            } catch (error) {
-                console.error("Error fetching chat messages:", error);
-            }
-        };
+    const db = getFirestore();
+    const navigate = useNavigate();
+    const [chatTitle, setChatTitle] = useState<string>("New Chat");
 
-        fetchMessages();
-    }, [userId, chatId]);
-
-    useEffect(() => {
-        const fetchChats = async () => {
-            try {
-                const tempChats: Chat[] = [];
-                let currentChat: Chat = { query: "", sources: [] };
-                
-                for (let i = 0; i < messages.length; i++) {                    
-                    if (i % 2 === 0) {
-                        console.log("Adding query:", messages[i].content);
-                        currentChat.query = messages[i].content;
-                    } else {
-                        currentChat.sources = dummySources;
-                        
-                        console.log("current Chat:", currentChat);
-                        tempChats.push(currentChat);
-                        currentChat = { query: "", sources: [] };
-                    }
-                }
-                setChats(tempChats);
-            } catch (error) {
-                console.error("Error fetching chat messages:", error);
+    if (!userId) {
+        console.error("User not logged in.");
+        navigate("/login");
+        return null;
+    }
+    if (chatId) {
+        const chatRef : DocumentReference<DocumentData, DocumentData> = doc(db, "Users", userId, "Chats", chatId);
+        const fetchChatDoc = async () => {
+            const chatDoc = await getDoc(chatRef);
+            if (!chatDoc.exists()) {
+                console.error("Chat document does not exist.");
+                return;
             }
-        };
-        fetchChats();
-    }, [messages]);
-    
+            setChatTitle(chatDoc.data().title);
+            setMessages(chatDoc.data().messages);
+        }
+        fetchChatDoc();
+    }
+
     const addQuery = (query: string) => {
         saveChat(query, dummySources);
     };
@@ -64,8 +51,8 @@ const MainContainer: React.FC = () => {
           <div className="flex flex-grow">
             <Sidebar/>
             <div className="flex flex-col flex-grow">
-            <HeaderBar title={chats.length > 0 ? chats[0].query : ''} />
-              <MainContent chats={chats} addQuery={addQuery}  />
+            <HeaderBar title={chatTitle} />
+              <MainContent messages={messages} addQuery={addQuery}  />
             </div>
           </div>
         </div>
