@@ -5,7 +5,7 @@ from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from openai import OpenAI
 
-from query_to_answer import break_down_query, collect_news, scrapping_content, metric_eval_ranking, generate_forecast
+from query_to_answer import break_down_query, collect_news, scrapping_content, filtering, generate_forecast
 import utils
 from model.forecast_request import ForecastRequest
 
@@ -46,8 +46,9 @@ def query_to_answer(request: ForecastRequest):
         # 'content': {'text': '...', 'media': ['...']}}]}
         news_with_content = scrapping_content.multiple_scrape_content(news)
         news_objects = utils.convert_to_article.dict_to_article(news_with_content)
-
-        ranked_news_with_content = metric_eval_ranking.metric_eval_ranking(news_objects)
+        filtering.get_relevance_score(news_objects, request.question, client)
+        ranked_news_with_content = filtering.sort_and_filter(news_objects, request.after_ranking_num_articles,
+                                                             request.perc_of_each_source,)
 
         answer = generate_forecast.generate_forecast(ranked_news_with_content)
         return answer
