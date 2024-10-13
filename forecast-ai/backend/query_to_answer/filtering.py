@@ -25,25 +25,28 @@ Your response should look like the following:
 Thoughts: {{ insert your thinking }}
 Rating: {{ insert your rating }}"""
 
-def get_relevance_score(articles: dict[str, Article], forecasting_question: str, client: any):
+
+def get_relevance_score(articles: dict[str, list[Article]], forecasting_question: str, client: any):
     # get relevance score for each article wrt original forecasting question using LLM
-    for key in article.keys():
+    for key in articles.keys():
         for article in articles[key]:
-            article_text = "\n---\nTitle: {title}\n\n{text}\n---\n".format(title=article.title, text=article.summary)
+            article_text = "\n---\nTitle: {title}\n\n{text}\n---\n".format(title=article.title,
+                                                                           text=article.content["text"])
             prompt = relevance_prompt.format(question=forecasting_question, article=article_text)
             response = client.chat.completions.create(
-            model="gpt-4o-mini", 
-            messages=[{ "role": "user", "content": prompt }]
-            )
-            loc = response.choices[0].message.split("Rating:")
+                model="gpt-4o-mini",
+                messages=[{"role": "user", "content": prompt}]
+            ).to_dict()
+            loc = response["choices"][0]["message"]["content"].split("Rating:")
             rating = loc[1].split()[0]
             if rating.isnumeric():
                 article.score = float(rating)
             else:
-                article.score = 1.0 # for not numeric (invalid) rating
+                article.score = 1.0  # for not numeric (invalid) rating
 
 
-def sort_and_filter(articles: dict[str, Article], n: int, percentage_per_source: dict[str, float]) -> dict[str, Article]:
+def sort_and_filter(articles: dict[str, list[Article]], n: int, percentage_per_source: dict[str, float]) -> \
+        dict[str, list[Article]]:
     # return N most relevant articles
     filtered_articles = {}
     for source in articles.keys():
