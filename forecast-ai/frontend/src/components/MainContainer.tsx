@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import HeaderBar from "./HeaderBar";
 import MainContent from "./MainContent";
 import Sidebar from "./Sidebar";
-import { dummySources, Message } from "../hooks/types";
+import { dummySources, Chat } from "../hooks/types";
 import { auth } from "./firebase";
 import useSaveChat from "../hooks/saveChat/useSaveChat";
 import { doc, getDoc } from "firebase/firestore";
@@ -12,7 +12,7 @@ import { DocumentReference, DocumentData } from "@firebase/firestore";
 import { useNavigate } from "react-router-dom";
 
 const MainContainer: React.FC = () => {
-    const [messages, setMessages] = useState<Message[]>([]);
+    const [chats, setChats] = useState<Chat[]>([]);
     const userId = auth.currentUser?.uid;
     const chatId = localStorage.getItem("selectedChatId");
     const saveChat = useSaveChat(userId || "", chatId);
@@ -34,7 +34,21 @@ const MainContainer: React.FC = () => {
                 return;
             }
             setChatTitle(chatDoc.data().title);
-            setMessages(chatDoc.data().messages);
+
+            // Convert the messages array to chats array as discussed
+            const messages = chatDoc.data().messages;
+            var tempChats: Chat[] = [];
+            var tempChat = { query: "", sources: [] };
+            for (let i = 0; i < messages.length; i++) {
+                if (messages[i].sender === "user") {
+                  tempChat.query = messages[i].content;
+                } else {
+                  tempChat.sources = messages[i].content;
+                  tempChats.push(tempChat);
+                  tempChat = { query: "", sources: [] };
+                }
+            }
+            setChats(tempChats);
         }
         fetchChatDoc();
     }
@@ -49,7 +63,7 @@ const MainContainer: React.FC = () => {
             <Sidebar/>
             <div className="flex flex-col flex-grow">
             <HeaderBar title={chatTitle} />
-              <MainContent messages={messages} addQuery={addQuery}  />
+              <MainContent chats={chats} addQuery={addQuery}  />
             </div>
           </div>
         </div>
