@@ -46,6 +46,7 @@ def query_to_answer(request: ForecastRequest):
         # 'content': {'text': '...', 'media': ['...']}}]}
         news_with_content = scrapping_content.multiple_scrape_content(news)
         news_objects = convert_to_article.dict_to_article(news_with_content)
+
         filtering.get_relevance_score(news_objects, request.question, client)
         ranked_news_with_content = filtering.sort_and_filter(news_objects, request.after_ranking_num_articles,
                                                              request.perc_of_each_source)

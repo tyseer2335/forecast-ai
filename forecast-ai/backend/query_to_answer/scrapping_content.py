@@ -70,9 +70,12 @@ def multiple_scrape_content(urls: dict) -> dict:
     for _, news in urls.items():
         for article in news:
             if not article['content']['text']:
-                res = advanced_selenium_scrape_content(driver, article['url'])
-                article['content']['text'] = res['text']
-                if not article['content']['media']:
-                    article['content']['media'] = res['media']
+                try:
+                    res = advanced_selenium_scrape_content(driver, article['url'])
+                    article['content']['text'] = res['text']
+                    if not article['content']['media']:
+                        article['content']['media'] = res['media']
+                except Exception as e:
+                    print(f"Error scraping content: {str(e)} for url: {article['url']}")
     driver.quit()
     return urls
