@@ -46,11 +46,12 @@ def query_to_answer(request: ForecastRequest):
         # 'content': {'text': '...', 'media': ['...']}}]}
         news_with_content = scrapping_content.multiple_scrape_content(news)
         news_objects = convert_to_article.dict_to_article(news_with_content)
+
         filtering.get_relevance_score(news_objects, request.question, client)
         ranked_news_with_content = filtering.sort_and_filter(news_objects, request.after_ranking_num_articles,
-                                                             request.perc_of_each_source,)
+                                                             request.perc_of_each_source)
 
-        answer = generate_forecast.generate_forecast(ranked_news_with_content)
+        answer = generate_forecast.generate_forecast(request, ranked_news_with_content)
         return answer
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error generating answer to query: {str(e)}")
