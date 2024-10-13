@@ -29,7 +29,7 @@ const SourcesContainer: React.FC<SourcesContainerProps> = ({ sources, error, loa
     }
 
     return (
-        <div className="w-full flex-grow space-y-4 bg-screen-black flex flex-col h-[90%] relative">
+        <div className="w-full flex-grow space-y-4 bg-screen-black flex flex-col h-[90%]">
             {loading ? (
                 <LoadingBar />
             ) : (
