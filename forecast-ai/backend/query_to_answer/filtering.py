@@ -1,3 +1,4 @@
+from model.article import Article
 
 relevance_prompt = """Please consider the following forecasting question.
 After that, I will give you a news article and ask you to rate its relevance with respect to the forecasting question.
