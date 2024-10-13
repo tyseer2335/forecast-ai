@@ -2,7 +2,7 @@
 import React, { useEffect, useRef } from "react";
 import ChatMessage from "./ChatMessage";
 import SourcesContainer from "./SourcesContainer";
-import { Chat } from "./MainContainer";
+import {Chat } from "../hooks/types";
 
 type ChatWindowProps = {
     chats: Chat[];
@@ -17,13 +17,16 @@ const ChatWindow: React.FC<ChatWindowProps> = ({ chats }) => {
 
     return (
         <div className="w-full h-[95%] p-4 bg-screen-black text-white space-y-[100px] flex flex-col overflow-y-auto">
-            {chats.map(chat => (
+            <div className="flex flex-col space-y-4 h-[95%]">
+                <div ref={bottomRef} />
+                {chats.map(chat => (
                 <div className="flex flex-col space-y-4 h-[95%]">
                     <div ref={bottomRef} />
                     <ChatMessage query={chat.query} />
                     <SourcesContainer sources={chat.sources} />
                 </div>
-            ))}
+                ))}
+            </div>
         </div>
     )
 }

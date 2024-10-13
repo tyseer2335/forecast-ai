@@ -2,7 +2,7 @@
 import React from "react";
 import ChatWindow from "./ChatWindow";
 import PromptBar from "./PromptBar";
-import { Chat } from "./MainContainer";
+import { Chat } from "../hooks/types";
 
 type MainContentProps = {
     chats: Chat[];

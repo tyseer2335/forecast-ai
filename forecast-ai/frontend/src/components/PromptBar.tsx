@@ -1,9 +1,8 @@
-// components/PromptBar.js
+// components/PromptBar.tsx
 import React, { useState } from "react";
-import axios from "axios";
 import OptionsButton from "../assets/options-button.svg";
 import SubmitButton from "../assets/submit-button.svg";
-import useSaveQuery from "../hooks/useSaveChat";
+import useSaveChat from "../hooks/saveChat/useSaveChat";
 import { useNavigate } from "react-router-dom";
 import { auth } from "./firebase";
 import AdvancedQueryOptionsMenu from "./AdvancedQueryOptionsMenu";
@@ -31,7 +30,7 @@ const PromptBar: React.FC<PromptBarProps> = ({ addQuery }) => {
   const navigate = useNavigate();
   const userId = auth.currentUser?.uid;
   const selectedChatId = localStorage.getItem("selectedChatId");
-  const saveQuery = useSaveQuery(userId || "", selectedChatId);
+  const saveChat = useSaveChat(userId || "", selectedChatId);
 
   if (!userId) {
     navigate("/login");
@@ -55,9 +54,6 @@ const PromptBar: React.FC<PromptBarProps> = ({ addQuery }) => {
         // });
         // ====================
 
-        // If the backend request succeeds, save the query to Firestore
-        await saveQuery(input);
-
         // Update the UI
         addQuery(input);
         setInput("");
@@ -80,7 +76,7 @@ const PromptBar: React.FC<PromptBarProps> = ({ addQuery }) => {
                 onChange={(e) => setInput(e.target.value)}
                 placeholder="Ask query"
                 disabled={isMenuOpen}
-                className="px-4 p-2 rounded-md bg-mid-dark-grey text-title-light-grey rounded-2xl focus:outline-none w-full"
+                className="px-4 p-2 rounded-md bg-mid-dark-grey text-title-light-grey focus:outline-none w-full"
             />
         </div>
         <button
