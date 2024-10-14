@@ -16,6 +16,7 @@ app = FastAPI()
 load_dotenv()
 OPENAI_API_KEY = os.getenv('OPENAPI_API_KEY')
 client = OpenAI(api_key=OPENAI_API_KEY)
+LOCAL_OR_PROD = os.getenv('LOCAL_OR_PROD')
 
 app.add_middleware(
     CORSMiddleware,
@@ -44,7 +45,7 @@ def query_to_answer(request: ForecastRequest):
         # Example:
         # {'query1': [{'title1': '...', 'description': '...', 'published date': '...', 'url': '...', 'publisher': '...',
         # 'content': {'text': '...', 'media': ['...']}}]}
-        news_with_content = scrapping_content.multiple_scrape_content(news)
+        news_with_content = scrapping_content.multiple_scrape_content(news, LOCAL_OR_PROD)
         news_objects = convert_to_article.dict_to_article(news_with_content)
 
         filtering.get_relevance_score(news_objects, request.question, client)
