@@ -5,17 +5,24 @@ import OwlLogo from '../assets/owl.svg';
 import SettingsLogo from '../assets/settings.svg';
 import { auth } from './firebase';
 
-// type SidebarProps = {
-//   localStorageSelectedChatId: any;
-// }
+type SidebarProps = {
+  newChatId: string | null;
+}
 
-const Sidebar: React.FC= () => {
+const Sidebar: React.FC<SidebarProps> = ({ newChatId }) => {
   const db = getFirestore();
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [chats, setChats] = useState<any[]>([]);
   const navigate = useNavigate();
   const userId = auth.currentUser?.uid;
   var [selectedChatId, setSelectedChatId] = useState<string | null>(localStorage.getItem('selectedChatId') ?? null);
+
+  useEffect(() => {
+    if (newChatId) {
+      setSelectedChatId(newChatId);
+      localStorage.setItem('selectedChatId', newChatId);
+    }
+  }, [newChatId]);
 
   useEffect(() => {
     if (!userId) {

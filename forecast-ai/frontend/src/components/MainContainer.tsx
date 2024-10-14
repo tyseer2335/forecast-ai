@@ -11,7 +11,6 @@ import { getFirestore } from "firebase/firestore";
 import { DocumentReference, DocumentData } from "@firebase/firestore";
 import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
-import handleChatClick from "./Sidebar";
 
 
 const MainContainer: React.FC = () => {
@@ -37,7 +36,6 @@ const MainContainer: React.FC = () => {
   // Selected Chat Id
   useEffect(() => {
     if (!localStorage.getItem("selectedChatId")) {
-        console.error("Chat ID not selected.");
         setChats([]);
         setChatTitle("New Chat");
     } else {
@@ -97,7 +95,7 @@ const MainContainer: React.FC = () => {
   return (
       <div className="h-screen flex flex-col bg-screen-black text-white font-inter">
         <div className="flex flex-grow">
-          <Sidebar/>
+          <Sidebar newChatId={chatId} />
           <div className="flex flex-col flex-grow">
           <HeaderBar title={chatTitle} />
             <MainContent chats={chats} addQuery={addQuery}  />
