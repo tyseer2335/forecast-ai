@@ -1,0 +1,72 @@
+.send-reset-email-btn {
+  padding: 0.5rem 1rem; 
+  font-size: 1rem;
+}
+
+@media (max-width: 640px) {
+    .center-mobile {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      height: 12vh; 
+      text-align: center;
+    }
+  
+    .input-mobile {
+        width: 100%;  
+        max-width: 400px; 
+        margin: 0 auto; 
+        box-sizing: border-box; 
+        padding: 12px; 
+      }
+    
+      .button-mobile {
+        width: 100%;
+        max-width: 400px; 
+        margin: 0 auto; 
+      } 
+
+      .buttons-row {
+        display: flex; 
+        flex-direction: column; 
+        align-items: center; 
+        width: 100%; 
+        margin-top: 20px; 
+      }
+    
+      .buttons-row .flex {
+        justify-content: center; 
+        width: 100%;  
+        padding: 30px;
+      } 
+
+      .learn-more-button-mobile {
+        width: 18rem;
+      } 
+      
+      .text-input-mobile { 
+        padding: 20px; 
+      }
+
+      .signup-login-button-mobile {
+        padding: 26px;  
+        font-size: 18px;
+      }  
+
+      .input-fields-mobile { 
+        padding: 26px;  
+      }
+
+      .confirm-placeholder::placeholder {
+        content: "Confirm";
+      } 
+
+      .send-reset-email-btn {
+        padding: 0.5rem 1rem;
+        font-size: 0.875rem;
+      }
+
+  }
+  
+  
