@@ -61,7 +61,8 @@ const PromptBar: React.FC<PromptBarProps> = ({ addQuery, addSources, addError, t
         setSubmitRequest(false);
       }).catch(error => {
         toggleLoading(false);
-        addError("Error generating answer to query");
+        const errorMessage = error.response.data.detail || "Error generating answer to query";
+        addError(errorMessage);
       });
     }
   };
