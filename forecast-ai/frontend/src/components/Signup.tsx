@@ -133,7 +133,7 @@ const Signup: React.FC = () => {
         {/* Logo and Title */}
         <div className="flex items-center space-x-4 center-mobile">
           <img src={OwlLogo} alt="logo" className="w-12 h-12" />
-          <h1 className="text-3xl text-title-light-grey font-light">forecastAI</h1>
+          <h1 className="text-3xl text-light-grey font-light">forecastAI</h1>
         </div>
 
         {/* Input Fields */}
@@ -232,7 +232,7 @@ const Signup: React.FC = () => {
         </form>
 
         {/* Sign In Link */}
-        <p className="text-base font-light text-title-light-grey mt-4">
+        <p className="text-base font-light text-light-grey mt-4">
           Already have an account?{' '}
           <NavLink
             to="/login"
@@ -243,7 +243,7 @@ const Signup: React.FC = () => {
         </p>
 
         {/* Rest Password */}
-        <p className="text-base font-light text-title-light-grey mt-4">
+        <p className="text-base font-light text-light-grey mt-4">
           {' '}
           <NavLink
             to="/recover-password"

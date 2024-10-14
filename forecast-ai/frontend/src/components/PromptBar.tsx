@@ -9,6 +9,8 @@ import { Chat, SourceObject } from "../hooks/types";
 import axios from "axios";
 
 type PromptBarProps = {
+  chats: Chat[];
+  setChatTitle: React.Dispatch<React.SetStateAction<string>>;
   saveChatToDB: (chat: Chat) => void;
   addQuery: (query: string) => void;
   addSources: (sources: SourceObject[]) => void;
@@ -26,7 +28,7 @@ export type Request = {
   end_date?: string;
 }
 
-const PromptBar: React.FC<PromptBarProps> = ({ saveChatToDB, addQuery, addSources, addError, toggleLoading }) => {
+const PromptBar: React.FC<PromptBarProps> = ({ chats, setChatTitle, saveChatToDB, addQuery, addSources, addError, toggleLoading }) => {
   const [input, setInput] = useState("");
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [request, setRequest] = useState<Request>({});
@@ -64,6 +66,9 @@ const PromptBar: React.FC<PromptBarProps> = ({ saveChatToDB, addQuery, addSource
       const updatedRequest = { ...request, question: input };
       setRequest(updatedRequest);
       setSubmitRequest(true);
+      if (chats.length == 0) {
+        setChatTitle(input);
+      }
       addQuery(input);
       setInput("");
       axios.post(`${process.env.REACT_APP_BACKEND_URL}/query_to_answer`, updatedRequest).then(response => {
@@ -122,7 +127,7 @@ const PromptBar: React.FC<PromptBarProps> = ({ saveChatToDB, addQuery, addSource
                 autoComplete="off"
                 placeholder="Ask query"
                 disabled={isMenuOpen}
-                className="px-4 p-2 rounded-md bg-mid-dark-grey text-title-light-grey rounded-2xl focus:outline-none flex-1"
+                className="px-4 p-2 rounded-md bg-mid-dark-grey text-light-grey rounded-2xl focus:outline-none flex-1"
             />
         </div>
         <button

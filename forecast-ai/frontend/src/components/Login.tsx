@@ -54,7 +54,7 @@ const Login: React.FC = () => {
                 navigate("/"); // Navigate to home page after login
             } else {
                 // If the email is not verified, set the error message
-                setLoginError('User not email verified. Please check your inbox to verify your email.');
+                setLoginError('User is not email verified. Please check your inbox to verify your email.');
             }
         } catch (error: any) {
             setLoginError('Login failed. Please try again.');
@@ -82,7 +82,7 @@ const Login: React.FC = () => {
                 {/* Logo and Title */}
                 <div className="flex items-center space-x-4 center-mobile">
                     <img src={OwlLogo} alt="logo" className="w-12 h-12" />
-                    <h1 className="text-3xl text-title-light-grey font-light">forecastAI</h1>
+                    <h1 className="text-3xl text-light-grey font-light">forecastAI</h1>
                 </div>
 
                 {/* Input Fields */}
@@ -139,7 +139,7 @@ const Login: React.FC = () => {
 
 
                 {/* Or Text */}
-                <div className="text-xl font-light text-title-light-grey">or</div>
+                <div className="text-xl font-light text-light-grey">or</div>
 
                 {/* Sign in with Google */}
                 <button
@@ -155,7 +155,7 @@ const Login: React.FC = () => {
                     {/* Learn More Button */}
                     <button  
                         onClick={() => navigate("/learn-more")}
-                        className="px-4 py-2 learn-more-button-mobile font-bold text-title-light-grey bg-black rounded-3xl transition-transform duration-300 transform hover:scale-105 hover:shadow-lg"
+                        className="px-4 py-2 learn-more-button-mobile font-bold text-light-grey bg-black rounded-3xl transition-transform duration-300 transform hover:scale-105 hover:shadow-lg"
                     >
                         learn more
                     </button>
@@ -163,7 +163,7 @@ const Login: React.FC = () => {
                     <div className="flex space-x-2">
                         <button 
                             onClick={() => navigate("/signup")}
-                            className="px-4 py-2 signup-login-button-mobile font-bold bg-white text-light-purple border border-light-purple rounded-3xl transition-transform duration-300 transform hover:scale-105 hover:shadow-lg"
+                            className="px-4 py-2 signup-login-button-mobile font-bold bg-white text-logo-purple border border-logo-purple rounded-3xl transition-transform duration-300 transform hover:scale-105 hover:shadow-lg"
                         >
                             Sign Up
                         </button>

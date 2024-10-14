@@ -127,7 +127,7 @@ const MainContainer: React.FC = () => {
           <Sidebar newChatId={chatId} />
           <div className="flex flex-col flex-grow">
             <HeaderBar title={chatTitle} />
-            <MainContent chats={chats} saveChatToDB={saveChatToDB} addQuery={addQuery} addSources={addSources} addError={addError} toggleLoading={toggleLoading} />
+            <MainContent chats={chats} setChatTitle={setChatTitle} saveChatToDB={saveChatToDB} addQuery={addQuery} addSources={addSources} addError={addError} toggleLoading={toggleLoading} />
           </div>
         </div>
       </div>

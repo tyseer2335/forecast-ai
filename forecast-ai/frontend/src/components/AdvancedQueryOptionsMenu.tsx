@@ -24,7 +24,13 @@ const AdvancedQueryOptionsMenu: React.FC<AdvancedQueryOptionsMenuProps> = ({ isM
 
     const menuRef = useRef<HTMLDivElement | null>(null);
 
+    const handleClose = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+        e.preventDefault();
+        setIsMenuOpen(false);
+    }
+
     const handleApply = (e: React.MouseEvent<HTMLButtonElement>) => {
+        e.preventDefault();
         setRequest(prevRequest => ({
             ...prevRequest,
             before_ranking_num_articles: totalSourcesToCollect,
@@ -96,7 +102,7 @@ const AdvancedQueryOptionsMenu: React.FC<AdvancedQueryOptionsMenuProps> = ({ isM
         <div ref={menuRef} className={`w-[480px] h-[40vh] bg-query-options-menu-bg py-5 px-4 pb-10 flex flex-col space-y-4 justify-center items-center absolute top-[-41vh] overflow-y-auto ${!isMenuOpen && 'opacity-0'}`}>
             <div className="w-full h-[10%] flex justify-between items-center">
                 <h1 className="text-sm text-metrics-text font-bold">Advanced Query Options</h1>
-                <button onClick={e => setIsMenuOpen(false)}>
+                <button onClick={handleClose}>
                     <img src={CloseMenuButton} alt="close-menu-btn" className="w-[12px] h-[12px]" />
                 </button>
             </div>

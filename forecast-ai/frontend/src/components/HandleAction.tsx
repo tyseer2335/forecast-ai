@@ -53,9 +53,9 @@ const HandleAction: React.FC = () => {
   return (
     <div className="min-h-screen bg-screen-black flex items-center justify-center font-inter">
       <div className="flex flex-col items-center space-y-6 w-1/3">
-        <h2 className="text-3xl text-title-light-grey font-light text-center">Processing your request...</h2>
+        <h2 className="text-3xl text-light-grey font-light text-center">Processing your request...</h2>
         {message && (
-          <p className="text-base font-light text-title-light-grey text-center">
+          <p className="text-base font-light text-light-grey text-center">
             {message}
           </p>
         )}
