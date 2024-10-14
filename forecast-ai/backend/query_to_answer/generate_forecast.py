@@ -1,0 +1,158 @@
+import model.forecast_request
+import model.article
+
+
+def generate_forecast(request: model.forecast_request.ForecastRequest, news: dict[str, list[model.article.Article]]) \
+        -> dict:
+    """
+    Generate forecast based on the news articles collected.
+
+    :param request: The ForecastRequest object
+    :param news: The news articles collected per source
+    :return: The forecast answer
+    """
+    mockup_answer = {
+        "Question ID": "IFP-1459",
+        "Question": "Will Goodluck Jonathan vacate the office of President of Nigeria before 10 June 2015?",
+        "Forecaster ID": "007",
+        "Forecaster Rationale": "By default, I assume that the incumbent will stay in power. Sifting through news for "
+                                "Nigeria is tough - there is sooo much coverage and I don't know the biases of each "
+                                "outlet.\n\nThis paper - the 6th most read, according to their banner - is very "
+                                "confident that he'll be re-elected.\n\nI will start aggressive and walk back if "
+                                "polls start to appear indicating that he has real competition.\n\nRight now, "
+                                "I'd put irreducible uncertainty at 8% (illness, scandal), but I don't have a very "
+                                "scientific rationale for that number.",
+        "Forecast": "8%",
+        "Crowd forecast": "29%",
+        "Ground truth label": "Yes",
+        "llm_features": {
+            "feature1_status_quo_bias": [
+                0.95,
+                0.95,
+                0.95,
+                0.95,
+                0.95,
+                0.95,
+                0.95,
+                0.95,
+                0.95,
+                0.95,
+                0.95,
+                0.95,
+                0.95,
+                0.95,
+                0.95,
+                0.95,
+                0.95,
+                0.95,
+                0.95,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+            ],
+            "feature2_overconfidence_bias": [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+            ]
+        }
+    }
+
+    return {
+        "answer": mockup_answer,
+        "sources": news
+    }
