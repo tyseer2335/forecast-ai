@@ -2,68 +2,137 @@
 import React, { useState } from "react";
 import HeaderBar from "./HeaderBar";
 import MainContent from "./MainContent";
-
-export type Metric = {
-    viewsCount: number,
-    trendingRate: number,
-    region: string
-}
-
-export type Source = {
-    title: string;
-    text: string;
-    image: string;
-    link: string;
-    logo: string;
-    metrics: Metric;
-}
-
-export type Chat = {
-    query: string;
-    sources: Source[];
-    error?: string;
-    loading: boolean;
-}
+import Sidebar from "./Sidebar";
+import { Chat, SourceObject } from "../hooks/types";
+import { auth } from "./firebase";
+import useSaveChat from "../hooks/saveChat/useSaveChat";
+import { doc, getDoc } from "firebase/firestore";
+import { getFirestore } from "firebase/firestore";
+import { DocumentReference, DocumentData } from "@firebase/firestore";
+import { useNavigate } from "react-router-dom";
+import { useEffect } from "react";
 
 const MainContainer: React.FC = () => {
-    const [chats, setChats] = useState<Chat[]>([]);
+  const db = getFirestore();
+  const navigate = useNavigate();
+  const saveChat = useSaveChat();
+  var [chats, setChats] = useState<Chat[]>([]);
+  var userId = auth.currentUser?.uid;
+  var chatId = localStorage.getItem("selectedChatId");
+    
+  const [chatTitle, setChatTitle] = useState<string>("New Chat");
 
-    const addQuery = (query: string) => {
-        setChats((prevChats): Chat[] => {
-            return [...prevChats, { query: query, sources: [], loading: true }];
-        })
-    };
+  // Sync User Login
+  useEffect(() => {
+    if (!auth.currentUser) {
+      console.error("User not logged in.");
+      navigate("/login");
+      return;
+    } 
+    userId = auth.currentUser.uid;
+  }, [auth]);
 
-    const addSources = (sources: Source[]) => {
-        setChats((prevChats): Chat[] => {
-            const newChats = [...prevChats];
-            newChats[newChats.length - 1] = { ...newChats[newChats.length - 1], sources: sources };
-            return newChats
-        })
+  // Selected Chat Id
+  useEffect(() => {
+    if (!localStorage.getItem("selectedChatId")) {
+        setChats([]);
+        setChatTitle("New Chat");
+    } else {
+        chatId = localStorage.getItem("selectedChatId");
+        if (userId && chatId) {
+            const chatRef : DocumentReference<DocumentData, DocumentData> = doc(db, "Users", userId, "Chats", chatId);
+            fetchChatDoc(chatRef);
+        }
+    }
+  }, [localStorage["selectedChatId"]]);
+
+  // =============== Helper Functions ===============
+  // I. fetchChatDoc: Fetch Doc and Extract Title & Messages
+  // II. addQuery(query): Add Query to DB
+  // ================================================
+
+  const fetchChatDoc = async (chatRef: DocumentReference) => {
+    
+    // 1. chatRef --> chatDoc
+    const chatDoc = await getDoc(chatRef);
+    if (!chatDoc.exists()) {
+        console.error("Chat document does not exist.");
+        return;
     }
 
-    const addError = (error: string) => {
-        setChats((prevChats): Chat[] => {
-            const newChats = [...prevChats];
-            newChats[newChats.length - 1] = { ...newChats[newChats.length - 1], error: error };
-            return newChats
-        })
-    }
+    // 2. Data Extraction (Title, Messages)
+    const data = chatDoc.data();
+    setChatTitle(data.title);
+    const messages = data.messages;
 
-    const toggleLoading = (loading: boolean) => {
-        setChats((prevChats): Chat[] => {
-            const newChats = [...prevChats];
-            newChats[newChats.length - 1] = { ...newChats[newChats.length - 1], loading: loading };
-            return newChats
-        })
+    // 3. Convert the messages array to chats array as discussed
+    var tempChats: Chat[] = [];
+    var tempChat = { query: "", sources: [], loading: false };
+    for (let i = 0; i < messages.length; i++) {
+        if (messages[i].sender === "user") {
+          tempChat.query = messages[i].content;
+        } else {
+          tempChat.sources = messages[i].content;
+          tempChats.push(tempChat);
+          tempChat = { query: "", sources: [], loading: false };
+        }
     }
+    setChats(tempChats);
+  }
 
-    return (
-        <div className="h-screen bg-screen-black text-white flex flex-col font-inter">
-            <HeaderBar title={chats.length > 0 ? chats[0].query : ''} />
-            <MainContent chats={chats} addQuery={addQuery} addSources={addSources} addError={addError} toggleLoading={toggleLoading} />
+  const saveChatToDB = async (chat: Chat) => {
+    userId = auth.currentUser?.uid ?? "";
+    chatId = localStorage.getItem("selectedChatId") ?? "";
+    saveChat(userId, chatId, chat.query, chat.sources);
+    chatId = localStorage.getItem("selectedChatId");
+    if (userId && chatId) {
+      const chatRef : DocumentReference<DocumentData, DocumentData> = doc(db, "Users", userId, "Chats", chatId);
+      fetchChatDoc(chatRef);
+    }
+  };
+
+  const addQuery = (query: string) => {
+      setChats((prevChats): Chat[] => {
+          return [...prevChats, { query: query, sources: [], loading: true }];
+      })
+  };
+
+  const addSources = (sources: SourceObject[]) => {
+      setChats((prevChats): Chat[] => {
+          const newChats = [...prevChats];
+          newChats[newChats.length - 1] = { ...newChats[newChats.length - 1], sources: sources };
+          return newChats
+      })
+  }
+
+  const addError = (error: string) => {
+      setChats((prevChats): Chat[] => {
+          const newChats = [...prevChats];
+          newChats[newChats.length - 1] = { ...newChats[newChats.length - 1], error: error };
+          return newChats
+      })
+  }
+
+  const toggleLoading = (loading: boolean) => {
+      setChats((prevChats): Chat[] => {
+          const newChats = [...prevChats];
+          newChats[newChats.length - 1] = { ...newChats[newChats.length - 1], loading: loading };
+          return newChats
+      })
+  }
+
+  return (
+      <div className="h-screen flex flex-col bg-screen-black text-white font-inter">
+        <div className="flex flex-grow">
+          <Sidebar newChatId={chatId} />
+          <div className="flex flex-col flex-grow">
+            <HeaderBar title={chatTitle} />
+            <MainContent chats={chats} saveChatToDB={saveChatToDB} addQuery={addQuery} addSources={addSources} addError={addError} toggleLoading={toggleLoading} />
+          </div>
         </div>
-    )
+      </div>
+    );
+      
 }
 
 export default MainContainer;

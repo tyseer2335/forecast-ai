@@ -1,9 +1,9 @@
 // src/components/SourceCard.tsx
 import React from "react";
-import { Source } from "./MainContainer";
+import { SourceObject } from "../hooks/types";
 
 type SourceCardProps = {
-    source: Source;
+    source: SourceObject;
 }
 
 const SourceCard: React.FC<SourceCardProps> = ({ source }) => {

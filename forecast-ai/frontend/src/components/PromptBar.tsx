@@ -1,14 +1,17 @@
-// components/PromptBar.js
+// components/PromptBar.tsx
 import React, { useState } from "react";
-import axios from "axios";
 import OptionsButton from "../assets/options-button.svg";
 import SubmitButton from "../assets/submit-button.svg";
+import { useNavigate } from "react-router-dom";
+import { auth } from "./firebase";
 import AdvancedQueryOptionsMenu from "./AdvancedQueryOptionsMenu";
-import { Source } from "./MainContainer";
+import { Chat, SourceObject } from "../hooks/types";
+import axios from "axios";
 
 type PromptBarProps = {
+  saveChatToDB: (chat: Chat) => void;
   addQuery: (query: string) => void;
-  addSources: (sources: Source[]) => void;
+  addSources: (sources: SourceObject[]) => void;
   addError: (error: string) => void;
   toggleLoading: (loading: boolean) => void;
 }
@@ -23,14 +26,22 @@ export type Request = {
   end_date?: string;
 }
 
-const PromptBar: React.FC<PromptBarProps> = ({ addQuery, addSources, addError, toggleLoading }) => {
+const PromptBar: React.FC<PromptBarProps> = ({ saveChatToDB, addQuery, addSources, addError, toggleLoading }) => {
   const [input, setInput] = useState("");
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [request, setRequest] = useState<Request>({});
   const [submitRequest, setSubmitRequest] = useState(false);
 
+  const navigate = useNavigate();
+  const userId = auth.currentUser?.uid;
+
+  if (!userId) {
+    navigate("/login");
+    return null;
+  }
+
   const convertResponseSourcesIntoSources = (responseSources: any) => {
-    const result: Source[] = [];
+    const result: SourceObject[] = [];
     Object.values(responseSources).forEach((sources: any) => {
       sources.forEach((source: any) => {
         result.push({
@@ -46,8 +57,9 @@ const PromptBar: React.FC<PromptBarProps> = ({ addQuery, addSources, addError, t
     return result;
   }
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
     if (input) {
       const updatedRequest = { ...request, question: input };
       setRequest(updatedRequest);
@@ -55,10 +67,17 @@ const PromptBar: React.FC<PromptBarProps> = ({ addQuery, addSources, addError, t
       addQuery(input);
       setInput("");
       axios.post(`${process.env.REACT_APP_BACKEND_URL}/query_to_answer`, updatedRequest).then(response => {
-        addSources(convertResponseSourcesIntoSources(response.data.sources));
+        const sources = convertResponseSourcesIntoSources(response.data.sources);
+        addSources(sources);
         toggleLoading(false);
         setRequest({});
         setSubmitRequest(false);
+        try {
+          saveChatToDB({ query: input, sources: sources, loading: false })
+          navigate("/");
+        } catch(error) {
+          console.error("Error handling submit:", error);
+        }
       }).catch(error => {
         toggleLoading(false);
         addError("Error generating answer to query");

@@ -4,8 +4,11 @@ import GoogleLogo from '../assets/google-logo.svg';
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth, signInWithGoogle } from "./firebase";
 import { useNavigate, NavLink } from "react-router-dom"; 
+import { getFirestore, doc, getDoc, setDoc, serverTimestamp } from "firebase/firestore"; // Firestore imports
 import { EyeIcon, EyeSlashIcon } from '@heroicons/react/24/solid';
 import "../css/responsive-custom-css.css";
+
+const db = getFirestore(); // Initialize Firestore
 
 const Login: React.FC = () => {
     const navigate = useNavigate();
@@ -19,39 +22,57 @@ const Login: React.FC = () => {
         setShowPassword(!showPassword);
     };
 
-    const onLogin = (e: React.FormEvent) => {
+    // Function to check if the user has a Firestore document
+    const checkAndCreateUserDocument = async (userId: string, email: string) => {
+        const userDocRef = doc(db, "Users", userId);
+        const userDoc = await getDoc(userDocRef);
+
+        if (!userDoc.exists()) {
+            // If the user document doesn't exist, create it
+            await setDoc(userDocRef, {
+                email: email,
+                createdAt: serverTimestamp() 
+            });
+            console.log("User document created for:", email);
+        } else {
+            console.log("User document already exists for:", email);
+        }
+    };
+
+    // Login with email and password
+    const onLogin = async (e: React.FormEvent) => {
         e.preventDefault();
         setLoginError(''); // Clear any previous error
-    
-        signInWithEmailAndPassword(auth, email, password)
-            .then((userCredential) => {
-                // Signed in
-                const user = userCredential.user;
-    
-                // Check if the user's email is verified
-                if (user.emailVerified) {
-                    navigate("/"); // Redirect after successful sign in
-                } else {
-                    // If the email is not verified, set the error message
-                    setLoginError('User not email verified. Please check your inbox to verify your email.');
-                }
-            })
-            .catch((error) => {
-                setLoginError('Login failed. Please try again.');
-                console.log(error.code, error.message);
-            });
+        try {
+            const userCredential = await signInWithEmailAndPassword(auth, email, password);
+            const user = userCredential.user;
+            // Check if the user's email is verified
+            if (user.emailVerified) {
+                console.log("User logged in:", user);
+                // Check if a user document exists and create one if it doesn't
+                await checkAndCreateUserDocument(user.uid, user.email || "");
+                navigate("/"); // Navigate to home page after login
+            } else {
+                // If the email is not verified, set the error message
+                setLoginError('User not email verified. Please check your inbox to verify your email.');
+            }
+        } catch (error: any) {
+            setLoginError('Login failed. Please try again.');
+            console.log(error.code, error.message);
+        }
     };
-    
-    
 
-    const onGoogleLogin = () => {
-        signInWithGoogle()
-            .then(() => {
-                navigate("/");
-            })
-            .catch((error: any) => {
-                console.log(error);
-            });
+    const onGoogleLogin = async () => {
+        try {
+            const result = await signInWithGoogle(); // signInWithGoogle returns UserCredential
+            const user = result.user; // Access user from result
+            console.log("Google login successful:", user);
+            // Check if a user document exists and create one if it doesn't
+            await checkAndCreateUserDocument(user.uid, user.email || "");
+            navigate("/");
+        } catch (error: any) {
+            console.log("Google login error:", error);
+        }
     };
 
     return (
@@ -121,7 +142,7 @@ const Login: React.FC = () => {
                 <div className="text-xl font-light text-title-light-grey">or</div>
 
                 {/* Sign in with Google */}
-                <button 
+                <button
                     onClick={onGoogleLogin}
                     className="flex items-center justify-center space-x-2 px-4 py-2 bg-white text-black rounded-3xl w-72"
                 >
