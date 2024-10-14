@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom'; 
+import { applyActionCode } from "firebase/auth";  
+import { auth } from "./firebase";
 
 const HandleAction: React.FC = () => {
   const location = useLocation();
@@ -36,14 +38,15 @@ const HandleAction: React.FC = () => {
 
   // Handle email verification
   const handleEmailVerification = async (code: string) => {
-    try {
+    try { 
+      await applyActionCode(auth, code);
       // Insert email verification logic here
       setMessage('Email successfully verified! Redirecting to sign in...');
       setTimeout(() => {
         navigate('/login'); // Redirect to login after verification
       }, 3000);
-    } catch (error) {
-      setMessage('Failed to verify email. Please try again.');
+    } catch (error) { 
+      console.log('Failed to verify email. Please try again.')
     }
   };
 

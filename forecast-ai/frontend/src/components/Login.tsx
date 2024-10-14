@@ -22,19 +22,27 @@ const Login: React.FC = () => {
     const onLogin = (e: React.FormEvent) => {
         e.preventDefault();
         setLoginError(''); // Clear any previous error
-
+    
         signInWithEmailAndPassword(auth, email, password)
             .then((userCredential) => {
                 // Signed in
                 const user = userCredential.user;
-                navigate("/");
-                console.log(user);
+    
+                // Check if the user's email is verified
+                if (user.emailVerified) {
+                    navigate("/"); // Redirect after successful sign in
+                } else {
+                    // If the email is not verified, set the error message
+                    setLoginError('User not email verified. Please check your inbox to verify your email.');
+                }
             })
             .catch((error) => {
                 setLoginError('Login failed. Please try again.');
                 console.log(error.code, error.message);
             });
     };
+    
+    
 
     const onGoogleLogin = () => {
         signInWithGoogle()
@@ -99,12 +107,15 @@ const Login: React.FC = () => {
                 {loginError && (
                     <div className="text-red-600 text-sm text-center">
                         {loginError}
-                        <span>
-                            {' '}
-                            <NavLink to="/recover-password" className="text-indigo-600 hover:text-indigo-500">Forgot Password?</NavLink>
-                        </span>
+                        {loginError !== 'User not email verified. Please check your inbox to verify your email.' && (
+                            <span>
+                                {' '}
+                                <NavLink to="/recover-password" className="text-indigo-600 hover:text-indigo-500">Forgot Password?</NavLink>
+                            </span>
+                        )}
                     </div>
                 )}
+
 
                 {/* Or Text */}
                 <div className="text-xl font-light text-title-light-grey">or</div>
