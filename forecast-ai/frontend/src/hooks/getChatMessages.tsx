@@ -1,6 +1,6 @@
 // src/hooks/getChatMessages.tsx
-import { SourceObject, Message } from "./types";
-import { doc, collection, addDoc, getFirestore, getDoc } from "firebase/firestore";
+import { Message } from "./types";
+import { doc, getFirestore, getDoc } from "firebase/firestore";
   
 export const getChatMessages = async (userId: string | undefined, chatId: string | null) => {
   const db = getFirestore();

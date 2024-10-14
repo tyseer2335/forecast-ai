@@ -2,7 +2,6 @@
 import React, { useState } from "react";
 import OptionsButton from "../assets/options-button.svg";
 import SubmitButton from "../assets/submit-button.svg";
-import useSaveChat from "../hooks/saveChat/useSaveChat";
 import { useNavigate } from "react-router-dom";
 import { auth } from "./firebase";
 import AdvancedQueryOptionsMenu from "./AdvancedQueryOptionsMenu";
