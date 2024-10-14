@@ -2,7 +2,6 @@
 import React, { useState } from "react";
 import OptionsButton from "../assets/options-button.svg";
 import SubmitButton from "../assets/submit-button.svg";
-import useSaveChat from "../hooks/saveChat/useSaveChat";
 import { useNavigate } from "react-router-dom";
 import { auth } from "./firebase";
 import AdvancedQueryOptionsMenu from "./AdvancedQueryOptionsMenu";
@@ -29,8 +28,6 @@ const PromptBar: React.FC<PromptBarProps> = ({ addQuery }) => {
 
   const navigate = useNavigate();
   const userId = auth.currentUser?.uid;
-  const selectedChatId = localStorage.getItem("selectedChatId");
-  const saveChat = useSaveChat(userId || "", selectedChatId);
 
   if (!userId) {
     navigate("/login");
@@ -57,6 +54,7 @@ const PromptBar: React.FC<PromptBarProps> = ({ addQuery }) => {
         // Update the UI
         addQuery(input);
         setInput("");
+        navigate("/");
       } catch (error) {
         console.error("Error handling submit:", error);
       }

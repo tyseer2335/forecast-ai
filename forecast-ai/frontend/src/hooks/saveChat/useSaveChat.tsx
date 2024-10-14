@@ -3,14 +3,15 @@ import { _saveUserMessage } from "./_saveUserMessage";
 import { _saveAISourcesMessage } from "./_saveAISourcesMessage";
 import { SourceObject } from "../types";
 import { doc, collection, addDoc, getFirestore } from "firebase/firestore";
+import { useNavigate } from "react-router-dom";
 
-
-const useSaveChat = (userId: string, chatId: string | null) => {
+const useSaveChat = () => {
   const db = getFirestore();
-  const saveChat = async (messageContent: string, dummySources: SourceObject[]) => {
+  const navigate = useNavigate();
+  const saveChat = async (userId: string, chatId: string, messageContent: string, dummySources: SourceObject[]) => {
     try {
       // 1. Get the chat reference
-      const chatRef = chatId 
+      var chatRef = chatId 
         ? doc(db, "Users", userId, "Chats", chatId) 
         : await addDoc(collection(db, "Users", userId, "Chats"), {
             title: messageContent,
@@ -18,7 +19,7 @@ const useSaveChat = (userId: string, chatId: string | null) => {
             created_at: new Date(),
             updated_at: new Date(),
           });
-     localStorage.setItem("selectedChatId", chatRef.id);
+      localStorage.setItem("selectedChatId", chatRef.id);
 
       // 2. Update the 'messages' array with the new message
       _saveUserMessage(chatRef, messageContent);
@@ -26,7 +27,7 @@ const useSaveChat = (userId: string, chatId: string | null) => {
       // 3. Save the AI source message
       _saveAISourcesMessage(chatRef, dummySources);
       
-      console.log("Chat document updated.");
+      navigate("/");
     } catch (e) {
       console.error("Error updating chat document: ", e);
     }

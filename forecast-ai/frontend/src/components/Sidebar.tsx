@@ -5,13 +5,24 @@ import OwlLogo from '../assets/owl.svg';
 import SettingsLogo from '../assets/settings.svg';
 import { auth } from './firebase';
 
-const Sidebar: React.FC = () => {
+type SidebarProps = {
+  newChatId: string | null;
+}
+
+const Sidebar: React.FC<SidebarProps> = ({ newChatId }) => {
   const db = getFirestore();
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [chats, setChats] = useState<any[]>([]);
   const navigate = useNavigate();
   const userId = auth.currentUser?.uid;
-  const [selectedChatId, setSelectedChatId] = useState<string | null>(null);
+  var [selectedChatId, setSelectedChatId] = useState<string | null>(localStorage.getItem('selectedChatId') ?? null);
+
+  useEffect(() => {
+    if (newChatId) {
+      setSelectedChatId(newChatId);
+      localStorage.setItem('selectedChatId', newChatId);
+    }
+  }, [newChatId]);
 
   useEffect(() => {
     if (!userId) {
@@ -102,12 +113,15 @@ const Sidebar: React.FC = () => {
   const handleChatClick = (chatId: string) => {
     if (chatId === selectedChatId) {
       setSelectedChatId(null);
-      localStorage.removeItem('selectedChatId');
-      return;
+      localStorage.setItem('selectedChatId', "");
+      // Need to reload the MainContainer component to clear the chat content
+
+    } else {
+      setSelectedChatId(chatId);
+      localStorage.setItem('selectedChatId', chatId);
+      
     }
-    setSelectedChatId(chatId);
-    localStorage.setItem('selectedChatId', chatId);
-    // navigate(`/chat/${chatId}`); TODO: Not sure how chat page is implemented -- Will be tested later
+    navigate('/');
   };
 
   return (
