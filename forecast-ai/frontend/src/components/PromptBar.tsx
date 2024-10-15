@@ -85,7 +85,8 @@ const PromptBar: React.FC<PromptBarProps> = ({ chats, setChatTitle, saveChatToDB
         }
       }).catch(error => {
         toggleLoading(false);
-        addError("Error generating answer to query");
+        const errorMessage = error.response.data.detail || "Error generating answer to query";
+        addError(errorMessage);
       });
     }
   };

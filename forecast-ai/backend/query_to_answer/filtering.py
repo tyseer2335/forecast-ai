@@ -51,7 +51,10 @@ def sort_and_filter(articles: dict[str, list[Article]], n: int, percentage_per_s
     # return N most relevant articles
     filtered_articles = {}
     for source in articles.keys():
-        sorted_articles = sorted(articles[source], key=lambda article: article.score, reverse=True)
-        num_articles = n * percentage_per_source[source]
-        filtered_articles[source] = sorted_articles[:int(num_articles)]
+        try:
+            sorted_articles = sorted(articles[source], key=lambda article: article.score, reverse=True)
+            num_articles = n * percentage_per_source[source]
+            filtered_articles[source] = sorted_articles[:int(num_articles)]
+        except Exception as e:
+            raise Exception(f"Error sorting and filtering articles: {str(e)}")
     return filtered_articles
