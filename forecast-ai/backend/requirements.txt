@@ -8,3 +8,4 @@ html2text==2024.2.26
 selenium==4.25.0
 requests==2.28.1
 beautifulsoup4==4.12.3
+coloredlogs==15.0.1
