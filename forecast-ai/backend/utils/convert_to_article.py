@@ -52,4 +52,14 @@ def dict_to_article(article_dict: dict) -> dict:
                 res[article['platform']] = [Article(**article)]  # **article is unpacking the dictionary
             else:
                 res[article['platform']].append(Article(**article))
+    # {'x.com US 2024 election predictions': [<model.article.Article at 0x1f2e4ed7cd0>,
+    #   <model.article.Article at 0x1f2e691fcd0>],
+    #  'facebook.com US 2024 election forecasts': [<model.article.Article at 0x1f2e6962950>,
+    #   <model.article.Article at 0x1f2e6aec750>],
+    #  'automatic': [<model.article.Article at 0x1f2e6ae3810>,
+    #   <model.article.Article at 0x1f2e6ae3250>,
+    #   <model.article.Article at 0x1f2e6a2fe10>]}
+    # We only want site name to be key; rename them
+    res = {key.split(' ')[0]: value for key, value in res.items()}
+
     return res
