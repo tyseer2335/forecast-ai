@@ -15,6 +15,8 @@ def unit_test_all():
     client, LOCAL_OR_PROD = test_env_var()
     request = test_create_request()
     search_queries = test_generate_search_queries(client, request)
+    news = test_collect_news(search_queries, request)
+    news_with_content = test_scrapping_content(news, LOCAL_OR_PROD)
 
 
 def test_env_var() -> tuple[OpenAI, str]:
@@ -107,7 +109,58 @@ def test_collect_news(search_queries: dict, request: ForecastRequest) -> dict:
     assert all(isinstance(article['publisher'], dict) for value in news.values() for article in value)
     # assert total # of articles is equal to request.before_ranking_num_articles
     assert sum(len(value) for value in news.values()) == request.before_ranking_num_articles
+    logging.info(f"[test_collect_news] news: {news}")
     return news
 
+
+def test_scrapping_content(news: dict, LOCAL_OR_PROD: str) -> dict:
+    news_with_content = scrapping_content.multiple_scrape_content(news, LOCAL_OR_PROD)
+    # {'Who will win the US 2024 election site:x.com': [{'title': 'Collin Rugg (@CollinRugg) - X', 'description':
+    # 'Collin Rugg (@CollinRugg)  X', 'published date': 'Wed, 05 Jun 2024 04:45:47 GMT',
+    # 'url': 'https://news.google.com/rss/articles
+    # /CBMiPEFVX3lxTE1jbmUxZ29SdC1QR3BmZUc3UWc0aTlYT1FIRWNWbER1aFJvdFNRQVdFTC1Zbm02eDVkUHQyRA?oc=5&hl=en-CA&gl=CA
+    # &ceid=CA:en', 'publisher': {'href': 'https://x.com', 'title': 'X'}, 'content': {'text': '', 'media': []}},
+    # {'title': 'Times Algebra (@TimesAlgebraIND) on X - X', 'description': 'Times Algebra (@TimesAlgebraIND) on X
+    # X', 'published date': 'Sun, 13 Oct 2024 08:30:35 GMT', 'url':
+    # 'https://news.google.com/rss/articles
+    # /CBMiPEFVX3lxTE1jbmUxZ29SdC1QR3BmZUc3UWc0aTlYT1FIRWNWbER1aFJvdFNRQVdFTC1Zbm02eDVkUHQyRA?oc=5&hl=en-CA&gl=CA
+    # &ceid=CA:en', 'publisher': {'href': 'https://x.com', 'title': 'X'}, 'content': {'text': '', 'media': []}},
+    # ... 'Who will win the US 2024 election site:facebook.com': [{'title': 'Heather Cox Richardson - Facebook',
+    # 'description': 'Heather Cox Richardson  Facebook',
+    assert isinstance(news_with_content, dict)
+    assert all(isinstance(key, str) for key in news_with_content.keys())
+    assert all(isinstance(value, list) for value in news_with_content.values())
+    assert all(isinstance(article, dict) for value in news_with_content.values() for article in value)
+    assert all('title' in article for value in news_with_content.values() for article in value)
+    assert all('description' in article for value in news_with_content.values() for article in value)
+    assert all('published date' in article for value in news_with_content.values() for article in value)
+    assert all('url' in article for value in news_with_content.values() for article in value)
+    assert all('publisher' in article for value in news_with_content.values() for article in value)
+    assert all(isinstance(article['publisher'], dict) for value in news_with_content.values() for article in value)
+    assert all('content' in article for value in news_with_content.values() for article in value)
+    assert all(isinstance(article['content'], dict) for value in news_with_content.values() for article in value)
+    assert all('text' in article['content'] for value in news_with_content.values() for article in value)
+    assert all('media' in article['content'] for value in news_with_content.values() for article in value)
+    logging.info(f"[test_scrapping_content] news_with_content: {news_with_content}")
+    return news_with_content
+
+
+def test_convert_to_article(news_with_content: dict) -> dict:
+    news_objects = convert_to_article.dict_to_article(news_with_content)
+    # {'x.com': [<model.article.Article at 0x22948f6bc50>,
+    #            <model.article.Article at 0x22948f6b6d0>],
+    #  'facebook.com': [<model.article.Article at 0x22948f6b510>,
+    #                   <model.article.Article at 0x22948f6bc10>],
+    #  'automatic': [<model.article.Article at 0x22948f6ba50>,
+    #                <model.article.Article at 0x22948eaff50>,
+    #                <model.article.Article at 0x22948eac790>,
+    #                <model.article.Article at 0x22948ead350>,
+    #                <model.article.Article at 0x22948eac8d0>,
+    #                <model.article.Article at 0x22948ead950>]}
+    assert isinstance(news_objects, dict)
+    assert all(isinstance(key, str) for key in news_objects.keys())
+    assert all(isinstance(value, list) for value in news_objects.values())
+    assert all(isinstance(article, Article) for value in news_objects.values() for article in value)
+    logging.info(f"[test_convert_to_article] news_objects: {news_objects}")
 
 
