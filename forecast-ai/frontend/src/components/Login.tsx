@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import OwlLogo from '../assets/owl.svg';
 import GoogleLogo from '../assets/google-logo.svg';
 import { signInWithEmailAndPassword } from "firebase/auth";
@@ -16,6 +16,10 @@ const Login: React.FC = () => {
     const [password, setPassword] = useState("");
     const [loginError, setLoginError] = useState(""); // State for handling login errors
     const [showPassword, setShowPassword] = useState(false); // State for toggling password visibility
+
+    useEffect(() => {
+        localStorage.clear();
+    }, []);
 
     // Function to toggle password visibility
     const togglePasswordVisibility = () => {
