@@ -1,23 +1,33 @@
 import os
+import logging
+import coloredlogs
 from dotenv import load_dotenv
 from openai import OpenAI
 from query_to_answer import break_down_query, collect_news, scrapping_content, filtering, generate_forecast
 from utils import convert_to_article
 from model.forecast_request import ForecastRequest
 from model.article import Article
-import logging
+
+# Configure logging with green success messages
+coloredlogs.install(fmt='%(asctime)s [%(levelname)s] %(message)s', level='INFO')
+logging.basicConfig(level=logging.INFO)
 
 
 def unit_test_all():
-    client, LOCAL_OR_PROD = test_env_var()
-    request = test_create_request()
-    search_queries = test_generate_search_queries(client, request)
-    news = test_collect_news(search_queries, request)
-    news_with_content = test_scrapping_content(news, LOCAL_OR_PROD)
-    news_objects = test_convert_to_article(news_with_content)
-    test_get_relevance_score(news_objects, request, client)
-    ranked_news_with_content = test_sort_and_filter(news_objects, request)
-    test_generate_forecast(request, ranked_news_with_content)
+    try:
+        client, LOCAL_OR_PROD = test_env_var()
+        request = test_create_request()
+        search_queries = test_generate_search_queries(client, request)
+        news = test_collect_news(search_queries, request)
+        news_with_content = test_scrapping_content(news, LOCAL_OR_PROD)
+        news_objects = test_convert_to_article(news_with_content)
+        test_get_relevance_score(news_objects, request, client)
+        ranked_news_with_content = test_sort_and_filter(news_objects, request)
+        test_generate_forecast(request, ranked_news_with_content)
+        logging.info("\033[92m[Unit Test Success]\033[0m All tests passed successfully.")
+    except AssertionError as e:
+        logging.error(f"[Unit Test Failed] {e}")
+        raise
 
 
 def test_env_var() -> tuple[OpenAI, str]:
@@ -28,7 +38,7 @@ def test_env_var() -> tuple[OpenAI, str]:
     assert isinstance(OPENAI_API_KEY, str)
     assert isinstance(client, OpenAI)
     assert isinstance(LOCAL_OR_PROD, str) and (LOCAL_OR_PROD == 'local' or LOCAL_OR_PROD == 'prod')
-    logging.info(f"[test_env_var] client: {client}, LOCAL_OR_PROD: {LOCAL_OR_PROD}")
+    logging.info(f"\033[92m[test_env_var] client: {client}, LOCAL_OR_PROD: {LOCAL_OR_PROD}\033[0m")
     return client, LOCAL_OR_PROD
 
 
@@ -48,7 +58,7 @@ def test_create_request() -> ForecastRequest:
     assert request.after_ranking_num_articles == 5
     assert request.start_date is None
     assert request.end_date is None
-    logging.info(f"[test_create_request] request: {request}")
+    logging.info(f"\033[92m[test_create_request] request: {request}\033[0m")
     return request
 
 
@@ -74,7 +84,7 @@ def test_generate_search_queries(client, request: ForecastRequest) -> dict:
     assert isinstance(search_queries['queries'], list)
     assert len(search_queries['queries']) == request.num_queries
     assert all(isinstance(query, str) for query in search_queries['queries'])
-    logging.info(f"[test_generate_search_queries] search_queries: {search_queries}")
+    logging.info(f"\033[92m[test_generate_search_queries] search_queries: {search_queries}\033[0m")
     return search_queries
 
 
@@ -110,7 +120,7 @@ def test_collect_news(search_queries: dict, request: ForecastRequest) -> dict:
     assert all(isinstance(article['publisher'], dict) for value in news.values() for article in value)
     # assert total # of articles is equal to request.before_ranking_num_articles
     assert sum(len(value) for value in news.values()) == request.before_ranking_num_articles
-    logging.info(f"[test_collect_news] news: {news}")
+    logging.info(f"\033[92m[test_collect_news] news: {news}\033[0m")
     return news
 
 
@@ -142,7 +152,7 @@ def test_scrapping_content(news: dict, LOCAL_OR_PROD: str) -> dict:
     assert all(isinstance(article['content'], dict) for value in news_with_content.values() for article in value)
     assert all('text' in article['content'] for value in news_with_content.values() for article in value)
     assert all('media' in article['content'] for value in news_with_content.values() for article in value)
-    logging.info(f"[test_scrapping_content] news_with_content: {news_with_content}")
+    logging.info(f"\033[92m[test_scrapping_content] news_with_content: {news_with_content}\033[0m")
     return news_with_content
 
 
@@ -162,7 +172,7 @@ def test_convert_to_article(news_with_content: dict) -> dict:
     assert all(isinstance(key, str) for key in news_objects.keys())
     assert all(isinstance(value, list) for value in news_objects.values())
     assert all(isinstance(article, Article) for value in news_objects.values() for article in value)
-    logging.info(f"[test_convert_to_article] news_objects: {news_objects}")
+    logging.info(f"\033[92m[test_convert_to_article] news_objects: {news_objects}\033[0m")
     return news_objects
 
 
@@ -170,7 +180,7 @@ def test_get_relevance_score(news_objects: dict, request: ForecastRequest, clien
     filtering.get_relevance_score(news_objects, request.question, client)
     # update self.score
     assert all(isinstance(article.score, float) for value in news_objects.values() for article in value)
-    logging.info(f"[test_get_relevance_score] news_objects: {news_objects}")
+    logging.info(f"\033[92m[test_get_relevance_score] news_objects: {news_objects}\033[0m")
 
 
 def test_sort_and_filter(news_objects: dict, request: ForecastRequest) -> dict:
@@ -185,7 +195,7 @@ def test_sort_and_filter(news_objects: dict, request: ForecastRequest) -> dict:
     assert all(isinstance(key, str) for key in ranked_news_with_content.keys())
     assert all(isinstance(value, list) for value in ranked_news_with_content.values())
     assert all(isinstance(article, Article) for value in ranked_news_with_content.values() for article in value)
-    logging.info(f"[test_sort_and_filter] ranked_news_with_content: {ranked_news_with_content}")
+    logging.info(f"\033[92m[test_sort_and_filter] ranked_news_with_content: {ranked_news_with_content}\033[0m")
     return ranked_news_with_content
 
 
@@ -205,7 +215,7 @@ def test_generate_forecast(request: ForecastRequest, ranked_news_with_content: d
     assert all(isinstance(key, str) for key in answer['sources'].keys())
     assert all(isinstance(value, list) for value in answer['sources'].values())
     assert all(isinstance(article, Article) for value in answer['sources'].values() for article in value)
-    logging.info(f"[test_generate_forecast] answer: {answer}")
+    logging.info(f"\033[92m[test_generate_forecast] answer: {answer}\033[0m")
     return answer
 
 
