@@ -19,6 +19,7 @@ const Login: React.FC = () => {
 
     useEffect(() => {
         localStorage.clear();
+        auth.signOut();
     }, []);
 
     // Function to toggle password visibility
