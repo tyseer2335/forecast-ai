@@ -164,3 +164,8 @@ def test_convert_to_article(news_with_content: dict) -> dict:
     logging.info(f"[test_convert_to_article] news_objects: {news_objects}")
 
 
+def test_get_relevance_score(news_objects: dict, request: ForecastRequest, client: OpenAI):
+    filtering.get_relevance_score(news_objects, request.question, client)
+    # update self.score
+    assert all(isinstance(article.score, float) for value in news_objects.values() for article in value)
+    logging.info(f"[test_get_relevance_score] news_objects: {news_objects}")
