@@ -77,7 +77,7 @@ const ResetPassword: React.FC = () => {
       <div className="flex flex-col items-center space-y-6 w-1/3">
 
         {/* Page Title */}
-        <h1 className="text-3xl text-title-light-grey font-light text-center">Reset Password</h1>
+        <h1 className="text-3xl text-light-grey font-light text-center">Reset Password</h1>
 
         {/* Form to Enter New Password */}
         {oobCode ? (
@@ -158,7 +158,7 @@ const ResetPassword: React.FC = () => {
 
         {/* Back to Login Link */}
         {message && (
-          <p className="text-base font-light text-title-light-grey mt-4 text-center">
+          <p className="text-base font-light text-light-grey mt-4 text-center">
             <NavLink to="/login" className="font-semibold text-indigo-600 hover:text-indigo-500">
               Back to Login
             </NavLink>

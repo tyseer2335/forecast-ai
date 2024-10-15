@@ -29,7 +29,7 @@ const RequestPasswordReset: React.FC = () => {
     <div className="min-h-screen bg-screen-black flex items-center justify-center font-inter">
       <div className="flex flex-col items-center space-y-6 w-1/3">
         {/* Page Title */}
-        <h1 className="text-3xl text-title-light-grey font-light text-center">Recover Password</h1>
+        <h1 className="text-3xl text-light-grey font-light text-center">Recover Password</h1>
 
         {/* Form to Enter Email */}
         <form className="flex flex-col space-y-4 w-full" onSubmit={handlePasswordReset}>
@@ -59,7 +59,7 @@ const RequestPasswordReset: React.FC = () => {
         </form>
 
         {/* Back to Login Link */}
-        <p className="text-base font-light text-title-light-grey mt-4 text-center">
+        <p className="text-base font-light text-light-grey mt-4 text-center">
           Remember your password?{' '}
           <NavLink
             to="/login"

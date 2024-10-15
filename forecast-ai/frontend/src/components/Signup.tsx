@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { createUserWithEmailAndPassword, sendEmailVerification, getAdditionalUserInfo } from 'firebase/auth';
+import { createUserWithEmailAndPassword, sendEmailVerification } from 'firebase/auth';
 import { auth } from './firebase';
 import { useNavigate, NavLink } from 'react-router-dom'; 
+import { getFirestore, doc, setDoc } from "firebase/firestore"; // Firestore imports
 import zxcvbn from 'zxcvbn'; // Password strength checking
 import "../css/responsive-custom-css.css"; // Custom CSS File for responsiveness
 
@@ -11,6 +12,7 @@ import { EyeIcon, EyeSlashIcon } from '@heroicons/react/24/solid';
 
 const Signup: React.FC = () => {
   const navigate = useNavigate();
+  const db = getFirestore(); // Initialize Firestore
   const [email, setEmail] = useState('');
 
   // States to confirm and set password.
@@ -91,22 +93,27 @@ const Signup: React.FC = () => {
     }
 
     // If everything is valid, proceed with Firebase signup
-    await createUserWithEmailAndPassword(auth, email, password)
-      .then(async (userCredential) => {
-        const user = userCredential.user;
-        console.log('Success: User signed up successfully');
+    try {
+      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+      // Signed in
+      const user = userCredential.user;
+      console.log('Success: User signed up successfully');
 
-        // Send email verification
-        await sendEmailVerification(user).then(() => {
-          console.log('Email verification sent!');
-          // Set a custom message to notify the user to check their inbox
-          setSuccessMessage('Verification email sent. Please check your inbox.');
-        });
+      // Send email verification
+      await sendEmailVerification(user);
+      console.log('Email verification sent!');
+      setSuccessMessage('Verification email sent. Please check your inbox.');
 
-      })
-      .catch((error) => {
-        const errorCode = error.code;
-        const errorMessage = error.message;
+      // Create a document in the Users collection
+      await setDoc(doc(db, 'Users', user.uid), {
+          email: user.email,
+          created_at: new Date(),
+      });
+
+      navigate("/login"); // Navigate to login after successful sign-up
+    } catch (error) {
+        const errorCode = (error as any).code;
+        const errorMessage = (error as any).message;
 
         // Check if the error is due to email already in use
         if (errorCode === 'auth/email-already-in-use') {
@@ -116,7 +123,7 @@ const Signup: React.FC = () => {
         }
 
         console.log('Fail: Signup failed', errorCode, errorMessage);
-      });
+    }
   };
 
   return (
@@ -126,7 +133,7 @@ const Signup: React.FC = () => {
         {/* Logo and Title */}
         <div className="flex items-center space-x-4 center-mobile">
           <img src={OwlLogo} alt="logo" className="w-12 h-12" />
-          <h1 className="text-3xl text-title-light-grey font-light">forecastAI</h1>
+          <h1 className="text-3xl text-light-grey font-light">forecastAI</h1>
         </div>
 
         {/* Input Fields */}
@@ -225,7 +232,7 @@ const Signup: React.FC = () => {
         </form>
 
         {/* Sign In Link */}
-        <p className="text-base font-light text-title-light-grey mt-4">
+        <p className="text-base font-light text-light-grey mt-4">
           Already have an account?{' '}
           <NavLink
             to="/login"
@@ -236,7 +243,7 @@ const Signup: React.FC = () => {
         </p>
 
         {/* Rest Password */}
-        <p className="text-base font-light text-title-light-grey mt-4">
+        <p className="text-base font-light text-light-grey mt-4">
           {' '}
           <NavLink
             to="/recover-password"

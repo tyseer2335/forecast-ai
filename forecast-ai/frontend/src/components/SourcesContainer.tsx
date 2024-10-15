@@ -3,12 +3,12 @@ import React, { useState } from "react";
 import ScrollLeftButton from "../assets/scroll-left-button.svg";
 import ScrollRightButton from "../assets/scroll-right-button.svg";
 import SourceSection from "./SourceSection";
-import { Source } from "./MainContainer";
+import { SourceObject } from "../hooks/types";
 import ErrorMessage from "./ErrorMessage";
 import LoadingBar from "./LoadingBar";
 
 type SourcesContainerProps = {
-    sources: Source[];
+    sources: SourceObject[];
     error: string | undefined;
     loading: boolean;
 }
@@ -29,14 +29,14 @@ const SourcesContainer: React.FC<SourcesContainerProps> = ({ sources, error, loa
     }
 
     return (
-        <div className="w-full flex-grow space-y-4 bg-screen-black flex flex-col h-[90%]">
+        <div className="w-full flex-grow space-y-4 bg-screen-black flex flex-col h-[85%]">
             {loading ? (
                 <LoadingBar />
             ) : (
                 error ? (
                     <ErrorMessage error={error} />
                 ) : (
-                    <div className="w-full flex-grow space-y-4 bg-screen-black flex flex-col h-[90%] relative">
+                    <div className="w-full flex-grow space-y-4 bg-screen-black flex flex-col h-full relative">
                         <h1 className="font-bold text-chat-message-text text-xl">Sources</h1>
                         <SourceSection source={sources[currentSource]} />
                         <button onClick={decrementCurrentSource} className="absolute left-0 top-1/2 cursor-pointer">
