@@ -163,6 +163,7 @@ def test_convert_to_article(news_with_content: dict) -> dict:
     assert all(isinstance(value, list) for value in news_objects.values())
     assert all(isinstance(article, Article) for value in news_objects.values() for article in value)
     logging.info(f"[test_convert_to_article] news_objects: {news_objects}")
+    return news_objects
 
 
 def test_get_relevance_score(news_objects: dict, request: ForecastRequest, client: OpenAI):
@@ -199,10 +200,14 @@ def test_generate_forecast(request: ForecastRequest, ranked_news_with_content: d
     assert isinstance(answer, dict)
     assert 'answer' in answer
     assert 'sources' in answer
-    assert isinstance(answer['answer'], str)
+    assert isinstance(answer['answer'], dict)
     assert isinstance(answer['sources'], dict)
     assert all(isinstance(key, str) for key in answer['sources'].keys())
     assert all(isinstance(value, list) for value in answer['sources'].values())
     assert all(isinstance(article, Article) for value in answer['sources'].values() for article in value)
     logging.info(f"[test_generate_forecast] answer: {answer}")
     return answer
+
+
+if __name__ == '__main__':
+    unit_test_all()
