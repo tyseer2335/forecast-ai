@@ -1,5 +1,5 @@
 // src/components/Login.tsx
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import OwlLogo from '../assets/owl.svg';
 import GoogleLogo from '../assets/google-logo.svg';
 import { signInWithEmailAndPassword } from "firebase/auth";
@@ -13,6 +13,11 @@ const Login: React.FC = () => {
     const navigate = useNavigate();
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+
+    useEffect(() => {
+        localStorage.clear();
+        auth.signOut();
+    }, []);
 
     // Function to check if the user has a Firestore document
     const checkAndCreateUserDocument = async (userId: string, email: string) => {
