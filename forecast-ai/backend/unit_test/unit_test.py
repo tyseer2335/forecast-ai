@@ -13,7 +13,7 @@ def unit_test_all():
     pass
 
 
-def test_env_var() -> OpenAI:
+def test_env_var() -> tuple[OpenAI, str]:
     load_dotenv()
     OPENAI_API_KEY = os.getenv('OPENAPI_API_KEY')
     client = OpenAI(api_key=OPENAI_API_KEY)
@@ -21,7 +21,8 @@ def test_env_var() -> OpenAI:
     assert isinstance(OPENAI_API_KEY, str)
     assert isinstance(client, OpenAI)
     assert isinstance(LOCAL_OR_PROD, str) and (LOCAL_OR_PROD == 'local' or LOCAL_OR_PROD == 'prod')
-    return client
+    logging.info(f"[test_env_var] client: {client}, LOCAL_OR_PROD: {LOCAL_OR_PROD}")
+    return client, LOCAL_OR_PROD
 
 
 def test_create_request() -> ForecastRequest:
@@ -34,6 +35,13 @@ def test_create_request() -> ForecastRequest:
                               end_date=None)
     assert isinstance(request, ForecastRequest)
     assert request.question == "Who will win the US 2024 election?"
+    assert request.num_queries == 5
+    assert request.perc_of_each_source == {'automatic': 0.6, 'x.com': 0.2, 'facebook.com': 0.2}
+    assert request.before_ranking_num_articles == 10
+    assert request.after_ranking_num_articles == 5
+    assert request.start_date is None
+    assert request.end_date is None
+    logging.info(f"[test_create_request] request: {request}")
     return request
 
 
@@ -59,4 +67,7 @@ def test_generate_search_queries(client, request: ForecastRequest) -> dict:
     assert isinstance(search_queries['queries'], list)
     assert len(search_queries['queries']) == request.num_queries
     assert all(isinstance(query, str) for query in search_queries['queries'])
+    logging.info(f"[test_generate_search_queries] search_queries: {search_queries}")
+    return search_queries
+
 
