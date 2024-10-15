@@ -169,3 +169,19 @@ def test_get_relevance_score(news_objects: dict, request: ForecastRequest, clien
     # update self.score
     assert all(isinstance(article.score, float) for value in news_objects.values() for article in value)
     logging.info(f"[test_get_relevance_score] news_objects: {news_objects}")
+
+
+def test_sort_and_filter(news_objects: dict, request: ForecastRequest):
+    ranked_news_with_content = filtering.sort_and_filter(news_objects, request.after_ranking_num_articles,
+                                                         request.perc_of_each_source)
+    # {'x.com': [<model.article.Article at 0x22948f6bc50>],
+    #  'facebook.com': [<model.article.Article at 0x22948f6b510>],
+    #  'automatic': [<model.article.Article at 0x22948eaff50>,
+    #                <model.article.Article at 0x22948ead950>,
+    #                <model.article.Article at 0x22948eac790>]}
+    assert isinstance(ranked_news_with_content, dict)
+    assert all(isinstance(key, str) for key in ranked_news_with_content.keys())
+    assert all(isinstance(value, list) for value in ranked_news_with_content.values())
+    assert all(isinstance(article, Article) for value in ranked_news_with_content.values() for article in value)
+    logging.info(f"[test_sort_and_filter] ranked_news_with_content: {ranked_news_with_content}")
+
