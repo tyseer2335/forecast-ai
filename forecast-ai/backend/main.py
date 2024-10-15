@@ -50,7 +50,6 @@ def query_to_answer(request: ForecastRequest):
         # 'content': {'text': '...', 'media': ['...']}}]}
         news_with_content = scrapping_content.multiple_scrape_content(news, LOCAL_OR_PROD)
         state = 3
-
         news_objects = convert_to_article.dict_to_article(news_with_content)
         state = 4
 
