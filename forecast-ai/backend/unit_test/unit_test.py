@@ -7,14 +7,18 @@ from model.forecast_request import ForecastRequest
 from model.article import Article
 # unit test lib
 import unittest
+# import log lib
+import logging
 
 
 def unit_test_all():
-    pass
+    client, LOCAL_OR_PROD = test_env_var()
+    request = test_create_request()
+    search_queries = test_generate_search_queries(client, request)
 
 
 def test_env_var() -> tuple[OpenAI, str]:
-    load_dotenv()
+    load_dotenv(dotenv_path='../.env')
     OPENAI_API_KEY = os.getenv('OPENAPI_API_KEY')
     client = OpenAI(api_key=OPENAI_API_KEY)
     LOCAL_OR_PROD = os.getenv('LOCAL_OR_PROD')  # set to `local` or `prod`. use `local` for testing selenium
