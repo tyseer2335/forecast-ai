@@ -75,3 +75,39 @@ def test_generate_search_queries(client, request: ForecastRequest) -> dict:
     return search_queries
 
 
+def test_collect_news(search_queries: dict, request: ForecastRequest) -> dict:
+    news = collect_news.collect_news(search_queries["queries"], request)
+    # {'Who will win the US 2024 election site:x.com': [{'title': 'Collin Rugg (@CollinRugg) - X',
+    #                                                    'description': 'Collin Rugg (@CollinRugg)  X',
+    #                                                    'published date': 'Wed, 05 Jun 2024 04:45:47 GMT',
+    #                                                    'url': 'https://n:en',
+    #                                                    'publisher': {'href': 'https://x.com', 'title': 'X'}},
+    #                                                   {'title': 'Times Algebra (@TimesAlgebraIND) on X - X',
+    #                                                    'description': 'Times Algebra (@TimesAlgebraIND) on X  X',
+    #                                                    'published date': 'Sun, 13 Oct 2024 08:30:35 GMT',
+    #                                                    'url': 'https://newn',
+    #                                                    'publisher': {'href': 'https://x.com', 'title': 'X'}}],
+    #  'Who will win the US 2024 election site:facebook.com': [{'title': 'Heather Cox Richardson - Facebook',
+    #                                                          'description': 'Heather Cox Richardson  Facebook',
+    #                                                          'published date': 'Sat, 31 Oct 2015 05:55:51 GMT',
+    #                                                          'url': 'httpsA:en',
+    #                                                          'publisher': {'href': 'https://www.facebook.com',
+    #                                                                        'title': 'Facebook'}},
+    #                                                         ...
+    assert isinstance(news, dict)
+    assert all(isinstance(key, str) for key in news.keys())
+    assert all(isinstance(value, list) for value in news.values())
+    assert all(isinstance(article, dict) for value in news.values() for article
+               in value)
+    assert all('title' in article for value in news.values() for article in value)
+    assert all('description' in article for value in news.values() for article in value)
+    assert all('published date' in article for value in news.values() for article in value)
+    assert all('url' in article for value in news.values() for article in value)
+    assert all('publisher' in article for value in news.values() for article in value)
+    assert all(isinstance(article['publisher'], dict) for value in news.values() for article in value)
+    # assert total # of articles is equal to request.before_ranking_num_articles
+    assert sum(len(value) for value in news.values()) == request.before_ranking_num_articles
+    return news
+
+
+
