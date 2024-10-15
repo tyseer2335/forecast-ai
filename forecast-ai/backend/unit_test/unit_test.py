@@ -5,9 +5,6 @@ from query_to_answer import break_down_query, collect_news, scrapping_content, f
 from utils import convert_to_article
 from model.forecast_request import ForecastRequest
 from model.article import Article
-# unit test lib
-import unittest
-# import log lib
 import logging
 
 
@@ -17,6 +14,10 @@ def unit_test_all():
     search_queries = test_generate_search_queries(client, request)
     news = test_collect_news(search_queries, request)
     news_with_content = test_scrapping_content(news, LOCAL_OR_PROD)
+    news_objects = test_convert_to_article(news_with_content)
+    test_get_relevance_score(news_objects, request, client)
+    ranked_news_with_content = test_sort_and_filter(news_objects, request)
+    test_generate_forecast(request, ranked_news_with_content)
 
 
 def test_env_var() -> tuple[OpenAI, str]:
@@ -171,7 +172,7 @@ def test_get_relevance_score(news_objects: dict, request: ForecastRequest, clien
     logging.info(f"[test_get_relevance_score] news_objects: {news_objects}")
 
 
-def test_sort_and_filter(news_objects: dict, request: ForecastRequest):
+def test_sort_and_filter(news_objects: dict, request: ForecastRequest) -> dict:
     ranked_news_with_content = filtering.sort_and_filter(news_objects, request.after_ranking_num_articles,
                                                          request.perc_of_each_source)
     # {'x.com': [<model.article.Article at 0x22948f6bc50>],
@@ -184,4 +185,24 @@ def test_sort_and_filter(news_objects: dict, request: ForecastRequest):
     assert all(isinstance(value, list) for value in ranked_news_with_content.values())
     assert all(isinstance(article, Article) for value in ranked_news_with_content.values() for article in value)
     logging.info(f"[test_sort_and_filter] ranked_news_with_content: {ranked_news_with_content}")
+    return ranked_news_with_content
 
+
+def test_generate_forecast(request: ForecastRequest, ranked_news_with_content: dict):
+    answer = generate_forecast.generate_forecast(request, ranked_news_with_content)
+    # {'answer': HARD_CODED_ANSWER,
+    #  'sources': {'x.com': [<model.article.Article at 0x22948f6bc50>],
+    #   'facebook.com': [<model.article.Article at 0x22948f6b510>],
+    #   'automatic': [<model.article.Article at 0x22948eaff50>,
+    #    <model.article.Article at 0x22948ead950>,
+    #    <model.article.Article at 0x22948eac790>]}
+    assert isinstance(answer, dict)
+    assert 'answer' in answer
+    assert 'sources' in answer
+    assert isinstance(answer['answer'], str)
+    assert isinstance(answer['sources'], dict)
+    assert all(isinstance(key, str) for key in answer['sources'].keys())
+    assert all(isinstance(value, list) for value in answer['sources'].values())
+    assert all(isinstance(article, Article) for value in answer['sources'].values() for article in value)
+    logging.info(f"[test_generate_forecast] answer: {answer}")
+    return answer
