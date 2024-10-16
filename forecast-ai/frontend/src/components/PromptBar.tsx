@@ -1,4 +1,4 @@
-// components/PromptBar.js
+// src/components/PromptBar.js
 import React, { useState } from "react";
 import axios from "axios";
 import OptionsButton from "../assets/options-button.svg";
@@ -105,12 +105,14 @@ const PromptBar: React.FC<PromptBarProps> = ({ addQuery, addSources, addError, t
                 placeholder="Ask query"
                 disabled={isMenuOpen}
                 className="px-4 p-2 rounded-md bg-mid-dark-grey text-title-light-grey rounded-2xl focus:outline-none flex-1"
+                data-testid="query-input"
             />
         </div>
         <button
             type="submit"
             disabled={isMenuOpen}
             className="bg-submit-btn-bg hover:bg-mid-light-grey w-10 h-10 rounded-full flex items-center justify-center"
+            data-testid="query-submit-btn"
         >
             <img src={SubmitButton} alt="submit-btn" className="w-7 h-7" />
         </button>

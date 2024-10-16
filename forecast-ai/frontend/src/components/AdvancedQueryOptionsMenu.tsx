@@ -112,7 +112,7 @@ const AdvancedQueryOptionsMenu: React.FC<AdvancedQueryOptionsMenuProps> = ({ isM
                     <div className="w-full px-2 space-y-5">
                         <div className="w-full space-y-2">
                             <h4 className="text-xs text-metrics-text">Total Sources to Collect</h4>
-                            <input type="number" min='1' className="bg-query-options-input-bg border border-metrics-text rounded-sm w-[100px] h-[40px] p-2 px-3 text-sm" value={totalSourcesToCollect} onChange={e => setTotalSourcesToCollect(Number(e.target.value))} />
+                            <input type="number" min='1' className="bg-query-options-input-bg border border-metrics-text rounded-sm w-[100px] h-[40px] p-2 px-3 text-sm" value={totalSourcesToCollect} onChange={e => setTotalSourcesToCollect(Number(e.target.value))} data-testid="total-sources-to-collect-input" />
                         </div>
                         <div className="w-full space-y-2">
                             <h4 className="text-xs text-metrics-text">Sources Percentage Allocation</h4>
@@ -120,7 +120,7 @@ const AdvancedQueryOptionsMenu: React.FC<AdvancedQueryOptionsMenuProps> = ({ isM
                                 <div className="flex flex-col">
                                     <p className="text-[10px] text-header-bar-text mb-2">News Ratio</p>
                                     <div className="w-full flex justify-start items-center space-x-2">
-                                        <input type="range" min='0' max='100' className="w-[50%] cursor-pointer range-slider" style={{background: `linear-gradient(to right, #AEB0FF ${newsRatio}%, #383838 ${newsRatio}%)`}} value={newsRatio} onChange={e => setNewsRatio(Number(e.target.value))} />
+                                        <input type="range" min='0' max='100' className="w-[50%] cursor-pointer range-slider" style={{background: `linear-gradient(to right, #AEB0FF ${newsRatio}%, #383838 ${newsRatio}%)`}} value={newsRatio} onChange={e => setNewsRatio(Number(e.target.value))} data-testid="news-ratio-input" />
                                         <div className="bg-query-options-input-bg p-1 rounded-sm w-[35px]">
                                             <p className="text-[10px]">{newsRatio}%</p>
                                         </div>
@@ -142,7 +142,7 @@ const AdvancedQueryOptionsMenu: React.FC<AdvancedQueryOptionsMenuProps> = ({ isM
                                 <div>
                                     <p className="text-[10px] text-header-bar-text mb-2">X Ratio</p>
                                     <div className="w-full flex justify-start items-center space-x-2">
-                                        <input type="range" min='0' max='100' className="w-[50%] cursor-pointer range-slider" style={{background: `linear-gradient(to right, #AEB0FF ${xRatio}%, #383838 ${xRatio}%)`}} value={xRatio} onChange={e => setXRatio(Number(e.target.value))} />
+                                        <input type="range" min='0' max='100' className="w-[50%] cursor-pointer range-slider" style={{background: `linear-gradient(to right, #AEB0FF ${xRatio}%, #383838 ${xRatio}%)`}} value={xRatio} onChange={e => setXRatio(Number(e.target.value))} data-testid="x-ratio-input" />
                                         <div className="bg-query-options-input-bg p-1 rounded-sm w-[35px]">
                                             <p className="text-[10px]">{xRatio}%</p>
                                         </div>
@@ -162,9 +162,9 @@ const AdvancedQueryOptionsMenu: React.FC<AdvancedQueryOptionsMenuProps> = ({ isM
                                     </div>
                                 </div>
                                 <div>
-                                    <p className="text-[10px] text-header-bar-text mb-2">Reddit Ratio</p>
+                                    <p className="text-[10px] text-header-bar-text mb-2">Facebook Ratio</p>
                                     <div className="w-full flex justify-start items-center space-x-2">
-                                        <input type="range" min='0' max='100' className="w-[50%] cursor-pointer range-slider" style={{background: `linear-gradient(to right, #AEB0FF ${facebookRatio}%, #383838 ${facebookRatio}%)`}} value={facebookRatio} onChange={e => setFacebookRatio(Number(e.target.value))} />
+                                        <input type="range" min='0' max='100' className="w-[50%] cursor-pointer range-slider" style={{background: `linear-gradient(to right, #AEB0FF ${facebookRatio}%, #383838 ${facebookRatio}%)`}} value={facebookRatio} onChange={e => setFacebookRatio(Number(e.target.value))} data-testid="facebook-ratio-input" />
                                         <div className="bg-query-options-input-bg p-1 rounded-sm w-[35px]">
                                             <p className="text-[10px]">{facebookRatio}%</p>
                                         </div>
@@ -207,12 +207,12 @@ const AdvancedQueryOptionsMenu: React.FC<AdvancedQueryOptionsMenuProps> = ({ isM
                     <div className="w-full px-2 space-y-5">
                         <div className="w-full space-y-2">
                             <h4 className="text-xs text-metrics-text">Total Sources to Display</h4>
-                            <input type="number" min='1' max={totalSourcesToCollect} className="bg-query-options-input-bg border border-metrics-text rounded-sm w-[100px] h-[40px] p-2 px-3 text-sm" value={totalSourcesToDisplay} onChange={e => setTotalSourcesToDisplay(Number(e.target.value))} />
+                            <input type="number" min='1' max={totalSourcesToCollect} className="bg-query-options-input-bg border border-metrics-text rounded-sm w-[100px] h-[40px] p-2 px-3 text-sm" value={totalSourcesToDisplay} onChange={e => setTotalSourcesToDisplay(Number(e.target.value))} data-testid="total-sources-to-display-input" />
                         </div>
                     </div>
                 </div>
                 <div className="flex justify-end items-center">
-                    <button className="px-4 py-2 rounded-lg text-source-text border border-source-text text-sm" onClick={handleApply}>Apply</button>
+                    <button className="px-4 py-2 rounded-lg text-source-text border border-source-text text-sm" onClick={handleApply} data-testid="apply-btn">Apply</button>
                 </div>
             </div>
         </div>
