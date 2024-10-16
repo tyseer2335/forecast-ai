@@ -4,7 +4,6 @@ import { getFirestore, collection, query, orderBy, onSnapshot } from 'firebase/f
 import OwlLogo from '../assets/owl.svg';
 import SettingsLogo from '../assets/settings.svg';
 import { auth } from './firebase';
-import { data } from 'autoprefixer';
 
 type SidebarProps = {
   newChatId: string | null;
@@ -132,9 +131,6 @@ const Sidebar: React.FC<SidebarProps> = ({ newChatId }) => {
   };
 
   return (
-    // Print the chatlists for testing
-    
-
     <div className="bg-sidebar-bg text-[#B0B1AF] h-screen flex flex-col justify-between w-1/5 min-w-[250px]">
       {/* Logo and program title */}
       <div className="flex items-center justify-between p-4 fixed top-0 left-0 z-10">
