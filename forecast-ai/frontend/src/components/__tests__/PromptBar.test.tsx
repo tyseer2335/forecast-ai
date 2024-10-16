@@ -51,10 +51,22 @@ describe(PromptBar, () => {
       data: mockResponseData,
     });
 
-    const input = getByTestId('query-input');
+    const totalSourcesToCollectInput = getByTestId("total-sources-to-collect-input");
+    const totalSourcesToDisplayInput = getByTestId("total-sources-to-display-input");
+    const newsRatioInput = getByTestId("news-ratio-input");
+    const xRatioInput = getByTestId("x-ratio-input");
+    const facebookRatioInput = getByTestId("facebook-ratio-input");
+    const applyButton = getByTestId("apply-btn");
+    const queryInput = getByTestId('query-input');
     const submitButton = getByTestId('query-submit-btn');
 
-    fireEvent.change(input, { target: { value: "Sample query" } });
+    fireEvent.change(totalSourcesToCollectInput, { target: { value: "15" } });
+    fireEvent.change(totalSourcesToDisplayInput, { target: { value: "10" } });
+    fireEvent.change(facebookRatioInput, { target: { value: "0" } });
+    fireEvent.change(newsRatioInput, { target: { value: "80" } });
+    fireEvent.change(xRatioInput, { target: { value: "20" } });
+    fireEvent.click(applyButton);
+    fireEvent.change(queryInput, { target: { value: "Sample query" } });
     fireEvent.click(submitButton);
 
     expect(addQuery).toHaveBeenCalledWith("Sample query");
@@ -62,7 +74,16 @@ describe(PromptBar, () => {
     await waitFor(() => {
       expect(mockedAxios.post).toHaveBeenCalledWith(
         `${process.env.REACT_APP_BACKEND_URL}/query_to_answer`,
-        { question: "Sample query" }
+        { 
+          question: "Sample query",
+          before_ranking_num_articles: 15,
+          after_ranking_num_articles: 10,
+          perc_of_each_source: {
+            automatic: 0.8,
+            'x.com': 0.2,
+            'facebook.com': 0.0
+          }
+        }
       );
 
       expect(addSources).toHaveBeenCalledWith([
