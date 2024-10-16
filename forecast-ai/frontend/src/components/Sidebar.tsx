@@ -4,6 +4,7 @@ import { getFirestore, collection, query, orderBy, onSnapshot } from 'firebase/f
 import OwlLogo from '../assets/owl.svg';
 import SettingsLogo from '../assets/settings.svg';
 import { auth } from './firebase';
+import { data } from 'autoprefixer';
 
 type SidebarProps = {
   newChatId: string | null;
@@ -44,7 +45,11 @@ const Sidebar: React.FC<SidebarProps> = ({ newChatId }) => {
       setSelectedChatId(savedChatId);
     }
 
-    return () => unsubscribe();
+    return () => {
+      if (unsubscribe && typeof unsubscribe === 'function') {
+        unsubscribe();
+      }
+    };
   }, [userId, navigate, db]);
 
   // Helper function to categorize chats by time period
@@ -86,17 +91,18 @@ const Sidebar: React.FC<SidebarProps> = ({ newChatId }) => {
 
   const { todayChats, last7DaysChats, last30DaysChats, earlierChats } = categorizeChats(chats);
 
-  // Reusable component to display chat sections
-  const ChatSection = ({ title, chatList }: { title: string; chatList: any[] }) => (
+  // Reusable component to display chat sessions by time period
+  const ChatSubList = ({ period, chatList }: { period: string; chatList: any[] }) => (
     <>
       {chatList.length > 0 && (
         <>
-          <h3 className="p-1 text-sm text-light-grey mt-4">{title}</h3>
+          <h3 className="p-1 text-sm text-light-grey mt-4">{period}</h3>
           {chatList.map((chat) => (
             <div
               key={chat.id}
               className={`p-2 hover:bg-button-hover rounded-md cursor-pointer ${chat.id === selectedChatId ? 'bg-button-hover font-bold' : ''}`} // Highlight selected chat
               onClick={() => handleChatClick(chat.id)}
+              data-testid={`chat-session-${chat.id}`}
             >
               {chat.title || `Chat ${chat.id}`}
             </div>
@@ -114,32 +120,36 @@ const Sidebar: React.FC<SidebarProps> = ({ newChatId }) => {
     if (chatId === selectedChatId) {
       setSelectedChatId(null);
       localStorage.setItem('selectedChatId', "");
-      // Need to reload the MainContainer component to clear the chat content
 
     } else {
       setSelectedChatId(chatId);
       localStorage.setItem('selectedChatId', chatId);
       
     }
+
+    // Reloading the MainContainer component to refresh the selectedChatId
     navigate('/');
   };
 
   return (
+    // Print the chatlists for testing
+    
+
     <div className="bg-sidebar-bg text-[#B0B1AF] h-screen flex flex-col justify-between w-1/5 min-w-[250px]">
       {/* Logo and program title */}
       <div className="flex items-center justify-between p-4 fixed top-0 left-0 z-10">
         <div className="flex items-center">
-          <img src={OwlLogo} alt="logo" className="w-8 h-8" />
-          <span className="text-2xl ps-2 text-light-grey font-light">forecastAI</span>
+          <img src={OwlLogo} alt="logo" className="w-8 h-8" data-testid="logo"/>
+          <span className="text-2xl ps-2 text-light-grey font-light" data-testid="program-title">forecastAI</span>
         </div>
       </div>
 
       {/* Chat history */}
-      <div className="overflow-y-auto mt-16 px-4 pb-20">
-        <ChatSection title="Today" chatList={todayChats} />
-        <ChatSection title="Previous 7 days" chatList={last7DaysChats} />
-        <ChatSection title="Previous 30 days" chatList={last30DaysChats} />
-        <ChatSection title="Earlier" chatList={earlierChats} />
+      <div className="overflow-y-auto mt-16 px-4 pb-20" data-testid="chat-history">
+        <ChatSubList period="Today" chatList={todayChats} />
+        <ChatSubList period="Previous 7 days" chatList={last7DaysChats} />
+        <ChatSubList period="Previous 30 days" chatList={last30DaysChats} />
+        <ChatSubList period="Earlier" chatList={earlierChats} />
       </div>
 
       {/* Settings button */}
@@ -147,6 +157,7 @@ const Sidebar: React.FC<SidebarProps> = ({ newChatId }) => {
         <button
           onClick={toggleSettings}
           className="flex items-center hover:bg-button-hover p-2 rounded-md"
+          data-testid="settings-button"
         >
           <img src={SettingsLogo} alt="settings" className="w-7 h-7" /> 
           <span className="px-2 text-light-grey">Settings</span>
@@ -155,7 +166,9 @@ const Sidebar: React.FC<SidebarProps> = ({ newChatId }) => {
 
       {/* Popup settings panel */}
       {isSettingsOpen && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-20">
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-20"
+          data-testid="settings-panel"
+        >
           <div className="bg-[#282C2C] p-6 rounded-lg w-[400px]">
             <h2 className="text-xl font-bold mb-4">Settings</h2>
             <button
