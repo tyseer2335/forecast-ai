@@ -1,1 +1,0 @@
-import SourcesContainer from "../SourcesContainer";
