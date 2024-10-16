@@ -1,11 +1,19 @@
 // src/components/__tests__/PromptBar.text.tsx
 import React from "react";
-import { render, screen, fireEvent, waitFor } from "@testing-library/react";
+import { render, fireEvent, waitFor } from "@testing-library/react";
 import axios from "axios";
 import PromptBar from "../PromptBar";
+import { auth } from "../firebase";
 
 jest.mock("axios");
+jest.mock("../firebase");
+
 const mockedAxios = axios as jest.Mocked<typeof axios>;
+const mockUsedNavigate = jest.fn();
+jest.mock('react-router-dom', () => ({
+   ...jest.requireActual('react-router-dom'),
+  useNavigate: () => mockUsedNavigate,
+}));
 
 describe(PromptBar, () => {
   const setChatTitle = jest.fn();
@@ -38,6 +46,7 @@ describe(PromptBar, () => {
     addSources.mockClear();
     addError.mockClear();
     toggleLoading.mockClear();
+    (auth.currentUser as unknown) = { uid: "testUserId" };
   });
 
   it("should send correct request when calling API", async () => {
