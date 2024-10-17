@@ -21,7 +21,7 @@ import { Timestamp } from 'firebase/firestore';
 // ✓ navigates to /login if user is not authenticated
 // ✓ navigates to /login if user is not authenticated with newChatId
 //
-// 2. Sidebar :: Display Tests
+// 2. Sidebar :: Layout Tests
 // These tests ensure that specific elements of the sidebar are correctly rendered.
 // Tests:
 // ✓ displays logo
@@ -167,7 +167,7 @@ describe('Sidebar :: Authentication Tests', () => {
 
 });
 
-describe('Sidebar :: Display Tests', () => {
+describe('Sidebar :: Layout Tests', () => {
   // These tests ensure that specific elements of the sidebar are correctly rendered.
 
   // Mocking react-router-dom (useNavigate)
@@ -332,7 +332,7 @@ describe('Sidebar :: Chat Sessions Display Tests', () => {
 
 describe('Sidebar :: Interaction Tests', () => {
   // These tests validate user interactions with the sidebar, such as clicking on a chat session.
-  
+
   // Mocking react-router-dom (useNavigate)
   beforeEach(async () => {
     (useNavigate as jest.Mock).mockReturnValue(mockNavigate);
