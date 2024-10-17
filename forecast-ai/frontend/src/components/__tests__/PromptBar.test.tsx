@@ -121,7 +121,12 @@ describe(PromptBar, () => {
     const getByTestId = setup();
 
     mockedAxios.post.mockRejectedValueOnce({
-      response: { data: { detail: "Error generating answer to query" } },
+      response: { data: { detail: "Error generating answer to query" } }
+    });
+
+    mockedAxios.get.mockResolvedValueOnce({
+      status: 200,
+      data: { status: "Server is running" }
     });
 
     const input = getByTestId('query-input');
@@ -132,6 +137,29 @@ describe(PromptBar, () => {
 
     await waitFor(() => {
       expect(addError).toHaveBeenCalledWith("Error generating answer to query");
+      expect(toggleLoading).toHaveBeenCalledWith(false);
+    });
+  });
+
+  it("should display server down error if server status check fails", async () => {
+    const getByTestId = setup();
+
+    mockedAxios.post.mockRejectedValueOnce({
+      response: { data: { detail: "Error generating answer to query" } }
+    });
+
+    mockedAxios.get.mockRejectedValueOnce({
+      response: { data: { detail: "Server is down" } }
+    });
+
+    const input = getByTestId("query-input");
+    const submitButton = getByTestId("query-submit-btn");
+
+    fireEvent.change(input, { target: { value: "Sample query" } });
+    fireEvent.click(submitButton);
+
+    await waitFor(() => {
+      expect(addError).toHaveBeenCalledWith("Server is down. Please wait for the server to load up in 1 minute.");
       expect(toggleLoading).toHaveBeenCalledWith(false);
     });
   });
