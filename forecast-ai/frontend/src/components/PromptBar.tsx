@@ -63,15 +63,17 @@ const PromptBar: React.FC<PromptBarProps> = ({ chats, setChatTitle, saveChatToDB
     e.preventDefault();
 
     if (input) {
-      const updatedRequest = { ...request, question: input };
-      setRequest(updatedRequest);
-      setSubmitRequest(true);
-      if (chats.length == 0) {
-        setChatTitle(input);
-      }
-      addQuery(input);
-      setInput("");
-      axios.post(`${process.env.REACT_APP_BACKEND_URL}/query_to_answer`, updatedRequest).then(response => {
+      try {
+        const updatedRequest = { ...request, question: input };
+        setRequest(updatedRequest);
+        setSubmitRequest(true);
+        if (chats.length == 0) {
+          setChatTitle(input);
+        }
+        addQuery(input);
+        setInput("");
+        // Send POST request
+        const response = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/query_to_answer`, updatedRequest);
         const sources = convertResponseSourcesIntoSources(response.data.sources);
         addSources(sources);
         toggleLoading(false);
@@ -83,11 +85,25 @@ const PromptBar: React.FC<PromptBarProps> = ({ chats, setChatTitle, saveChatToDB
         } catch(error) {
           console.error("Error handling submit:", error);
         }
-      }).catch(error => {
+      } catch (error) {
+        let serverDown = false;
+        try{
+          // Check server status
+          const serverStatusResponse = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/`);
+          if (serverStatusResponse.status !== 200 || serverStatusResponse.data.status !== "Server is running") {
+            serverDown = true;
+          }
+        } catch (error) {
+          serverDown = true;
+        }
+
         toggleLoading(false);
-        const errorMessage = error.response.data.detail || "Error generating answer to query";
+        let errorMessage = (error as any).response?.data?.detail || "Error generating answer to query";
+        if (serverDown) {
+          errorMessage = "Server is down. Please wait for the server to load up in 1 minute.";
+        }
         addError(errorMessage);
-      });
+      }
     }
   };
 
