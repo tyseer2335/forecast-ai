@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from "react";
+// src/components/Login.tsx
+import React, { useState, useEffect } from "react";
 import OwlLogo from '../assets/owl.svg';
 import GoogleLogo from '../assets/google-logo.svg';
 import { signInWithEmailAndPassword } from "firebase/auth";
