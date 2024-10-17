@@ -50,14 +50,6 @@ const PromptBar: React.FC<PromptBarProps> = ({ addQuery, addSources, addError, t
     e.preventDefault();
     if (input) {
       try {
-        // Check server status
-        const serverStatusResponse = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/`);
-        if (serverStatusResponse.status !== 200 || serverStatusResponse.data.status !== "Server is running") {
-          toggleLoading(false);
-          addError("Server is not up. Please wait for the server to load.");
-          return;
-        }
-
       const updatedRequest = { ...request, question: input };
       setRequest(updatedRequest);
       setSubmitRequest(true);
@@ -70,8 +62,23 @@ const PromptBar: React.FC<PromptBarProps> = ({ addQuery, addSources, addError, t
         setRequest({});
         setSubmitRequest(false);
       } catch (error) {
+        let serverDown = false;
+        try{
+        // Check server status
+        const serverStatusResponse = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/`);
+        if (serverStatusResponse.status !== 200 || serverStatusResponse.data.status !== "Server is running") {
+          serverDown = true;
+        }
+      }
+      catch (error) {
+        serverDown = true;
+      }
+
         toggleLoading(false);
-        const errorMessage = (error as any).response?.data?.detail || "Error generating answer to query";
+        let errorMessage = (error as any).response?.data?.detail || "Error generating answer to query";
+        if (serverDown) {
+          errorMessage = "Server is down. Please wait for the server to load up in 1 minute.";
+        }
         addError(errorMessage);
       }
     }
