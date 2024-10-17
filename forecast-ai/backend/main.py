@@ -68,4 +68,4 @@ def query_to_answer(request: ForecastRequest):
 
 @app.get("/")
 def read_root():
-    return {"Status": "Server is running"}
+    return {"status": "Server is running"}
