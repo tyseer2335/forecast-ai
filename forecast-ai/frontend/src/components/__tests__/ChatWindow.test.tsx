@@ -113,7 +113,8 @@ describe('ChatWindow :: Scroll Behaviour', () => {
     const { rerender } = render(<ChatWindow chats={sampleChats} />);
 
     // Mock the scrollIntoView method on the bottomRef
-    const bottomRef = screen.getByTestId('bottom-ref');
+    const bottomRefs = screen.getAllByTestId('bottom-ref');
+    const bottomRef = bottomRefs[bottomRefs.length - 1];
 
     rerender(<ChatWindow chats={sampleChats} />);
 
@@ -124,12 +125,16 @@ describe('ChatWindow :: Scroll Behaviour', () => {
   it('scrolls to the bottom when new chats are added', () => {
     // Render the component with no chats first
     const { rerender } = render(<ChatWindow chats={[]} />);
-    
-    // Mock the scrollIntoView method on the bottomRef
-    const bottomRef = screen.getByTestId('bottom-ref');
+
+    // Expect there is no bottomRef initially, as there is no chat
+    expect(screen.queryByTestId('bottom-ref')).not.toBeInTheDocument();
 
     // Re-render the component with new chats
     rerender(<ChatWindow chats={sampleChats.concat(sampleChats)} />);
+
+    // Mock the scrollIntoView method on the bottomRef
+    const bottomRefs = screen.getAllByTestId('bottom-ref');
+    const bottomRef = bottomRefs[bottomRefs.length - 1];
 
     // Verify that scrollIntoView was called with the expected argument
     expect(bottomRef.scrollIntoView).toHaveBeenCalledWith({ behavior: 'smooth' });
@@ -138,7 +143,8 @@ describe('ChatWindow :: Scroll Behaviour', () => {
   // Does not scroll to the bottom if no new chats are added
   it('does not trigger scrolling if no new chats are added', () => {
     const { rerender } = render(<ChatWindow chats={sampleChats} />);
-    const bottomRef = screen.getByTestId('bottom-ref');
+    const bottomRefs = screen.getAllByTestId('bottom-ref');
+    const bottomRef = bottomRefs[bottomRefs.length - 1];
 
     // Mock scrollIntoView
     const mockScrollIntoView = jest.fn();
@@ -205,8 +211,7 @@ describe('ChatWindow :: Dynamic Updates', () => {
           sources: [],
         },
       ];
-    const displayal = render(<ChatWindow chats={chatsWithMissingSources} />);
-    console.log(displayal.debug());
+    render(<ChatWindow chats={chatsWithMissingSources} />);
 
     chatsWithMissingSources.forEach((chat, index) => {
         const chatMessage = screen.getAllByTestId('chat-message')[index];
