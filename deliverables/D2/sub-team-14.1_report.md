@@ -17,7 +17,7 @@ ForecastAI/HeavyLifters/Subteam14.1
     - [Muaj](#muaj)
     - [Irene](#irene)
 
-## Summmry
+## Summary
 ### Goal and Focus: User Story 1
 
 Our primary objective was to implement **User Story 1**:  
