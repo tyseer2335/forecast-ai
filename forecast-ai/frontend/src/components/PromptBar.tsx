@@ -46,24 +46,34 @@ const PromptBar: React.FC<PromptBarProps> = ({ addQuery, addSources, addError, t
     return result;
   }
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (input) {
+      try {
+        // Check server status
+        const serverStatusResponse = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/`);
+        if (serverStatusResponse.status !== 200 || serverStatusResponse.data.status !== "Server is running") {
+          toggleLoading(false);
+          addError("Server is not up. Please wait for the server to load.");
+          return;
+        }
+
       const updatedRequest = { ...request, question: input };
       setRequest(updatedRequest);
       setSubmitRequest(true);
       addQuery(input);
       setInput("");
-      axios.post(`${process.env.REACT_APP_BACKEND_URL}/query_to_answer`, updatedRequest).then(response => {
+        // Send POST request
+        const response = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/query_to_answer`, updatedRequest);
         addSources(convertResponseSourcesIntoSources(response.data.sources));
         toggleLoading(false);
         setRequest({});
         setSubmitRequest(false);
-      }).catch(error => {
+      } catch (error) {
         toggleLoading(false);
-        const errorMessage = error.response.data.detail || "Error generating answer to query";
+        const errorMessage = (error as any).response?.data?.detail || "Error generating answer to query";
         addError(errorMessage);
-      });
+      }
     }
   };
 
