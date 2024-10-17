@@ -50,11 +50,11 @@ const PromptBar: React.FC<PromptBarProps> = ({ addQuery, addSources, addError, t
     e.preventDefault();
     if (input) {
       try {
-      const updatedRequest = { ...request, question: input };
-      setRequest(updatedRequest);
-      setSubmitRequest(true);
-      addQuery(input);
-      setInput("");
+        const updatedRequest = { ...request, question: input };
+        setRequest(updatedRequest);
+        setSubmitRequest(true);
+        addQuery(input);
+        setInput("");
         // Send POST request
         const response = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/query_to_answer`, updatedRequest);
         addSources(convertResponseSourcesIntoSources(response.data.sources));
@@ -64,15 +64,14 @@ const PromptBar: React.FC<PromptBarProps> = ({ addQuery, addSources, addError, t
       } catch (error) {
         let serverDown = false;
         try{
-        // Check server status
-        const serverStatusResponse = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/`);
-        if (serverStatusResponse.status !== 200 || serverStatusResponse.data.status !== "Server is running") {
+          // Check server status
+          const serverStatusResponse = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/`);
+          if (serverStatusResponse.status !== 200 || serverStatusResponse.data.status !== "Server is running") {
+            serverDown = true;
+          }
+        } catch (error) {
           serverDown = true;
         }
-      }
-      catch (error) {
-        serverDown = true;
-      }
 
         toggleLoading(false);
         let errorMessage = (error as any).response?.data?.detail || "Error generating answer to query";
