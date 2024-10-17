@@ -16,17 +16,14 @@ const ChatWindow: React.FC<ChatWindowProps> = ({ chats }) => {
     }, [chats]);
 
     return (
-        <div className="w-full h-[95%] p-4 bg-screen-black text-white space-y-[100px] flex flex-col overflow-y-auto" data-testid="chat-window">
-            <div className="flex flex-col space-y-4 h-[95%]">
-                <div ref={bottomRef} data-testid="bottom-ref" />
-                {chats.map(chat => (
-                <div className="flex flex-col space-y-4 h-[95%]">
-                    <div ref={bottomRef} />
+        <div className="w-full h-full px-4 pt-4 bg-screen-black text-white space-y-[100px] flex flex-col overflow-y-auto" data-testid="chat-window">
+            {chats.map(chat => (
+                <div className="flex flex-col space-y-4 h-full">
+                    <div ref={bottomRef} data-testid="bottom-ref"/>
                     <ChatMessage query={chat.query} data-testid="chat-message" />
                     <SourcesContainer sources={chat.sources} data-testid="sources-container" />
                 </div>
-                ))}
-            </div>
+            ))}
         </div>
     )
 }
