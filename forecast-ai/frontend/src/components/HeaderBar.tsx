@@ -1,5 +1,6 @@
 // src/components/HeaderBar.tsx
-import React from "react";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 import BookmarkButton from "../assets/bookmark-button.svg";
 import ShareButton from "../assets/share-button.svg";
 
@@ -8,6 +9,27 @@ type HeaderBarProps = {
 }
 
 const HeaderBar: React.FC<HeaderBarProps> = ({ title }) => {
+  const [serverStatus, setServerStatus] = useState<"up" | "down" | "loading">("loading");
+
+  useEffect(() => {
+    const checkServerStatus = async () => {
+      try {
+        const response = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/`);
+        // log  
+        console.log(response);
+        if (response.status === 200 && response.data.status === "Server is running") {
+          setServerStatus("up");
+        } else {
+          setServerStatus("down");
+        }
+      } catch (error) {
+        setServerStatus("down");
+      }
+    };
+
+    checkServerStatus();
+  }, []);
+
   return (
     <header className="bg-screen-black text-header-bar-text px-6 py-6 w-full h-[8vh] flex items-center">
         {title && <h3 className="flex-grow font-bold text-center text-sm">{title}</h3>}
@@ -22,6 +44,15 @@ const HeaderBar: React.FC<HeaderBarProps> = ({ title }) => {
             <button className="w-10 h-10 rounded-full">
                 <img src="https://via.placeholder.com/150" alt="profile-pic" className="w-full h-full rounded-full" />
             </button>
+            <div className="ml-4">
+                {serverStatus === "loading" ? (
+                  <div className="w-4 h-4 rounded-full bg-yellow-500"></div>
+                ) : serverStatus === "up" ? (
+                  <div className="w-4 h-4 rounded-full bg-green-500"></div>
+                ) : (
+                  <div className="w-4 h-4 rounded-full bg-red-500"></div>
+                )}
+            </div>
         </div>
     </header>
   );

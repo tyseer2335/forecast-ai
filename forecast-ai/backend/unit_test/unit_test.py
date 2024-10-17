@@ -1,8 +1,13 @@
 import os
+import sys
 import logging
 import coloredlogs
 from dotenv import load_dotenv
 from openai import OpenAI
+
+# Add the parent directory of 'unit_test' to the Python path
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+
 from query_to_answer import break_down_query, collect_news, scrapping_content, filtering, generate_forecast
 from utils import convert_to_article
 from model.forecast_request import ForecastRequest
@@ -31,7 +36,7 @@ def unit_test_all():
 
 
 def test_env_var() -> tuple[OpenAI, str]:
-    load_dotenv(dotenv_path='../.env')
+    load_dotenv(dotenv_path='./.env')
     OPENAI_API_KEY = os.getenv('OPENAPI_API_KEY')
     client = OpenAI(api_key=OPENAI_API_KEY)
     LOCAL_OR_PROD = os.getenv('LOCAL_OR_PROD')  # set to `local` or `prod`. use `local` for testing selenium

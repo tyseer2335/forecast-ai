@@ -64,3 +64,8 @@ def query_to_answer(request: ForecastRequest):
         return answer
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error generating answer to query: {str(e)}. State: {state}")
+
+
+@app.get("/")
+def read_root():
+    return {"status": "Server is running"}
