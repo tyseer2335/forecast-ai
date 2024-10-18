@@ -114,7 +114,11 @@ Muaj’s main role was developing a comprehensive database schema that the team 
 ## Irene
 Irene contributed to updating the database schema and rules, but her main focus wat to implement dynamic sidebar interactions chat window functionality. She implemented key features, including allowing users to select or create new chats from the sidebar, setting the default title for new chats as the first query, and ensuring chat history is maintained based on user selections. Irene integrated real-time message updates, saving them to the correct chat session and reflecting changes in the sidebar. She addressed bugs related to real-time updates and user account behaviors, ensuring smooth navigation and sorting of chats by the latest activity. She wrote unit tests for both the **Sidebar** and **ChatWindow** and collaborated with sub-teams U2 and U3 to align on chat rules and type definitions, continuously revising the codebase to maintain team coordination. She also implemented the logout functionality, ensuring that users could securely log out of their accounts and clear their corresponding session data. She designed the UI for the query options when D2 has been started using Figma, ensuring that the team had a clear vision of the final product. Here is a video of the Figma design:
 
-  <video controls="controls" style="max-width: 600px;" src="./images/14.1/query-options-figma-design.mov">
+
+
+
+
+  <video controls="controls" style="max-width: 600px;" src="https://github.com/user-attachments/assets/f1230773-ec8c-4766-a05d-066d1c86d19b">
   </video>
 
 # Instructions
@@ -153,7 +157,8 @@ Irene contributed to updating the database schema and rules, but her main focus 
    
 5. Quit the test runner by pressing `q` after the tests have completed.
   Below is a video that demonstrates how to run the unit tests:
-    <video controls="controls" style="max-width: 600px;" src="./images/14.1/unit-test-demo.mov">
+
+    <video controls="controls" style="max-width: 600px;" src="https://github.com/user-attachments/assets/e1b6b343-35a9-4c87-b292-14a60780543a">
     </video>
 
 # Demonstrations
@@ -161,8 +166,9 @@ Here are some videos that demonstrate the features implemented by our subteam:
 
 1. **Dynamic Sidebar and Chat Window Interaction**
    - This video showcases the dynamic sidebar and chat window interactions, allowing users to select or create new chats, update existing chats, and view real-time message updates.
-   <video controls="controls" style="max-width: 600px;" src="./images/14.1/feature_test.mp4">
+   <video controls="controls" style="max-width: 600px;" src="https://github.com/user-attachments/assets/3b4cbc31-b802-4060-a998-d9a2702e7605">
    </video>
+
 
 # Scope of Contribution and Acknowledgment of Team Work
 In this project, our team divided the work into 3 subteams. This subteam's (14.1) contributions  focused on updating the database, the chat history feature, and enabling users to interact with their chat sessions. We implemented the UI that allows users to view, select, and engage with past chats, along with features like automated chat title generation and editing for better organization. 
