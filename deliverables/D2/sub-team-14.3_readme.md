@@ -57,6 +57,6 @@ ___
 - Email verification
 - Reset password
 - Responsive design
-Heres a [video demos](https://drive.google.com/file/d/1jLkRadwnyJRltXDWGD_hFCGPyi6nHjqq/view) that highlighting some features.  
+Heres a [video demo](https://drive.google.com/file/d/1jLkRadwnyJRltXDWGD_hFCGPyi6nHjqq/view) that highlighting some features.  
 You can read more about features in the sub-team report.
 
