@@ -2,7 +2,7 @@ import React from 'react';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import { MemoryRouter } from 'react-router-dom';
-import { signInWithEmailAndPassword, signInWithPopup } from 'firebase/auth'; // Mocked Firebase auth methods
+import { getAuth, signInWithEmailAndPassword, signInWithPopup } from 'firebase/auth'; // Mocked Firebase auth methods
 import Login from '../Login';
 
 /*
@@ -35,13 +35,27 @@ This test suite verifies the functionality of the Login component.
 */
 
 jest.mock('firebase/auth', () => ({
-  getAuth: jest.fn(),
+  getAuth: jest.fn(() => ({
+    signOut: jest.fn(),
+  })),
   signInWithEmailAndPassword: jest.fn(),
   signInWithPopup: jest.fn(),
   GoogleAuthProvider: jest.fn(),
 }));
 
 describe('Login Component', () => {
+  let mockSignOut: jest.Mock;
+
+  beforeEach(() => {
+    // Mock signOut
+    mockSignOut = jest.fn();
+    (getAuth as jest.Mock).mockReturnValue({
+      signOut: mockSignOut,
+    });
+
+    jest.clearAllMocks();  // Clear mocks between tests
+  });
+
   it('renders the login form correctly', () => {
     render(
       <MemoryRouter>
@@ -167,6 +181,6 @@ describe('Login Component', () => {
     fireEvent.change(screen.getByPlaceholderText('Password'), { target: { value: 'password' } });
     fireEvent.click(screen.getByText('Login'));
 
-    expect(await screen.findByText('User not email verified. Please check your inbox to verify your email.')).toBeInTheDocument();
+    expect(await screen.findByText('User is not email verified. Please check your inbox to verify your email.')).toBeInTheDocument();
   });
 });
