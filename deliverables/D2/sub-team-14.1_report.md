@@ -173,7 +173,9 @@ Here are some videos that demonstrate the features implemented by our subteam:
 # Scope of Contribution and Acknowledgment of Team Work
 In this project, our team divided the work into 3 subteams. This subteam's (14.1) contributions  focused on updating the database, the chat history feature, and enabling users to interact with their chat sessions. We implemented the UI that allows users to view, select, and engage with past chats, along with features like automated chat title generation and editing for better organization. 
 
-It's important to note that while we handled the chat interaction, database update, and history functionality, there were certain features we did not work on. Those include authentication, the prompt bar, and any sort of backend development. We merged these features from team 14.2 because some of our work depended on their work (ex. prompt bar).
+Please note that the data that will be displayed after a user submits a question will be placeholder (dummy) data that we manually input for demonstration purposes. This means the response will remain the same regardless of the user's input. The actual backend, which will provide dynamic, accurate responses, has been developed by another Subteam (14.2) as part of their component.
+
+It's important to acknowledge that while we handled the chat interaction, database update, and history functionality, there were certain features we did not work on. Those include authentication, the prompt bar, and any other sort of backend development. We merged these features from team 14.2 because some of our work depended on their work (ex. prompt bar).
 
 Also note that the flow diagram above was created by Yehyun Lee from Subteam 14.2, as mentioned in the summary.
 
