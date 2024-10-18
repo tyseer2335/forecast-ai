@@ -57,7 +57,6 @@ Heres some screenshots of the pages we made. We can see Desktop and Mobile view
 | Desktop | Mobile |
 |----------------------------|--------------------|
 | ![Old Default Page](https://i.ibb.co/HNWShzH/Sign-Up.png) | ![New Page for Login](https://i.ibb.co/m87KGHZ/Sign-Up-M.png) | 
-|
 | ![Old Default Page](https://i.ibb.co/RPxLdXT/Sign-In.png) | ![New Page for Login](https://i.ibb.co/bBTpXX1/Sign-In-M.png) | 
 | ![Old Default Page](https://i.ibb.co/hXYg7Zf/Learn-More.png) | ![New Page for Login](https://i.ibb.co/LrQhv4x/Learn-More-M.png) | 
 | ![Old Default Page](https://i.ibb.co/FnwPKfm/Frgot-Pass.png) | ![New Page for Login](https://i.ibb.co/SV0rK9s/Frgot-Pass-M.png) |
