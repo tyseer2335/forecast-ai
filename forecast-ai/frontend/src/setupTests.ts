@@ -1,5 +1,7 @@
 // src/setupTests.ts
 import "@testing-library/jest-dom";
+import '@testing-library/jest-dom/extend-expect';
+import 'isomorphic-fetch';
 import { TextEncoder, TextDecoder } from "util";
 import { ReadableStream } from "web-streams-polyfill";
 
