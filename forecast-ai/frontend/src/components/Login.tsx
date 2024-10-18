@@ -119,14 +119,15 @@ const Login: React.FC = () => {
                         <button
                             type="button"
                             onClick={togglePasswordVisibility}
+                            aria-label="toggle password visibility"
                             className="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-500"
                         >
-                            {showPassword ? (
-                                <EyeSlashIcon className="h-5 w-5" aria-hidden="true" />
-                            ) : (
-                                <EyeIcon className="h-5 w-5" aria-hidden="true" />
-                            )}
-                        </button>
+                        {showPassword ? (
+                        <EyeSlashIcon className="h-5 w-5" aria-hidden="true" />
+                        ) : (
+                        <EyeIcon className="h-5 w-5" aria-hidden="true" />
+                        )}
+                    </button>
                     </div>
                 </div>
 
