@@ -4,30 +4,34 @@ ForecastAI/HeavyLifters/Subteam14.1
 ## Table of Contents
 - [Summary](#summary)
   - [Goal and Focus: User Story 1](#goal-and-focus-user-story-1)
-  - [Database Schema and Rules](#database-schema-and-rules)
-    - [Structure](#structure)
-    - [Database Breakdown](#database-breakdown)
-    - [Data Relationships](#data-relationships)
-    - [Security Rules](#security-rules)
-  - [Implementations](#implementations)
-    - [Dynamic Signup/Login](#dynamic-signuplogin)
-    - [Dynamic Sidebar](#dynamic-sidebar)
-    - [Dynamic Chat Window](#dynamic-chat-window)
-    - [Unit Testing](#unit-testing)
+  - [Flow Diagram Drawn by Yehyun Lee](#flow-diagram-drawn-by-yehyun-lee)
+- [Database Schema and Rules](#database-schema-and-rules)
+  - [Structure](#structure)
+  - [Database Breakdown](#database-breakdown)
+  - [Data Relationships](#data-relationships)
+  - [Security Rules](#security-rules)
+- [Key Features](#key-features)
+  - [Dynamic Signup/Login](#dynamic-signuplogin)
+  - [Dynamic Sidebar](#dynamic-sidebar)
+  - [Dynamic Chat Window](#dynamic-chat-window)
+- [Implementations](#implementations)
+  - [Key Components](#key-components)
+  - [Unit Testing](#unit-testing)
 - [Individual Contributions](#individual-contributions)
-    - [Muaj](#muaj)
-    - [Irene](#irene)
+  - [Muaj](#muaj)
+  - [Irene](#irene)
 - [Instructions](#instructions)
-    - [How to Run the Unit Tests](#how-to-run-the-unit-tests)
+  - [How to Run the Unit Tests](#how-to-run-the-unit-tests)
+- [Demonstrations](#demonstrations)
 - [Scope of Contribution and Acknowledgment of Team Work](#scope-of-contribution-and-acknowledgment-of-team-work)
 - [Deployment](#deployment)
 
 
 ## Summary
-### Goal and Focus: User Story 1 💬
+### Goal and Focus: User Story 1
 
 Our primary objective was to implement **User Story 1**:  
-***"As a forecast researcher, I want to be able to view all my chat messages with the AI agent so that I can go back and use it as reference material for future work."***
+  ***"As a forecast researcher, I want to be able to view all my chat messages with the AI agent so that I can go back and use it as reference material for future work."***
 
 The main goal was to provide users with a streamlined and intuitive way to view and manage their past chat interactions with the AI agent. This was achieved through a **dynamic and responsive user interface**, particularly a sidebar that allows users to browse, select, and retrieve chat histories efficiently.
 
@@ -76,7 +80,7 @@ Below is a snippet of the implemented security rules:
 
 ---
 
-### Implementations
+### Key Features
 
 #### Dynamic Signup/Login
 
@@ -84,16 +88,44 @@ Upon successful signup or login, the database is automatically updated to store 
 
 #### Dynamic Sidebar
 
-The **dynamic sidebar** is now fully integrated with the database. It allows users to either select existing chats or initiate new ones. Upon creating a new chat, the sidebar auto-selects the new session, with the first message serving as the default title. The sidebar provides real-time updates, immediately reflecting new messages and auto-sorting chats based on the most recent activity. This enhances the user experience by ensuring the most relevant conversations are easily accessible without requiring manual refreshes.
+The **dynamic sidebar** is now fully integrated with the database. It allows users to either select existing chats or initiate new ones. By default, no chat is selected. 
+
+Users can simply click on a chat to view its messages, or they can create a new chat by not clicking or re-clicking the selected chat.  Upon creating a new chat, the title is automatically set with the first message serving as the default title. 
+
+The sidebar provides real-time updates, immediately reflecting new messages and auto-sorting chats based on the most recent activity. This enhances the user experience by ensuring the most relevant conversations are easily accessible without requiring manual refreshes.
 
 #### Dynamic Chat Window
 
-The **dynamic chat window** operates seamlessly for both new and returning users, providing a smooth and intuitive flow. Users can start new conversations or revisit old ones, with real-time updates ensuring that the chat window displays only relevant messages for the selected session. This facilitates easy message additions and history retrieval without interruptions.
+The **dynamic chat window** operates seamlessly for both new and returning users, providing a smooth and intuitive flow. All messages are stored in the database and displayed in the chat window synchronously. Users can start new conversations or revisit old ones, with real-time updates ensuring that the chat window displays only relevant messages for the selected session. This facilitates easy message additions and history retrieval without interruptions.
+
+
+### Implementations
+
+As the key features are tightly integrated, we have worked on more than the following components. However, the following components are the main implementations for the key features:
+
+#### Key Components
+The main implementations of the components for the key features can be found in the following files:
+- `Sidebar.tsx`: 
+  - Manages the dynamic sidebar interactions, including chat selection, creation, and real-time updates. The full path from the project root is `forecast-ai/frontend/src/components/Sidebar.tsx`.
+- `ChatWindow.tsx`: 
+  - Handles the dynamic chat window functionality, displaying messages in real-time and ensuring that the chat history is accurately reflected based on user selections. 
+  - The full path from the project root is `forecast-ai/frontend/src/components/ChatWindow.tsx`.
+- `types.ts`:
+  - Contains the type definitions for the chat data structure, ensuring consistency and reliability across components.
+  - The full path from the project root is `forecast-ai/frontend/src/components/hooks/types.ts`.
+- `saveChat/`: 
+  - Contains the functions for saving chat data to the database, ensuring that all chat sessions are stored accurately and efficiently. 
+  - The directory includes `_saveAISourcesMessages.tsx`, `_saveUserMessages.tsx`, `useGetChatRef.tsx`, and `useSaveChat.tsx`. 
+  - Each file contributes to saving chat data from AI, users, getting chat references, and managing chat saving hooks.
+  - The full path from the project root is `forecast-ai/frontend/src/components/hooks/saveChat/`.
+- `getChatMessages.tsx`:
+  - Contains the function for retrieving chat messages from the database, ensuring that users can access their chat history more seamlessly especially for the future work.
+  -  The full path from the project root is `forecast-ai/frontend/src/components/hooks/getChatMessages.tsx`.
 
 #### Unit Testing
 
 We conducted thorough **unit testing** for the core components of the chat functionality, ensuring reliability and performance:
-- Tests are saved in `/__test__/ChatWindow.test.tsx` and `/__test__/Sidebar.test.tsx`.
+- Tests are saved in the `forecast-ai/frontend/src/components/__test__/` folder. They are named `Sidebar.test.tsx` and `ChatWindow.test.tsx`.
 - Continuous progress updates were provided to the team regarding database connection successes and overall feature integration.
 - The comments at the top of each test file provide a clear overview of the test suite's purpose and descriptions of the test cases. Below are the screenshots of the comments:
 
@@ -164,10 +196,48 @@ Irene contributed to updating the database schema and rules, but her main focus 
 # Demonstrations
 Here are some videos that demonstrate the features implemented by our subteam:
 
-1. **Dynamic Sidebar and Chat Window Interaction**
-   - This video showcases the dynamic sidebar and chat window interactions, allowing users to select or create new chats, update existing chats, and view real-time message updates.
+1. **General Overview of Dynamic Sidebar and Chat Window Interaction**
+   
+   This video showcases the dynamic sidebar and chat window interactions, allowing users to select or create new chats, update existing chats, and view real-time message updates.
    <video controls="controls" style="max-width: 600px;" src="https://github.com/user-attachments/assets/3b4cbc31-b802-4060-a998-d9a2702e7605">
    </video>
+
+2. **Automated Chat Title Generation**
+   
+   This video demonstrates the automated chat title generation feature, which assigns a meaningful title to each chat session based on the first message.
+   <video controls="controls" style="max-width: 600px;" src="auto-default-title.mov"> 
+  </video>
+
+3. **Automated Sorting of Chats**
+   
+   This video showcases the automated sorting of chats based on the latest activity, ensuring that the most recent conversations are easily accessible.
+   <video controls="controls" style="max-width: 600px;" src="auto-sort-chats.mov"> 
+  </video>
+
+4. **Database Stores Existing Chat History**
+   
+   This video demonstrates that the database stores existing chat history for the user correctly, ensuring that users can access their chat sessions seamlessly.
+   <video controls="controls" style="max-width: 600px;" src="DB-stores-existing-chat-history.mov"> 
+  </video>
+
+5. **Existing Account Creates a New Chat**
+   
+   This video showcases the process of creating a new chat session by unselecting a chat, including setting the default title and updating the sidebar with the new chat.
+   <video controls="controls" style="max-width: 600px;" src="./images/14.1/how-to-start-new-chat.mov"> 
+  </video>
+
+6. **New Account Creates a New Chat and Continues from There**
+   
+   When a new user logs in, they can create a new chat by simply inputting their very first message.
+   This video demonstrates the default behavior when creating a new chat, allowing users to continue from the newly created chat without any additional steps.
+   <video controls="controls" style="max-width: 600px;" src="./images/14.1/new-account-create-new-chat-then-continue-from-there.mov"> 
+  </video>
+
+7. **Real-Time DB Updates and Chat Reflection**
+   
+   This video demonstrates the real-time updates of the database and chat reflection, ensuring that changes made by users are immediately reflected in the chat window. Also note that the chat sessions are sorted based on the latest activity in real-time.
+   <video controls="controls" style="max-width: 600px;" src="./images/14.1/saves-chat-message-correctly-to-session.mov">
+  </video>
 
 
 # Scope of Contribution and Acknowledgment of Team Work
