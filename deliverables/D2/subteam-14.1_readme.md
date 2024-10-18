@@ -55,3 +55,8 @@ This README will guide you through the installation, setup, and usage of our com
 
 ## Demonstration
 Here is a video demo of the application showcasing key features of our component:
+
+<video width="600" controls>
+  <source src="deliverables\D2\images\14.1\feature_test.mp4" type="video/mp4">
+</video>
+
