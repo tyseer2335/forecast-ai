@@ -130,9 +130,11 @@ We conducted thorough **unit testing** for the core components of the chat funct
 - The comments at the top of each test file provide a clear overview of the test suite's purpose and descriptions of the test cases. Below are the screenshots of the comments:
 
   **Sidebar Unit Testing Comments**
+  
     <img src="./images/14.1//unit-test-Sidebar-comments.png" width="600" alt="Sidebar Unit Testing Comments">
 
   **ChatWindow Unit Testing Comments**
+  
     <img src="./images/14.1//unit-test-ChatWindow-comments.png" width="600" alt="ChatWindow Unit Testing Comments">
 
 - Refer to the instructions(#how-to-run-the-unit-tests) below for running the unit tests.
@@ -205,39 +207,39 @@ Here are some videos that demonstrate the features implemented by our subteam:
 2. **Automated Chat Title Generation**
    
    This video demonstrates the automated chat title generation feature, which assigns a meaningful title to each chat session based on the first message.
-   <video controls="controls" style="max-width: 600px;" src="auto-default-title.mov"> 
-  </video>
+   <video controls="controls" style="max-width: 600px;" src="https://github.com/user-attachments/assets/a8984e9d-087c-44ff-86f7-61711a1e6650"> 
+   </video>
 
 3. **Automated Sorting of Chats**
    
    This video showcases the automated sorting of chats based on the latest activity, ensuring that the most recent conversations are easily accessible.
-   <video controls="controls" style="max-width: 600px;" src="auto-sort-chats.mov"> 
-  </video>
+   <video controls="controls" style="max-width: 600px;" src="https://github.com/user-attachments/assets/5cf123f1-091c-4b47-a77b-9eeb313852cb"> 
+   </video>
 
 4. **Database Stores Existing Chat History**
    
    This video demonstrates that the database stores existing chat history for the user correctly, ensuring that users can access their chat sessions seamlessly.
-   <video controls="controls" style="max-width: 600px;" src="DB-stores-existing-chat-history.mov"> 
-  </video>
+   <video controls="controls" style="max-width: 600px;" src="https://github.com/user-attachments/assets/bbecde8d-cba8-498d-91ce-248e5ed379df"> 
+   </video>
 
 5. **Existing Account Creates a New Chat**
    
    This video showcases the process of creating a new chat session by unselecting a chat, including setting the default title and updating the sidebar with the new chat.
-   <video controls="controls" style="max-width: 600px;" src="./images/14.1/how-to-start-new-chat.mov"> 
-  </video>
+   <video controls="controls" style="max-width: 600px;" src="https://github.com/user-attachments/assets/e7f478fb-51e6-4f24-9194-6df84560a333"> 
+   </video>
 
-6. **New Account Creates a New Chat and Continues from There**
+6. **New Account Creates a New Chat and Continues**
    
    When a new user logs in, they can create a new chat by simply inputting their very first message.
-   This video demonstrates the default behavior when creating a new chat, allowing users to continue from the newly created chat without any additional steps.
-   <video controls="controls" style="max-width: 600px;" src="./images/14.1/new-account-create-new-chat-then-continue-from-there.mov"> 
-  </video>
+   This video demonstrates the default behaviour when creating a new chat, allowing users to continue from the newly created chat without any additional steps.
+   <video controls="controls" style="max-width: 600px;" src="https://github.com/user-attachments/assets/3e7bfb66-fa40-492c-9c52-d8da4c7dfa63"> 
+   </video>
 
 7. **Real-Time DB Updates and Chat Reflection**
-   
-   This video demonstrates the real-time updates of the database and chat reflection, ensuring that changes made by users are immediately reflected in the chat window. Also note that the chat sessions are sorted based on the latest activity in real-time.
-   <video controls="controls" style="max-width: 600px;" src="./images/14.1/saves-chat-message-correctly-to-session.mov">
-  </video>
+
+   This video demonstrates the real-time updates of the database and chat reflection, ensuring the chat message is exactly added to the correct chat session. Also note that the chat sessions are sorted based on the latest activity in real-time.
+   <video controls="controls" style="max-width: 600px;" src="https://github.com/user-attachments/assets/fe884fe5-7d37-4cc9-9c96-e60153897348">
+   </video>
 
 
 # Scope of Contribution and Acknowledgment of Team Work
