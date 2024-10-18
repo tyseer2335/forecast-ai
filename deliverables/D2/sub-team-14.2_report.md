@@ -150,7 +150,7 @@ Our deployed application link: [forecastai.netlify.app](https://forecastai.netli
 
 For automated deployment, we utilize CI/CD by maintaining a private fork of our project in a personal GitHub account. Whenever updates are made to the main branch, syncing the fork in the private fork triggers the CI/CD pipeline, which redeploys the frontend and backend application with the latest commits.
 
-<video src="https://github.com/user-attachments/assets/37ad165b-eea5-4d95-a302-bfabd99dd5d" controls="controls" style="max-width: 730px;">
+<video src="https://github.com/user-attachments/assets/cd7a7664-0672-4f80-b5c1-19e53dedd7d8" controls="controls" style="max-width: 730px;">
 </video>
 
 </br>
