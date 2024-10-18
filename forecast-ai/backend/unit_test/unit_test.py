@@ -20,15 +20,25 @@ logging.basicConfig(level=logging.INFO)
 
 def unit_test_all():
     try:
+        logging.info("\033[92m[Unit Test] Starting unit tests...\033[0m")
         client, LOCAL_OR_PROD = test_env_var()
+        logging.info("\033[92m[Unit Test] Environment variables loaded successfully.\033[0m")
         request = test_create_request()
+        logging.info("\033[92m[Unit Test] ForecastRequest object created successfully.\033[0m")
         search_queries = test_generate_search_queries(client, request)
+        logging.info("\033[92m[Unit Test] Search queries generated successfully.\033[0m")
         news = test_collect_news(search_queries, request)
+        logging.info("\033[92m[Unit Test] News collected successfully.\033[0m")
         news_with_content = test_scrapping_content(news, LOCAL_OR_PROD)
+        logging.info("\033[92m[Unit Test] News with content scrapped successfully.\033[0m")
         news_objects = test_convert_to_article(news_with_content)
+        logging.info("\033[92m[Unit Test] News converted to Article objects successfully.\033[0m")
         test_get_relevance_score(news_objects, request, client)
+        logging.info("\033[92m[Unit Test] Relevance score calculated successfully.\033[0m")
         ranked_news_with_content = test_sort_and_filter(news_objects, request)
+        logging.info("\033[92m[Unit Test] News sorted and filtered successfully.\033[0m")
         test_generate_forecast(request, ranked_news_with_content)
+        logging.info("\033[92m[Unit Test] Forecast generated successfully.\033[0m")
         logging.info("\033[92m[Unit Test Success]\033[0m All tests passed successfully.")
     except AssertionError as e:
         logging.error(f"[Unit Test Failed] {e}")
@@ -36,6 +46,10 @@ def unit_test_all():
 
 
 def test_env_var() -> tuple[OpenAI, str]:
+    """
+    Test if environment variables are loaded correctly
+    :return:
+    """
     load_dotenv(dotenv_path='./.env')
     OPENAI_API_KEY = os.getenv('OPENAPI_API_KEY')
     client = OpenAI(api_key=OPENAI_API_KEY)
@@ -48,6 +62,10 @@ def test_env_var() -> tuple[OpenAI, str]:
 
 
 def test_create_request() -> ForecastRequest:
+    """
+    Test if ForecastRequest object is created correctly
+    :return:
+    """
     request = ForecastRequest(question="Who will win the US 2024 election?",
                               num_queries=5,
                               perc_of_each_source={'automatic': 0.6, 'x.com': 0.2, 'facebook.com': 0.2},
@@ -68,6 +86,12 @@ def test_create_request() -> ForecastRequest:
 
 
 def test_generate_search_queries(client, request: ForecastRequest) -> dict:
+    """
+    Test if search queries are generated correctly
+    :param client:
+    :param request:
+    :return:
+    """
     search_queries = break_down_query.generate_search_queries(client, request)
     # {'formatted_queries': {'automatic': ['News: predictions for the US 2024 presidential election',
     #                                      'Opinion: analysis on the US 2024 election candidates',
@@ -94,6 +118,12 @@ def test_generate_search_queries(client, request: ForecastRequest) -> dict:
 
 
 def test_collect_news(search_queries: dict, request: ForecastRequest) -> dict:
+    """
+    Test if news are collected correctly
+    :param search_queries:
+    :param request:
+    :return:
+    """
     news = collect_news.collect_news(search_queries["queries"], request)
     # {'Who will win the US 2024 election site:x.com': [{'title': 'Collin Rugg (@CollinRugg) - X',
     #                                                    'description': 'Collin Rugg (@CollinRugg)  X',
@@ -130,6 +160,12 @@ def test_collect_news(search_queries: dict, request: ForecastRequest) -> dict:
 
 
 def test_scrapping_content(news: dict, LOCAL_OR_PROD: str) -> dict:
+    """
+    Test if content is scrapped correctly
+    :param news:
+    :param LOCAL_OR_PROD:
+    :return:
+    """
     news_with_content = scrapping_content.multiple_scrape_content(news, LOCAL_OR_PROD)
     # {'Who will win the US 2024 election site:x.com': [{'title': 'Collin Rugg (@CollinRugg) - X', 'description':
     # 'Collin Rugg (@CollinRugg)  X', 'published date': 'Wed, 05 Jun 2024 04:45:47 GMT',
@@ -162,6 +198,11 @@ def test_scrapping_content(news: dict, LOCAL_OR_PROD: str) -> dict:
 
 
 def test_convert_to_article(news_with_content: dict) -> dict:
+    """
+    Test if news are converted to Article objects correctly
+    :param news_with_content:
+    :return:
+    """
     news_objects = convert_to_article.dict_to_article(news_with_content)
     # {'x.com': [<model.article.Article at 0x22948f6bc50>,
     #            <model.article.Article at 0x22948f6b6d0>],
@@ -182,6 +223,13 @@ def test_convert_to_article(news_with_content: dict) -> dict:
 
 
 def test_get_relevance_score(news_objects: dict, request: ForecastRequest, client: OpenAI):
+    """
+    Test if relevance score is calculated correctly
+    :param news_objects:
+    :param request:
+    :param client:
+    :return:
+    """
     filtering.get_relevance_score(news_objects, request.question, client)
     # update self.score
     assert all(isinstance(article.score, float) for value in news_objects.values() for article in value)
@@ -189,6 +237,12 @@ def test_get_relevance_score(news_objects: dict, request: ForecastRequest, clien
 
 
 def test_sort_and_filter(news_objects: dict, request: ForecastRequest) -> dict:
+    """
+    Test if news are sorted and filtered correctly
+    :param news_objects:
+    :param request:
+    :return:
+    """
     ranked_news_with_content = filtering.sort_and_filter(news_objects, request.after_ranking_num_articles,
                                                          request.perc_of_each_source)
     # {'x.com': [<model.article.Article at 0x22948f6bc50>],
@@ -205,6 +259,12 @@ def test_sort_and_filter(news_objects: dict, request: ForecastRequest) -> dict:
 
 
 def test_generate_forecast(request: ForecastRequest, ranked_news_with_content: dict):
+    """
+    Test if forecast is generated correctly
+    :param request:
+    :param ranked_news_with_content:
+    :return:
+    """
     answer = generate_forecast.generate_forecast(request, ranked_news_with_content)
     # {'answer': HARD_CODED_ANSWER,
     #  'sources': {'x.com': [<model.article.Article at 0x22948f6bc50>],
