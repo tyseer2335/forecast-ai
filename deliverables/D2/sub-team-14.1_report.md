@@ -15,8 +15,10 @@ ForecastAI/HeavyLifters/Subteam14.1
     - [Dynamic Chat Window](#dynamic-chat-window)
     - [Unit Testing](#unit-testing)
 - [Individual Contributions](#individual-contributions)
-  - [Muaj](#muaj)
-  - [Irene](#irene)
+    - [Muaj](#muaj)
+    - [Irene](#irene)
+- [Scope of Contribution and Acknowledgment of Team Work](#scope-of-contribution-and-acknowledgment-of-team-work)
+
 
 ## Summary
 ### Goal and Focus: User Story 1
@@ -97,3 +99,8 @@ Muaj’s main role was developing a comprehensive database schema that the team 
 
 ## Irene
 Irene contributed to updating the database schema and rules, but her main focus wat to implement dynamic sidebar interactions chat window functionality. She implemented key features, including allowing users to select or create new chats from the sidebar, setting the default title for new chats as the first query, and ensuring chat history is maintained based on user selections. Irene integrated real-time message updates, saving them to the correct chat session and reflecting changes in the sidebar. She addressed bugs related to real-time updates and user account behaviors, ensuring smooth navigation and sorting of chats by the latest activity. She wrote unit tests for both the **Sidebar** and **ChatWindow** and collaborated with sub-teams U2 and U3 to align on chat rules and type definitions, continuously revising the codebase to maintain team coordination.
+
+# Scope of Contribution and Acknowledgment of Team Work
+In this project, our team divided the work to 3 subteams. This subteam's (14.1) contributions  focused on updating the database, the chat history feature, and enabling users to interact with their chat sessions. We implemented the UI that allows users to view, select, and engage with past chats, along with features like automated chat title generation and editing for better organization. 
+
+It's important to note that while we handled the chat interaction, database update, and history functionality, there were certain features we did not work on. Those includes authentication, the prompt bar, and any sort of backend development. We merged these features from team 14.2 because some of our work depended on their work (ex. prompt bar).
