@@ -57,6 +57,6 @@ This README will guide you through the installation, setup, and usage of our com
 
 Here’s a video demo of the application showcasing the key features of our component:
 
-
-
-
+<video src="https://github.com/user-attachments/assets/b6c3dfcb-51c0-45f7-adbe-174aae3545f6
+" controls="controls" style="max-width: 730px;">
+</video>
