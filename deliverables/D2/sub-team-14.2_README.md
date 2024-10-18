@@ -1,11 +1,10 @@
-### What is the product? ⚙️
+## What is the product? ⚙️
 
 The project is designed to streamline the collection of real-time global data and identify biases in AI-generated forecasts. It automates data gathering from various sources like news and social media, organizes it for AI analysis, and provides visualizations that highlight both the predictions and any biases in the data. This enhances the transparency of AI forecasts and improves their accuracy by addressing potential cognitive biases.
 
 Developed in partnership with the Machine Learning Group at the University of Toronto, the platform refines a custom AI model for forecasting major events. Users can submit questions, and the system generates predictions, clearly showing how the data and AI's reasoning impact the results, making AI-driven forecasts more understandable and transparent.
 
----
-### Installation Guide
+## Installation Guide
 
 #### 1. Ensure you have Node.js, npm, Python, pip and an IDE such as VS Code installed.
 
@@ -79,8 +78,7 @@ LOCAL_OR_PROD=local
 
 The server should now be running in http://localhost:8000.
 
----
-### How to run tests 🧪
+## How to run tests 🧪
 
 #### 1. Navigate to the frontend directory and run the following commmand:
 
@@ -110,13 +108,14 @@ You should see the following output:\
 - **Adjustable Data Parameters**: Users can control the parameters to customize the total number of sources to collect/display, ratio of different news platform and article date ranges.
 - **View Full Data Source**: Users can view the entire content of each data source to understand the context behind the data
 
----
-### Local Demo
+## Demo
+
+### Local:
 
 <video src="https://github.com/user-attachments/assets/6bed3b01-1f62-4c9b-9eb3-709871057002" controls="controls" style="max-width: 730px;">
 </video>
 
-### Production Demo
+### Production:
 
 <video src="https://github.com/user-attachments/assets/03b27fe0-6d79-4e8a-ac3c-4e23a69a2b06" controls="controls" style="max-width: 730px;">
 </video>
