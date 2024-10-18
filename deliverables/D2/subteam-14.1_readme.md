@@ -54,8 +54,9 @@ This README will guide you through the installation, setup, and usage of our com
 7. The application should now be running in your browser!
 
 ## Demonstration
-Here is a video demo of the application showcasing key features of our component:
-<video src="https://github.com/csc301-2024-f/project-14-ml-cs-uoft/raw/refs/heads/D2-14-1/docs/muaj/subteam-readme/deliverables/D2/images/14.1/feature_test.mp4" controls="controls" style="max-width: 730px;">
-</video>
+
+Here’s a video demo of the application showcasing the key features of our component:
+
+
 
 
