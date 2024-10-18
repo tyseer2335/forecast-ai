@@ -12,8 +12,8 @@ We concluded that the web app mostly comes down to 4 components. Authentication,
 
 <div> 
     <img src="./images/14.1/flow-diagram.png">
-    <img src="./images/14.2/flow-diagram.png">
-    <img src="./images/14.3/flow-diagram.png">
+    <img src="./images/14.1/flow-diagram2.png">
+    <img src="./images/14.1/flow-diagram3.png">
 </div>
 
 ***Left represents U1, middle U2, last diagram for U3**
@@ -22,7 +22,7 @@ Connection between loading chat with sidebar in U1, prompting bar in U2 with the
 
 Below diagram represents the whole stack infrastructure, how each component calls each other. Blue represents frontend, green for backend, where pink is more specific detail of backend components.
 
-<img src="./images/14.2/infrastructure-diagram.png" width="600">
+<img src="./images/14.1/infrastructure-diagram.png" width="600">
 
 <br />
 Upon finishing D1, I already began implementing bare bone authentication, so we already had a clear understanding of what stack we are using, deployment, and libraries. After dividing the team into 3 and assigning user story to each team based on skill sets and interests, it was up to each sub team member to decide what they specifically wanted to work on within their assigned user story scope.
