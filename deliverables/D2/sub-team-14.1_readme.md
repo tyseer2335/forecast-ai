@@ -37,7 +37,7 @@ This README will guide you through the installation, setup, and usage of our com
    npm install
    ```
 5. Set up Firebase:
-   - Create a Firebase project and obtain your API keys. Here is a guide: [Firbase Setup](https://firebase.google.com/docs/web/setup)
+   - Create a Firebase project and obtain your API keys. Here is a guide: [Firebase Setup](https://firebase.google.com/docs/web/setup)
    - Create a .env file in the frontend folder and add the following:
         ```
         REACT_APP_FIREBASE_API_KEY=your-firebase-api-key
