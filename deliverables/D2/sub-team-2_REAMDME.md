@@ -113,7 +113,11 @@ You should see the following output:\
 
 ---
 ### Local Demo
-![](./images/14.2/local-demo.mov)
+
+<video src="https://github.com/user-attachments/assets/6bed3b01-1f62-4c9b-9eb3-709871057002" controls="controls" style="max-width: 730px;">
+</video>
 
 ### Production Demo
-![](./images/14.2/prod-demo.mov)
+
+<video src="https://github.com/user-attachments/assets/03b27fe0-6d79-4e8a-ac3c-4e23a69a2b06" controls="controls" style="max-width: 730px;">
+</video>
