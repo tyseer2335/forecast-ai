@@ -61,7 +61,7 @@ To safeguard user privacy and data integrity, we implemented strict **security r
 
 
 Below is a snippet of the implemented security rules:
-  <img src="./images/security-rules.png" width="600" alt="Security Rules Implementation">
+  <img src="./images/14.1//security-rules.png" width="600" alt="Security Rules Implementation">
 
 ---
 
@@ -87,9 +87,9 @@ We conducted thorough **unit testing** for the core components of the chat funct
 - Refer to the test files for detailed descriptions of the test cases.
 - Refer to README for instructions on running the tests.
 - Below is the output of the test results:
-  <img src="./images/unit-test-output-Sidebar.png" width="600" alt="Sidebar Unit Testing Output">
-  <img src="./images/unit-test-output-ChatWindow.png" width="600" alt="ChatWindow Unit Testing Output">
-  <img src="./images/unit-test-output-all.png" width="600" alt="All Unit Testing Output">
+  <img src="./images/14.1//unit-test-output-Sidebar.png" width="600" alt="Sidebar Unit Testing Output">
+  <img src="./images//14.1/unit-test-output-ChatWindow.png" width="600" alt="ChatWindow Unit Testing Output">
+  <img src="./images//14.1/unit-test-output-all.png" width="600" alt="All Unit Testing Output">
 
 
 ---
@@ -107,6 +107,10 @@ In this project, our team divided the work into 3 subteams. This subteam's (14.1
 It's important to note that while we handled the chat interaction, database update, and history functionality, there were certain features we did not work on. Those include authentication, the prompt bar, and any sort of backend development. We merged these features from team 14.2 because some of our work depended on their work (ex. prompt bar).
 
 # Deployment
-Enjoy forecastAI!
+Our deployed application link: https://forecastai.netlify.app/login 
 
-https://forecastai.netlify.app/login 
+Test account that can be used without signing up:
+- Email: edisonliem417@gmail.com
+- Password: forecastai1234
+
+Enjoy forecastAI!
