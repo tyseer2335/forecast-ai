@@ -2,6 +2,7 @@
 ForecastAI/HeavyLifters/Subteam14.1 
 
 ## Table of Contents
+- [Summary](#summary)
   - [Goal and Focus: User Story 1](#goal-and-focus-user-story-1)
   - [Database Schema and Rules](#database-schema-and-rules)
     - [Structure](#structure)
@@ -13,9 +14,9 @@ ForecastAI/HeavyLifters/Subteam14.1
     - [Dynamic Sidebar](#dynamic-sidebar)
     - [Dynamic Chat Window](#dynamic-chat-window)
     - [Unit Testing](#unit-testing)
-  - [Individual Contributions](#individual-contributions)
-    - [Muaj](#muaj)
-    - [Irene](#irene)
+- [Individual Contributions](#individual-contributions)
+  - [Muaj](#muaj)
+  - [Irene](#irene)
 
 ## Summary
 ### Goal and Focus: User Story 1
@@ -55,6 +56,10 @@ We adopted an **embedding approach** to maintain efficient querying, especially 
 
 To safeguard user privacy and data integrity, we implemented strict **security rules**, ensuring that users can only access their own data and preventing unauthorized access to other users' chats.
 
+
+Below is a snippet of the implemented security rules:
+  <img src="./images/security-rules.png" width="600" alt="Security Rules Implementation">
+
 ---
 
 ### Implementations
@@ -76,12 +81,14 @@ The **dynamic chat window** operates seamlessly for both new and returning users
 We conducted thorough **unit testing** for the core components of the chat functionality, ensuring reliability and performance:
 - Tests are saved in `/__test__/ChatWindow.test.tsx` and `/__test__/Sidebar.test.tsx`.
 - Continuous progress updates were provided to the team regarding database connection successes and overall feature integration.
+- Refer to the test files for detailed descriptions of the test cases.
+- Refer to README for instructions on running the tests.
+- Below is the output of the test results:
+  <img src="./images/unit-test-output-Sidebar.png" width="600" alt="Sidebar Unit Testing Output">
+  <img src="./images/unit-test-output-ChatWindow.png" width="600" alt="ChatWindow Unit Testing Output">
+  <img src="./images/unit-test-output-all.png" width="600" alt="All Unit Testing Output">
 
----
-**Note**: The focus on quality over quantity was maintained throughout the project, ensuring the features were robust, user-friendly, and efficient.
 
----
----
 ---
 
 # Individual Contributions
