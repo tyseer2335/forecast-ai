@@ -41,7 +41,6 @@ REACT_APP_FIREBASE_MESSAGING_SENDER_ID=your-firebase-messaging-sender-id
 REACT_APP_FIREBASE_APP_ID=your-firebase-app-id
 
 REACT_APP_BACKEND_URL=backend-url (http://localhost:8000 for local)
-
 ```
 
 If REACT_APP_BACKEND_URL is set to production endpoint, you do not need to run the backend locally. If this is set to localhost, please continue to host the Fast API locally.
