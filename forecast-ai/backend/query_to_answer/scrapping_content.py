@@ -41,7 +41,7 @@ def init_driver():
     # [For hosting FastAPI with selenium on Render with Docker]
     options.add_argument("--no-sandbox")
     options.add_argument("--disable-dev-shm-usage")
-    driver = webdriver.Chrome(options=options, desired_capabilities=DesiredCapabilities.CHROME)
+    driver = webdriver.Chrome(options=options)
     return driver
 
 
