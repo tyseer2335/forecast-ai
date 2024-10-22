@@ -34,7 +34,11 @@ def _single_scrape_content(url: str) -> dict:
 def init_driver():
     options = Options()
     options.headless = True
-    driver = webdriver.Chrome(options=options)
+    # driver = webdriver.Chrome(options=options)
+    driver = webdriver.Remote(
+        command_executor='http://selenium:4444/wd/hub',
+        options=options
+    )
     return driver
 
 
