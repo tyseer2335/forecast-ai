@@ -41,7 +41,7 @@ const AnswerDisplay: React.FC<AnswerDisplayProps> = ({ answer }) => {
 
   return (
     <div className="p-4 bg-gray-800 rounded-md">
-      <h3 className="text-lg font-bold mb-2">Forecast AI's Answer</h3>
+      <h3 className="text-lg font-bold mb-2">THIS IS MOCK UP DESIGN!</h3>
       <p className="text-white mb-4"><strong>Question:</strong> {answer.Question}</p>
       <p className="text-white mb-4"><strong>Forecast:</strong> {answer.Forecast}</p>
       <p className="text-white mb-4"><strong>Crowd Forecast:</strong> {answer["Crowd forecast"]}</p>
