@@ -42,7 +42,7 @@ def init_driver():
     options.add_argument("--no-sandbox")
     options.add_argument("--disable-dev-shm-usage")
     driver = webdriver.Remote(
-        command_executor='http://selenium-standalone-chrome:4444/wd/hub',
+        command_executor='http://selenium:4444/wd/hub',
         options=options
     )
     return driver

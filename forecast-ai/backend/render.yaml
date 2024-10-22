@@ -12,3 +12,6 @@ services:
     name: selenium-standalone-chrome
     env: docker
     dockerfilePath: ./Dockerfile.selenium
+    ports:
+      - 4444
+      - 5900
