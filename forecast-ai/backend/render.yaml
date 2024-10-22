@@ -1,9 +1,19 @@
 services:
-  # A Docker web service
   - type: web
-    name: fastapi-example
-    runtime: python
+    name: fastapi-app
+    env: docker
+    dockerfilePath: ./Dockerfile
+    buildCommand: ""
+    startCommand: ""
+    autoDeploy: true
+    envVars:
+      - key: PORT
+        value: 8000
+    healthCheckPath: "/"
     plan: free
-    autoDeploy: false
-    buildCommand: pip install -r requirements.txt
-    startCommand: uvicorn main:app --host 0.0.0.0 --port $PORT
+
+  - type: privateService
+    name: selenium
+    env: docker
+    dockerfilePath: ./Dockerfile.selenium
+    plan: free
