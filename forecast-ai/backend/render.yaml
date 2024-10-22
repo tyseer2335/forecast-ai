@@ -12,8 +12,7 @@ services:
     healthCheckPath: "/"
     plan: free
 
-  - type: privateService
-    name: selenium
+  - type: pserv
+    name: selenium-standalone-chrome-debug
     env: docker
     dockerfilePath: ./Dockerfile.selenium
-    plan: free
