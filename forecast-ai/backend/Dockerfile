@@ -1,19 +1,42 @@
-# Use the official Python image from the Docker Hub
-FROM python:3.9
+# Use Python base image
+FROM python:3.9-slim
 
-# Set the working directory in the container
+# Install system dependencies
+RUN apt-get update && apt-get install -y \
+    wget \
+    gnupg \
+    curl \
+    unzip \
+    && rm -rf /var/lib/apt/lists/*
+
+# Install specific version of Chrome (114)
+RUN wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add - \
+    && echo "deb http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google.list \
+    && apt-get update \
+    && apt-get install -y google-chrome-stable=114.0.5735.198-1 \
+    && apt-mark hold google-chrome-stable \
+    && rm -rf /var/lib/apt/lists/*
+
+# Install matching ChromeDriver version (114.0.5735.90)
+RUN wget -q -O /tmp/chromedriver.zip https://chromedriver.storage.googleapis.com/114.0.5735.90/chromedriver_linux64.zip \
+    && unzip /tmp/chromedriver.zip -d /usr/local/bin/ \
+    && rm /tmp/chromedriver.zip \
+    && chmod +x /usr/local/bin/chromedriver
+
+# Set working directory
 WORKDIR /app
 
-# Copy the requirements file into the container
+# Copy requirements and install dependencies
 COPY requirements.txt .
-
-# Install the dependencies
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy the rest of the application code into the container
+# Copy application code
 COPY . .
 
-# Expose the port the app runs on
+# Update Chrome options in your code
+ENV CHROME_OPTIONS="--headless --no-sandbox --disable-dev-shm-usage"
+
+# Expose the port
 EXPOSE 8000
 
 # Command to run the application

@@ -34,17 +34,11 @@ def _single_scrape_content(url: str) -> dict:
 
 def init_driver():
     options = Options()
-    options.headless = True
-    # [For local]
-    # driver = webdriver.Chrome(options=options)
-
-    # [For hosting FastAPI with selenium on Render with Docker]
-    options.add_argument("--no-sandbox")
-    options.add_argument("--disable-dev-shm-usage")
-    driver = webdriver.Remote(
-        command_executor='http://selenium:4444/wd/hub',
-        options=options
-    )
+    options.add_argument('--headless')
+    options.add_argument('--no-sandbox')
+    options.add_argument('--disable-dev-shm-usage')
+    options.binary_location = '/usr/bin/google-chrome'
+    driver = webdriver.Chrome(options=options)
     return driver
 
 
