@@ -1,5 +1,5 @@
 // src/components/PromptBar.js
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import OptionsButton from "../assets/options-button.svg";
 import SubmitButton from "../assets/submit-button.svg";
 import { useNavigate } from "react-router-dom";
@@ -7,7 +7,7 @@ import { auth } from "./firebase";
 import AdvancedQueryOptionsMenu from "./AdvancedQueryOptionsMenu";
 import { Chat, SourceObject } from "../hooks/types";
 import axios from "axios";
-import { v4 as uuidv4 } from 'uuid';
+import { v4 as uuidv4 } from "uuid";
 
 type PromptBarProps = {
   chats: Chat[];
@@ -17,7 +17,7 @@ type PromptBarProps = {
   addSources: (sources: SourceObject[]) => void;
   addError: (error: string) => void;
   toggleLoading: (loading: boolean) => void;
-}
+};
 
 export type Request = {
   question?: string;
@@ -27,14 +27,23 @@ export type Request = {
   after_ranking_num_articles?: number;
   start_date?: string;
   end_date?: string;
-}
+};
 
-const PromptBar: React.FC<PromptBarProps> = ({ chats, setChatTitle, saveChatToDB, addQuery, addSources, addError, toggleLoading }) => {
+const PromptBar: React.FC<PromptBarProps> = ({
+  chats,
+  setChatTitle,
+  saveChatToDB,
+  addQuery,
+  addSources,
+  addError,
+  toggleLoading,
+}) => {
   const [input, setInput] = useState("");
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [request, setRequest] = useState<Request>({});
   const [submitRequest, setSubmitRequest] = useState(false);
-  const [status, setStatus] = useState(""); // Add state to handle status updates
+  const [status, setStatus] = useState(""); // State to store status updates
+  const socketRef = useRef<WebSocket | null>(null); // WebSocket reference
 
   const navigate = useNavigate();
   const userId = auth.currentUser?.uid;
@@ -51,15 +60,66 @@ const PromptBar: React.FC<PromptBarProps> = ({ chats, setChatTitle, saveChatToDB
         result.push({
           title: source.title,
           text: source.content.text,
-          image: source.content.media.length > 0 ? source.content.media[0] : "https://placehold.co/306x150?text=No+Image+Available",
+          image:
+            source.content.media.length > 0
+              ? source.content.media[0]
+              : "https://placehold.co/306x150?text=No+Image+Available",
           link: source.url,
           logo: "https://placehold.co/150x150?text=Logo",
-          metrics: { viewsCount: 483, trendingRate: 22, region: 'Atlanta, USA' }
-        })
-      })
-    })
+          metrics: {
+            viewsCount: 483,
+            trendingRate: 22,
+            region: "Atlanta, USA",
+          },
+        });
+      });
+    });
     return result;
-  }
+  };
+
+  // Function to handle WebSocket connection
+  const connectWebSocket = (queryId: string) => {
+    if (!process.env.REACT_APP_BACKEND_URL) {
+      throw new Error("REACT_APP_BACKEND_URL is not defined");
+    }
+    const socket = new WebSocket(
+      `${process.env.REACT_APP_BACKEND_URL.replace(
+        "https",
+        "ws"
+      )}/status?query_id=${queryId}`
+    );
+
+    socket.onopen = () => {
+      console.log("WebSocket connection established");
+    };
+
+    socket.onmessage = (event) => {
+      setStatus(event.data); // Update status in real-time
+    };
+
+    socket.onerror = (error) => {
+      console.error("WebSocket error: ", error);
+    };
+
+    socket.onclose = () => {
+      console.log("WebSocket connection closed");
+    };
+
+    socketRef.current = socket; // Save WebSocket instance to ref
+  };
+
+  // Function to close WebSocket connection on unmount
+  const closeWebSocket = () => {
+    if (socketRef.current) {
+      socketRef.current.close();
+    }
+  };
+
+  useEffect(() => {
+    return () => {
+      closeWebSocket(); // Close WebSocket connection on component unmount
+    };
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -76,45 +136,44 @@ const PromptBar: React.FC<PromptBarProps> = ({ chats, setChatTitle, saveChatToDB
         addQuery(input);
         setInput("");
 
-        // WebSocket connection to receive real-time status
+        // Open WebSocket connection to receive real-time status
+        connectWebSocket(queryId);
+
+        // Send POST request with query ID
         if (!process.env.REACT_APP_BACKEND_URL) {
           throw new Error("REACT_APP_BACKEND_URL is not defined");
         }
-        console.log("Connecting to WebSocket...");
-        const socket = new WebSocket(`${process.env.REACT_APP_BACKEND_URL.replace('https', 'ws')}/status?query_id=${queryId}`);
-        console.log("WebSocket connection established");
-
-        socket.onmessage = (event) => {
-          setStatus(event.data); // Update status state with WebSocket messages
-        };
-
-        socket.onerror = (error) => {
-          console.error("WebSocket error: ", error);
-        };
-
-        socket.onclose = () => {
-          console.log("WebSocket connection closed");
-        };
-
-        // Send POST request with query ID
-        const response = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/query_to_answer?query_id=${queryId}`, updatedRequest);
-        const sources = convertResponseSourcesIntoSources(response.data.sources);
+        const response = await axios.post(
+          `${process.env.REACT_APP_BACKEND_URL.replace(
+            "https",
+            "http"
+          )}/query_to_answer?query_id=${queryId}`,
+          updatedRequest
+        );
+        const sources = convertResponseSourcesIntoSources(
+          response.data.sources
+        );
         addSources(sources);
         toggleLoading(false);
         setRequest({});
         setSubmitRequest(false);
         try {
-          saveChatToDB({ query: input, sources: sources, loading: false })
+          saveChatToDB({ query: input, sources: sources, loading: false });
           navigate("/");
-        } catch(error) {
+        } catch (error) {
           console.error("Error handling submit:", error);
         }
       } catch (error) {
         let serverDown = false;
         try {
           // Check server status
-          const serverStatusResponse = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/`);
-          if (serverStatusResponse.status !== 200 || serverStatusResponse.data.status !== "Server is running") {
+          const serverStatusResponse = await axios.get(
+            `${process.env.REACT_APP_BACKEND_URL}/`
+          );
+          if (
+            serverStatusResponse.status !== 200 ||
+            serverStatusResponse.data.status !== "Server is running"
+          ) {
             serverDown = true;
           }
         } catch (error) {
@@ -122,9 +181,12 @@ const PromptBar: React.FC<PromptBarProps> = ({ chats, setChatTitle, saveChatToDB
         }
 
         toggleLoading(false);
-        let errorMessage = (error as any).response?.data?.detail || "Error generating answer to query";
+        let errorMessage =
+          (error as any).response?.data?.detail ||
+          "Error generating answer to query";
         if (serverDown) {
-          errorMessage = "Server is down. Please wait for the server to load up in 1 minute.";
+          errorMessage =
+            "Server is down. Please wait for the server to load up in 1 minute.";
         }
         addError(errorMessage);
       }
@@ -133,60 +195,76 @@ const PromptBar: React.FC<PromptBarProps> = ({ chats, setChatTitle, saveChatToDB
 
   const formattedDate = (isoString: string) => {
     const date = new Date(isoString);
-    return date.toLocaleDateString('en-US', {
-      month: 'short',
-      day: 'numeric',
-      year: 'numeric'
-    })
-  }
+    return date.toLocaleDateString("en-US", {
+      month: "short",
+      day: "numeric",
+      year: "numeric",
+    });
+  };
 
   return (
-    <form onSubmit={handleSubmit} className="bg-mid-dark-grey px-6 py-3 flex justify-between items-center rounded-full relative h-[64px]">
-        <AdvancedQueryOptionsMenu isMenuOpen={isMenuOpen} setIsMenuOpen={setIsMenuOpen} setRequest={setRequest} submitRequest={submitRequest} />
-        <div className="flex justify-start items-center w-[95%] space-x-2">
-            <button type="button">
-                <img src={OptionsButton} alt="options-btn" onClick={e => setIsMenuOpen(!isMenuOpen)} />
-            </button>
-            {(request.start_date || request.end_date) && (
-              <div className="flex justify-center items-center space-x-2">
-                  {request.start_date && (
-                      <div className="rounded-md h-[30px] px-3 py-2 text-metrics-text bg-prompt-bar-date-bg cursor-pointer">
-                        <p className="text-xs font-semibold">From: {formattedDate(request.start_date)}</p>
-                      </div>
-                  )}
-                  {request.end_date && (
-                      <div className="rounded-md h-[30px] px-3 py-2 text-metrics-text bg-prompt-bar-date-bg cursor-pointer">
-                        <p className="text-xs font-semibold">To: {formattedDate(request.end_date)}</p>
-                      </div>
-                  )}
+    <form
+      onSubmit={handleSubmit}
+      className="bg-mid-dark-grey px-6 py-3 flex justify-between items-center rounded-full relative h-[64px]"
+    >
+      <AdvancedQueryOptionsMenu
+        isMenuOpen={isMenuOpen}
+        setIsMenuOpen={setIsMenuOpen}
+        setRequest={setRequest}
+        submitRequest={submitRequest}
+      />
+      <div className="flex justify-start items-center w-[95%] space-x-2">
+        <button type="button">
+          <img
+            src={OptionsButton}
+            alt="options-btn"
+            onClick={() => setIsMenuOpen(!isMenuOpen)}
+          />
+        </button>
+        {(request.start_date || request.end_date) && (
+          <div className="flex justify-center items-center space-x-2">
+            {request.start_date && (
+              <div className="rounded-md h-[30px] px-3 py-2 text-metrics-text bg-prompt-bar-date-bg cursor-pointer">
+                <p className="text-xs font-semibold">
+                  From: {formattedDate(request.start_date)}
+                </p>
               </div>
             )}
-            <input
-                type="text"
-                value={input}
-                onChange={(e) => setInput(e.target.value)}
-                autoComplete="off"
-                placeholder="Ask query"
-                disabled={isMenuOpen}
-                className="px-4 p-2 rounded-md bg-mid-dark-grey text-title-light-grey rounded-2xl focus:outline-none flex-1"
-                data-testid="query-input"
-            />
-        </div>
-        <button
-            type="submit"
-            disabled={isMenuOpen}
-            className="bg-submit-btn-bg hover:bg-mid-light-grey w-10 h-10 rounded-full flex items-center justify-center"
-            data-testid="query-submit-btn"
-        >
-            <img src={SubmitButton} alt="submit-btn" className="w-7 h-7" />
-        </button>
-
-        {/* Display real-time status updates */}
-        {submitRequest && status && (
-          <div className="absolute bottom-[-30px] left-1/2 transform -translate-x-1/2 text-xs text-white">
-            {status}
+            {request.end_date && (
+              <div className="rounded-md h-[30px] px-3 py-2 text-metrics-text bg-prompt-bar-date-bg cursor-pointer">
+                <p className="text-xs font-semibold">
+                  To: {formattedDate(request.end_date)}
+                </p>
+              </div>
+            )}
           </div>
         )}
+        <input
+          type="text"
+          value={input}
+          onChange={(e) => setInput(e.target.value)}
+          autoComplete="off"
+          placeholder="Ask query"
+          disabled={isMenuOpen}
+          className="px-4 p-2 rounded-md bg-mid-dark-grey text-title-light-grey rounded-2xl focus:outline-none flex-1"
+          data-testid="query-input"
+        />
+      </div>
+      <button
+        type="submit"
+        disabled={isMenuOpen}
+        className="bg-submit-btn-bg hover:bg-mid-light-grey w-10 h-10 rounded-full flex items-center justify-center"
+        data-testid="query-submit-btn"
+      >
+        <img src={SubmitButton} alt="submit-btn" className="w-7 h-7" />
+      </button>
+
+      {/* Display real-time status updates */}
+      {submitRequest && status && (
+        <div className="absolute bottom-[-30px] left-1/2 transform -translate-x-1/2 text-xs text-white">
+          {status}
+        </div>
+      )}
     </form>
   );
 };
