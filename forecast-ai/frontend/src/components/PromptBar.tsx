@@ -1,5 +1,5 @@
 // src/components/PromptBar.js
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import OptionsButton from "../assets/options-button.svg";
 import SubmitButton from "../assets/submit-button.svg";
 import { useNavigate } from "react-router-dom";
@@ -7,6 +7,7 @@ import { auth } from "./firebase";
 import AdvancedQueryOptionsMenu from "./AdvancedQueryOptionsMenu";
 import { Chat, SourceObject } from "../hooks/types";
 import axios from "axios";
+import { v4 as uuidv4 } from 'uuid';
 
 type PromptBarProps = {
   chats: Chat[];
@@ -33,6 +34,7 @@ const PromptBar: React.FC<PromptBarProps> = ({ chats, setChatTitle, saveChatToDB
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [request, setRequest] = useState<Request>({});
   const [submitRequest, setSubmitRequest] = useState(false);
+  const [status, setStatus] = useState(""); // Add state to handle status updates
 
   const navigate = useNavigate();
   const userId = auth.currentUser?.uid;
@@ -61,6 +63,7 @@ const PromptBar: React.FC<PromptBarProps> = ({ chats, setChatTitle, saveChatToDB
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    const queryId = uuidv4(); // Generate a unique ID for WebSocket connection
 
     if (input) {
       try {
@@ -72,8 +75,29 @@ const PromptBar: React.FC<PromptBarProps> = ({ chats, setChatTitle, saveChatToDB
         }
         addQuery(input);
         setInput("");
-        // Send POST request
-        const response = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/query_to_answer`, updatedRequest);
+
+        // WebSocket connection to receive real-time status
+        if (!process.env.REACT_APP_BACKEND_URL) {
+          throw new Error("REACT_APP_BACKEND_URL is not defined");
+        }
+        console.log("Connecting to WebSocket...");
+        const socket = new WebSocket(`${process.env.REACT_APP_BACKEND_URL.replace('https', 'ws')}/status?query_id=${queryId}`);
+        console.log("WebSocket connection established");
+
+        socket.onmessage = (event) => {
+          setStatus(event.data); // Update status state with WebSocket messages
+        };
+
+        socket.onerror = (error) => {
+          console.error("WebSocket error: ", error);
+        };
+
+        socket.onclose = () => {
+          console.log("WebSocket connection closed");
+        };
+
+        // Send POST request with query ID
+        const response = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/query_to_answer?query_id=${queryId}`, updatedRequest);
         const sources = convertResponseSourcesIntoSources(response.data.sources);
         addSources(sources);
         toggleLoading(false);
@@ -87,7 +111,7 @@ const PromptBar: React.FC<PromptBarProps> = ({ chats, setChatTitle, saveChatToDB
         }
       } catch (error) {
         let serverDown = false;
-        try{
+        try {
           // Check server status
           const serverStatusResponse = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/`);
           if (serverStatusResponse.status !== 200 || serverStatusResponse.data.status !== "Server is running") {
@@ -156,6 +180,13 @@ const PromptBar: React.FC<PromptBarProps> = ({ chats, setChatTitle, saveChatToDB
         >
             <img src={SubmitButton} alt="submit-btn" className="w-7 h-7" />
         </button>
+
+        {/* Display real-time status updates */}
+        {submitRequest && status && (
+          <div className="absolute bottom-[-30px] left-1/2 transform -translate-x-1/2 text-xs text-white">
+            {status}
+          </div>
+        )}
     </form>
   );
 };
