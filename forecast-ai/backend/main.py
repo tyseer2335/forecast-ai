@@ -60,19 +60,22 @@ async def send_status_update(query_id: str, message: str):
 async def query_to_answer(request: ForecastRequest, query_id: str):
     state = 0
     try:
+        state = 1
         await send_status_update(query_id, "Generating search queries...")
         # Generate search queries
         search_queries = break_down_query.generate_search_queries(client, request)
         if search_queries["success"] is False:
             raise HTTPException(status_code=500, detail=f"Error generating answer to query. State: {state}")
-        state = 1
 
+        state = 2
+        await asyncio.sleep(0)
         await send_status_update(query_id, "Collecting news...")
         # Collect news
         # return dict; key as query, value as list of dict with title, description, published date, url, publisher
         news = collect_news.collect_news(search_queries["queries"], request)
-        state = 2
 
+        state = 3
+        await asyncio.sleep(0)
         await send_status_update(query_id, "Scraping content...")
         # Content added to each news
         # return dict; key as query, value as list of dict with title, description, published date, url, publisher,
@@ -81,24 +84,30 @@ async def query_to_answer(request: ForecastRequest, query_id: str):
         # {'query1': [{'title1': '...', 'description': '...', 'published date': '...', 'url': '...', 'publisher': '...',
         # 'content': {'text': '...', 'media': ['...']}}]}
         news_with_content = scrapping_content.multiple_scrape_content(news, LOCAL_OR_PROD)
-        state = 3
 
+        state = 4
+        await asyncio.sleep(0)
         await send_status_update(query_id, "Converting news objects to articles...")
         news_objects = convert_to_article.dict_to_article(news_with_content)
-        state = 4
 
+        state = 5
+        await asyncio.sleep(0)
         await send_status_update(query_id, "Filtering and scoring relevance...")
         filtering.get_relevance_score(news_objects, request.question, client)
-        state = 5
 
+        state = 6
+        await asyncio.sleep(0)
         await send_status_update(query_id, "Ranking news articles...")
         ranked_news_with_content = filtering.sort_and_filter(news_objects, request.after_ranking_num_articles,
                                                              request.perc_of_each_source)
-        state = 6
+
+        state = 7
+        await asyncio.sleep(0)
         await send_status_update(query_id, "Generating forecast answer...")
         answer = generate_forecast.generate_forecast(request, ranked_news_with_content)
 
-        state = 7
+        state = 8
+        await asyncio.sleep(0)
         await send_status_update(query_id, "Process complete.")
         return answer
     except Exception as e:
