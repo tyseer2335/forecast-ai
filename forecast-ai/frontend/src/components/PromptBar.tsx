@@ -85,7 +85,7 @@ const PromptBar: React.FC<PromptBarProps> = ({
     const socket = new WebSocket(
       `${process.env.REACT_APP_BACKEND_URL.replace(
         "https",
-        "ws"
+        "wss"
       )}/status?query_id=${queryId}`
     );
 
