@@ -8,6 +8,10 @@ from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
+from dotenv import load_dotenv
+import os
+load_dotenv()
+LOCAL_OR_PROD = os.getenv('LOCAL_OR_PROD')
 
 
 def _single_scrape_content(url: str) -> dict:
@@ -38,10 +42,11 @@ def _single_scrape_content(url: str) -> dict:
 
 def init_driver():
     options = Options()
-    options.add_argument('--headless')
-    options.add_argument('--no-sandbox')
-    options.add_argument('--disable-dev-shm-usage')
-    options.binary_location = '/usr/bin/google-chrome'
+    if LOCAL_OR_PROD == 'prod':
+        options.add_argument('--headless')
+        options.add_argument('--no-sandbox')
+        options.add_argument('--disable-dev-shm-usage')
+        options.binary_location = '/usr/bin/google-chrome'
     driver = webdriver.Chrome(options=options)
     return driver
 
