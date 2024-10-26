@@ -47,11 +47,11 @@ async def websocket_status(websocket: WebSocket, query_id: str):
         await websocket.close()
 
 
-def send_status_update(query_id: str, message: str):
+async def send_status_update(query_id: str, message: str):
     if query_id in active_connections:
         websocket = active_connections[query_id]
         try:
-            asyncio.create_task(websocket.send_text(message))
+            await websocket.send_text(message)  # Using await to ensure it sends immediately
         except:
             del active_connections[query_id]
 
@@ -60,20 +60,20 @@ def send_status_update(query_id: str, message: str):
 async def query_to_answer(request: ForecastRequest, query_id: str):
     state = 0
     try:
-        send_status_update(query_id, "Generating search queries...")
+        await send_status_update(query_id, "Generating search queries...")
         # Generate search queries
         search_queries = break_down_query.generate_search_queries(client, request)
         if search_queries["success"] is False:
             raise HTTPException(status_code=500, detail=f"Error generating answer to query. State: {state}")
         state = 1
 
-        send_status_update(query_id, "Collecting news...")
+        await send_status_update(query_id, "Collecting news...")
         # Collect news
         # return dict; key as query, value as list of dict with title, description, published date, url, publisher
         news = collect_news.collect_news(search_queries["queries"], request)
         state = 2
 
-        send_status_update(query_id, "Scraping content...")
+        await send_status_update(query_id, "Scraping content...")
         # Content added to each news
         # return dict; key as query, value as list of dict with title, description, published date, url, publisher,
         # content: dict with text and media
@@ -83,26 +83,26 @@ async def query_to_answer(request: ForecastRequest, query_id: str):
         news_with_content = scrapping_content.multiple_scrape_content(news, LOCAL_OR_PROD)
         state = 3
 
-        send_status_update(query_id, "Converting news objects to articles...")
+        await send_status_update(query_id, "Converting news objects to articles...")
         news_objects = convert_to_article.dict_to_article(news_with_content)
         state = 4
 
-        send_status_update(query_id, "Filtering and scoring relevance...")
+        await send_status_update(query_id, "Filtering and scoring relevance...")
         filtering.get_relevance_score(news_objects, request.question, client)
         state = 5
 
-        send_status_update(query_id, "Ranking news articles...")
+        await send_status_update(query_id, "Ranking news articles...")
         ranked_news_with_content = filtering.sort_and_filter(news_objects, request.after_ranking_num_articles,
                                                              request.perc_of_each_source)
         state = 6
-        send_status_update(query_id, "Generating forecast answer...")
+        await send_status_update(query_id, "Generating forecast answer...")
         answer = generate_forecast.generate_forecast(request, ranked_news_with_content)
 
         state = 7
-        send_status_update(query_id, "Process complete.")
+        await send_status_update(query_id, "Process complete.")
         return answer
     except Exception as e:
-        send_status_update(query_id, f"Error: {str(e)}. State: {state}")
+        await send_status_update(query_id, f"Error: {str(e)}. State: {state}")
         raise HTTPException(status_code=500, detail=f"Error generating answer to query: {str(e)}. State: {state}")
 
 
