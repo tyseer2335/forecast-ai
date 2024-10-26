@@ -82,8 +82,8 @@ def multiple_scrape_content(urls: dict, env: str) -> dict:
     :return:
     """
     urls = urls.copy()
-    if env == 'local':  # Init here for faster loading
-        driver = init_driver()
+    # if env == 'local':  # Init here for faster loading
+    driver = init_driver()
 
     # Add 'content' key to each news
     for _, news in urls.items():
