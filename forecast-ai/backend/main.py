@@ -107,5 +107,5 @@ async def query_to_answer(request: ForecastRequest, query_id: str):
 
 
 @app.get("/")
-def read_root():
+async def read_root():
     return {"status": "Server is running"}
