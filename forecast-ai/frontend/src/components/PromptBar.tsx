@@ -166,9 +166,12 @@ const PromptBar: React.FC<PromptBarProps> = ({
       } catch (error) {
         let serverDown = false;
         try {
+          if (!process.env.REACT_APP_BACKEND_URL) {
+            throw new Error("REACT_APP_BACKEND_URL is not defined");
+          }
           // Check server status
           const serverStatusResponse = await axios.get(
-            `${process.env.REACT_APP_BACKEND_URL}/`
+            `${process.env.REACT_APP_BACKEND_URL.replace("https", "http")}/`
           );
           if (
             serverStatusResponse.status !== 200 ||
