@@ -83,10 +83,12 @@ const PromptBar: React.FC<PromptBarProps> = ({
       throw new Error("REACT_APP_BACKEND_URL is not defined");
     }
     const socket = new WebSocket(
-      `${process.env.REACT_APP_BACKEND_URL.replace(
-        "https",
-        "wss"
-      )}/status?query_id=${queryId}`
+      `${process.env.REACT_APP_BACKEND_URL.replace("https://", "wss://")
+        .replace("http://localhost", "ws://localhost")
+        .replace(
+          "https://localhost",
+          "ws://localhost"
+        )}/status?query_id=${queryId}`
     );
 
     socket.onopen = () => {
@@ -144,10 +146,7 @@ const PromptBar: React.FC<PromptBarProps> = ({
           throw new Error("REACT_APP_BACKEND_URL is not defined");
         }
         const response = await axios.post(
-          `${process.env.REACT_APP_BACKEND_URL.replace(
-            "https",
-            "http"
-          )}/query_to_answer?query_id=${queryId}`,
+          `${process.env.REACT_APP_BACKEND_URL}/query_to_answer?query_id=${queryId}`,
           updatedRequest
         );
         const sources = convertResponseSourcesIntoSources(
@@ -171,7 +170,7 @@ const PromptBar: React.FC<PromptBarProps> = ({
           }
           // Check server status
           const serverStatusResponse = await axios.get(
-            `${process.env.REACT_APP_BACKEND_URL.replace("https", "http")}/`
+            `${process.env.REACT_APP_BACKEND_URL}/`
           );
           if (
             serverStatusResponse.status !== 200 ||
