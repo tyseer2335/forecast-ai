@@ -17,6 +17,7 @@ type PromptBarProps = {
   addSources: (sources: SourceObject[]) => void;
   addError: (error: string) => void;
   toggleLoading: (loading: boolean) => void;
+  addStatus: (status: string) => void;
 };
 
 export type Request = {
@@ -37,12 +38,12 @@ const PromptBar: React.FC<PromptBarProps> = ({
   addSources,
   addError,
   toggleLoading,
+  addStatus
 }) => {
   const [input, setInput] = useState("");
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [request, setRequest] = useState<Request>({});
   const [submitRequest, setSubmitRequest] = useState(false);
-  const [status, setStatus] = useState(""); // State to store status updates
   const socketRef = useRef<WebSocket | null>(null); // WebSocket reference
 
   const navigate = useNavigate();
@@ -96,7 +97,7 @@ const PromptBar: React.FC<PromptBarProps> = ({
     };
 
     socket.onmessage = (event) => {
-      setStatus(event.data); // Update status in real-time
+      addStatus(event.data); // Update status in real-time
     };
 
     socket.onerror = (error) => {
@@ -260,13 +261,6 @@ const PromptBar: React.FC<PromptBarProps> = ({
       >
         <img src={SubmitButton} alt="submit-btn" className="w-7 h-7" />
       </button>
-
-      {/* Display real-time status updates */}
-      {submitRequest && status && (
-        <div className="absolute bottom-[-30px] left-1/2 transform -translate-x-1/2 text-xs text-white">
-          {status}
-        </div>
-      )}
     </form>
   );
 };

@@ -11,6 +11,7 @@ export type Chat = {
   sources: SourceObject[];
   error?: string;
   loading: boolean;
+  status?: string;
 }
 
 // Example of a SourceObject:
