@@ -1,3 +1,4 @@
+// src/components/ChatWindow.tsx
 import React, { useEffect, useRef } from "react";
 import ChatMessage from "./ChatMessage";
 import SourcesContainer from "./SourcesContainer";
@@ -53,6 +54,7 @@ const ChatWindow: React.FC<ChatWindowProps> = ({ chats }) => {
             sources={chat.sources}
             error={chat.error}
             loading={chat.loading}
+            status={chat.status}
             data-testid="sources-container"
           />
           <AnswerDisplay answer={mockAnswer} />

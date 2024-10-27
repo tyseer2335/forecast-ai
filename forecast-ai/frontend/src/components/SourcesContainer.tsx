@@ -11,9 +11,10 @@ type SourcesContainerProps = {
     sources: SourceObject[];
     error: string | undefined;
     loading: boolean;
+    status: string | undefined;
 }
 
-const SourcesContainer: React.FC<SourcesContainerProps> = ({ sources, error, loading }) => {
+const SourcesContainer: React.FC<SourcesContainerProps> = ({ sources, error, loading, status }) => {
     const [currentSource, setCurrentSource] = useState(0);
 
     const decrementCurrentSource = () => {
@@ -31,7 +32,7 @@ const SourcesContainer: React.FC<SourcesContainerProps> = ({ sources, error, loa
     return (
         <div className="w-full flex-grow space-y-4 bg-screen-black flex flex-col h-[85%]">
             {loading ? (
-                <LoadingBar />
+                <LoadingBar status={status} />
             ) : (
                 error ? (
                     <ErrorMessage error={error} />

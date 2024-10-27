@@ -101,7 +101,7 @@ const MainContainer: React.FC = () => {
       setChats((prevChats): Chat[] => {
           const newChats = [...prevChats];
           newChats[newChats.length - 1] = { ...newChats[newChats.length - 1], sources: sources };
-          return newChats
+          return newChats;
       })
   }
 
@@ -109,7 +109,7 @@ const MainContainer: React.FC = () => {
       setChats((prevChats): Chat[] => {
           const newChats = [...prevChats];
           newChats[newChats.length - 1] = { ...newChats[newChats.length - 1], error: error };
-          return newChats
+          return newChats;
       })
   }
 
@@ -117,7 +117,15 @@ const MainContainer: React.FC = () => {
       setChats((prevChats): Chat[] => {
           const newChats = [...prevChats];
           newChats[newChats.length - 1] = { ...newChats[newChats.length - 1], loading: loading };
-          return newChats
+          return newChats;
+      })
+  }
+
+  const addStatus = (status: string) => {
+      setChats((prevChats): Chat[] => {
+        const newChats = [...prevChats];
+        newChats[newChats.length - 1] = { ...newChats[newChats.length - 1], status: status };
+        return newChats;
       })
   }
 
@@ -127,7 +135,7 @@ const MainContainer: React.FC = () => {
           <Sidebar newChatId={chatId} />
           <div className="flex flex-col flex-grow">
             <HeaderBar title={chatTitle} />
-            <MainContent chats={chats} setChatTitle={setChatTitle} saveChatToDB={saveChatToDB} addQuery={addQuery} addSources={addSources} addError={addError} toggleLoading={toggleLoading} />
+            <MainContent chats={chats} setChatTitle={setChatTitle} saveChatToDB={saveChatToDB} addQuery={addQuery} addSources={addSources} addError={addError} toggleLoading={toggleLoading} addStatus={addStatus} />
           </div>
         </div>
       </div>
