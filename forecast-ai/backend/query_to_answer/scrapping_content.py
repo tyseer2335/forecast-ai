@@ -8,10 +8,6 @@ from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
-from dotenv import load_dotenv
-import os
-load_dotenv()
-LOCAL_OR_PROD = os.getenv('LOCAL_OR_PROD')
 
 
 def _single_scrape_content(url: str) -> dict:
@@ -40,7 +36,7 @@ def _single_scrape_content(url: str) -> dict:
     }
 
 
-def init_driver():
+def init_driver(LOCAL_OR_PROD: str) -> webdriver.Chrome:
     options = Options()
     if LOCAL_OR_PROD == 'prod':
         options.add_argument('--headless')
@@ -82,23 +78,23 @@ def multiple_scrape_content(urls: dict, env: str) -> dict:
     :return:
     """
     urls = urls.copy()
-    if env == 'local':  # Init here for faster loading
-        driver = init_driver()
+    # if env == 'local':  # Init here for faster loading
+    driver = init_driver(env)
 
     # Add 'content' key to each news
     for _, news in urls.items():
         for article in news:
             article['content'] = _single_scrape_content(article['url'])
-    if env == 'local':
-        for _, news in urls.items():
-            for article in news:
-                if not article['content']['text']:
-                    try:
-                        res = advanced_selenium_scrape_content(driver, article['url'])
-                        article['content']['text'] = res['text']
-                        if not article['content']['media']:
-                            article['content']['media'] = res['media']
-                    except Exception as e:
-                        print(f"Error scraping content: {str(e)} for url: {article['url']}")
-        driver.quit()
+    # if env == 'local':
+    for _, news in urls.items():
+        for article in news:
+            # if not article['content']['text']:
+            try:
+                res = advanced_selenium_scrape_content(driver, article['url'])
+                article['content']['text'] = res['text']
+                if not article['content']['media']:
+                    article['content']['media'] = res['media']
+            except Exception as e:
+                print(f"Error scraping content: {str(e)} for url: {article['url']}")
+    driver.quit()
     return urls
