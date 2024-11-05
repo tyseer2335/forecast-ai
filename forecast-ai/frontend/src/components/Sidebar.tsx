@@ -4,7 +4,12 @@ import { getFirestore, collection, query, orderBy, onSnapshot } from 'firebase/f
 import OwlLogo from '../assets/owl.svg';
 import SettingsLogo from '../assets/settings.svg';
 import { auth } from './firebase';
-import OptionsButtonIcon from '../assets/options-button.svg';
+import OptionsIcon from '../assets/options-button.svg';
+import { on } from 'events';
+import { set } from 'date-fns';
+import { doc, deleteDoc } from "firebase/firestore";
+import { hover } from '@testing-library/user-event/dist/hover';
+
 
 type SidebarProps = {
   newChatId: string | null;
@@ -17,11 +22,12 @@ const Sidebar: React.FC<SidebarProps> = ({ newChatId }) => {
   const navigate = useNavigate();
   const userId = auth.currentUser?.uid;
   var [selectedChatId, setSelectedChatId] = useState<string>(localStorage.getItem('selectedChatId') ?? "");
+  var [hoveredChatId, setHoveredChatId] = useState<string>("");
+  var [editingChatId, setEditingChatId] = useState<string>("");
 
   useEffect(() => {
     if (newChatId) {
-      setSelectedChatId(newChatId);
-      localStorage.setItem('selectedChatId', newChatId);
+      selectChatSession(newChatId);
     }
   }, [newChatId]);
 
@@ -42,7 +48,7 @@ const Sidebar: React.FC<SidebarProps> = ({ newChatId }) => {
 
     const savedChatId = localStorage.getItem('selectedChatId');
     if (savedChatId) {
-      setSelectedChatId(savedChatId);
+      selectChatSession(savedChatId);
     }
 
     return () => {
@@ -102,29 +108,80 @@ const Sidebar: React.FC<SidebarProps> = ({ newChatId }) => {
     </div>
   );
 
-  // OptionsButton - front.
-  // <button type="button">
-  //         <img
-  //           src={OptionsButtonIcon}
-  //           alt="options-btn"
-  //           onClick={() => setIsMenuOpen(!isMenuOpen)}
-  //         />
-  //       </button>
-  // Next Up:
-  {/* TASK 1. For each chat session, if hovered or selected, then show an options button */}
-  {/* TASK 2. When OptionsButton is clicked, show options block with options of Share, Delete, Rename at the right side of the options button like a small popup */}
+  const handleChatDelete = async (chatId: string) => {
+    // Delete the chat
+    // console.log("Delete chat with id:", chatId);
+    // Now delete the chat from the firebase database (db)
+    if (!userId) {
+      return;
+    }
 
+    await deleteDoc(doc(db, "Users", userId, "Chats", chatId));
+
+    // If the chat is selected, then clear the selectedChatId
+    if (chatId === selectedChatId) {
+      selectChatSession("");
+    }
+    
+  }
+
+  const handleChatRename = (chatId: string) => {
+    // Rename the chat
+  }
+
+  const handleChatShare = (chatId: string) => {
+    // Share the chat
+  }
+
+  const EditChatButton = (chatId: any) => (
+    <div className="flex bg-button-hover rounded-md cursor-pointer">
+      <button type="button">
+        <img 
+          src={OptionsIcon}
+          alt="edit-btn"
+          onClick={(e) => 
+            {
+              e.stopPropagation()
+              setEditingChatId(chatId)
+            }
+          }
+          />
+      </button>
+      {/* {editingChatId == chatId && <ChatEditMenu chatId={chatId} />} */}
+    </div>
+  );
+  // Next Up:
+  {/* TASK 1. For each chat session, if hovered or selected, then show an edit button - Done */}
+  {/* TASK 2. When EditButton is clicked, show options block with options of Share, Delete, Rename at the right side of the options button like a small popup */}
+
+  // For TASK 2, I'll just implement Delete for now
+  const ChatEditMenu = ({ chatId }: { chatId: string }) => (
+    <div className=" bg-[#282C2C] p-2 rounded-md absolute left-40">
+      <button
+        onClick={() => handleChatDelete(chatId)}
+        className="p-1 hover:bg-button-hover rounded-md"
+        data-testid="delete-chat-button"
+      >
+        x
+      </button>
+    </div>
+  );
 
   // Individual chat session
   const ChatSession = ({ chat }: { chat: any }) => (
     <div
       key={chat.id}
-      className={`p-2 hover:bg-button-hover rounded-md cursor-pointer ${chat.id === selectedChatId ? 'bg-button-hover font-bold' : ''}`}
+      className={`p-2 hover:bg-button-hover rounded-md cursor-pointer flex justify-between ${chat.id === selectedChatId ? 'bg-button-hover font-bold' : ''}`}
       onClick={() => handleChatClick(chat.id)}
+      onMouseEnter={() => setHoveredChatId(chat.id)}
+      onMouseLeave={() => setHoveredChatId("")}
       data-testid={`chat-session-${chat.id}`}
     >
-      {chat.title || `Chat ${chat.id}`}
+      <span>{chat.title || `Chat ${chat.id}`}</span> 
+      {(hoveredChatId === chat.id || selectedChatId === chat.id) && <EditChatButton chatId={chat.id} />}
+      {editingChatId == chat.id && <ChatEditMenu chatId={chat.id} />}
     </div>
+    
   );
 
   // Sub List of previous chat sessions by time period
@@ -141,19 +198,23 @@ const Sidebar: React.FC<SidebarProps> = ({ newChatId }) => {
     </>
   );
 
+  const selectChatSession = (chatId: string) => {
+    setSelectedChatId(chatId);
+    localStorage.setItem('selectedChatId', chatId);
+
+    setHoveredChatId("");
+    setEditingChatId("");
+  }
+
   const toggleSettings = () => {
     setIsSettingsOpen(!isSettingsOpen);
   };
 
   const handleChatClick = (chatId: string) => {
     if (chatId === selectedChatId) {
-      setSelectedChatId("");
-      localStorage.setItem('selectedChatId', "");
-
+      selectChatSession("");
     } else {
-      setSelectedChatId(chatId);
-      localStorage.setItem('selectedChatId', chatId);
-      
+      selectChatSession(chatId);
     }
 
     // Reloading the MainContainer component to refresh the selectedChatId
