@@ -4,6 +4,7 @@ import { getFirestore, collection, query, orderBy, onSnapshot } from 'firebase/f
 import OwlLogo from '../assets/owl.svg';
 import SettingsLogo from '../assets/settings.svg';
 import { auth } from './firebase';
+import OptionsButtonIcon from '../assets/options-button.svg';
 
 type SidebarProps = {
   newChatId: string | null;
@@ -101,21 +102,39 @@ const Sidebar: React.FC<SidebarProps> = ({ newChatId }) => {
     </div>
   );
 
-  // Reusable component to display chat sessions by time period
-  const ChatSubList = ({ period, chatList }: { period: string; chatList: any[] }) => (
+  // OptionsButton - front.
+  // <button type="button">
+  //         <img
+  //           src={OptionsButtonIcon}
+  //           alt="options-btn"
+  //           onClick={() => setIsMenuOpen(!isMenuOpen)}
+  //         />
+  //       </button>
+  // Next Up:
+  {/* TASK 1. For each chat session, if hovered or selected, then show an options button */}
+  {/* TASK 2. When OptionsButton is clicked, show options block with options of Share, Delete, Rename at the right side of the options button like a small popup */}
+
+
+  // Individual chat session
+  const ChatSession = ({ chat }: { chat: any }) => (
+    <div
+      key={chat.id}
+      className={`p-2 hover:bg-button-hover rounded-md cursor-pointer ${chat.id === selectedChatId ? 'bg-button-hover font-bold' : ''}`}
+      onClick={() => handleChatClick(chat.id)}
+      data-testid={`chat-session-${chat.id}`}
+    >
+      {chat.title || `Chat ${chat.id}`}
+    </div>
+  );
+
+  // Sub List of previous chat sessions by time period
+  const PrevChatSubList = ({ period, chatList }: { period: string; chatList: any[] }) => (
     <>
       {chatList.length > 0 && (
         <>
           <h3 className="p-1 text-sm text-light-grey mt-4">{period}</h3>
           {chatList.map((chat) => (
-            <div
-              key={chat.id}
-              className={`p-2 hover:bg-button-hover rounded-md cursor-pointer ${chat.id === selectedChatId ? 'bg-button-hover font-bold' : ''}`} // Highlight selected chat
-              onClick={() => handleChatClick(chat.id)}
-              data-testid={`chat-session-${chat.id}`}
-            >
-              {chat.title || `Chat ${chat.id}`}
-            </div>
+            <ChatSession chat={chat} />
           ))}
         </>
       )}
@@ -154,10 +173,10 @@ const Sidebar: React.FC<SidebarProps> = ({ newChatId }) => {
       {/* Chat Sessions */}
       <div className="overflow-y-auto mt-16 px-4 pb-20 pt-3" data-testid="chat-sessions">
         <NewChatSessionButton />
-        <ChatSubList period="Today" chatList={todayChats} />
-        <ChatSubList period="Previous 7 days" chatList={last7DaysChats} />
-        <ChatSubList period="Previous 30 days" chatList={last30DaysChats} />
-        <ChatSubList period="Earlier" chatList={earlierChats} />
+        <PrevChatSubList period="Today" chatList={todayChats} />
+        <PrevChatSubList period="Previous 7 days" chatList={last7DaysChats} />
+        <PrevChatSubList period="Previous 30 days" chatList={last30DaysChats} />
+        <PrevChatSubList period="Earlier" chatList={earlierChats} />
       </div>
 
       {/* Settings button */}
