@@ -15,7 +15,7 @@ const Sidebar: React.FC<SidebarProps> = ({ newChatId }) => {
   const [chats, setChats] = useState<any[]>([]);
   const navigate = useNavigate();
   const userId = auth.currentUser?.uid;
-  var [selectedChatId, setSelectedChatId] = useState<string | null>(localStorage.getItem('selectedChatId') ?? null);
+  var [selectedChatId, setSelectedChatId] = useState<string>(localStorage.getItem('selectedChatId') ?? "");
 
   useEffect(() => {
     if (newChatId) {
@@ -90,6 +90,17 @@ const Sidebar: React.FC<SidebarProps> = ({ newChatId }) => {
 
   const { todayChats, last7DaysChats, last30DaysChats, earlierChats } = categorizeChats(chats);
 
+  // A New Chat Session Button
+  const NewChatSessionButton = () => (
+    <div
+      className={`p-2 hover:bg-button-hover rounded-md cursor-pointer ${!selectedChatId ? 'bg-button-hover font-bold' : ''}`}
+      onClick={() => handleChatClick("")}
+      data-testid="new-chat-session-button"
+    >
+      New Session
+    </div>
+  );
+
   // Reusable component to display chat sessions by time period
   const ChatSubList = ({ period, chatList }: { period: string; chatList: any[] }) => (
     <>
@@ -117,7 +128,7 @@ const Sidebar: React.FC<SidebarProps> = ({ newChatId }) => {
 
   const handleChatClick = (chatId: string) => {
     if (chatId === selectedChatId) {
-      setSelectedChatId(null);
+      setSelectedChatId("");
       localStorage.setItem('selectedChatId', "");
 
     } else {
@@ -133,15 +144,16 @@ const Sidebar: React.FC<SidebarProps> = ({ newChatId }) => {
   return (
     <div className="bg-sidebar-bg text-[#B0B1AF] h-screen flex flex-col justify-between w-1/5 min-w-[250px]">
       {/* Logo and program title */}
-      <div className="flex items-center justify-between p-4 fixed top-0 left-0 z-10">
+      <div className="flex items-center justify-between p-4 fixed top-0 left-0 z-10`"> 
         <div className="flex items-center">
           <img src={OwlLogo} alt="logo" className="w-8 h-8" data-testid="logo"/>
           <span className="text-2xl ps-2 text-light-grey font-light" data-testid="program-title">forecastAI</span>
         </div>
       </div>
-
-      {/* Chat history */}
-      <div className="overflow-y-auto mt-16 px-4 pb-20" data-testid="chat-history">
+      
+      {/* Chat Sessions */}
+      <div className="overflow-y-auto mt-16 px-4 pb-20 pt-3" data-testid="chat-sessions">
+        <NewChatSessionButton />
         <ChatSubList period="Today" chatList={todayChats} />
         <ChatSubList period="Previous 7 days" chatList={last7DaysChats} />
         <ChatSubList period="Previous 30 days" chatList={last30DaysChats} />
