@@ -66,7 +66,7 @@ const PromptBar: React.FC<PromptBarProps> = ({
               ? source.content.media[0]
               : "https://placehold.co/306x150?text=No+Image+Available",
           link: source.url,
-          logo: "https://placehold.co/150x150?text=Logo",
+          logo: `http://www.google.com/s2/favicons?domain=${source.url}&sz=64`,
           metrics: {
             viewsCount: 483,
             trendingRate: 22,
@@ -208,7 +208,7 @@ const PromptBar: React.FC<PromptBarProps> = ({
   return (
     <form
       onSubmit={handleSubmit}
-      className="bg-mid-dark-grey px-6 py-3 flex justify-between items-center rounded-full relative h-[64px]"
+      className="bg-mid-dark-grey px-6 py-3 flex justify-between items-center rounded-full relative h-[64px] w-[80%]"
     >
       <AdvancedQueryOptionsMenu
         isMenuOpen={isMenuOpen}

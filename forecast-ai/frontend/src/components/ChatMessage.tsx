@@ -7,7 +7,7 @@ type ChatMessageProps = {
 
 const ChatMessage: React.FC<ChatMessageProps> = ({ query }) => {
     return (
-        <div className="bg-mid-dark-grey text-chat-message-text font-bold px-6 py-5 rounded-full max-w-[60%] ml-auto">
+        <div className="bg-mid-dark-grey text-chat-message-text text-sm font-bold px-6 py-5 rounded-full max-w-[60%] ml-auto">
             {query}
         </div>
     )
