@@ -19,6 +19,8 @@ const Sidebar: React.FC<SidebarProps> = ({ newChatId }) => {
   const userId = auth.currentUser?.uid;
   var [selectedChatId, setSelectedChatId] = useState<string>(localStorage.getItem('selectedChatId') ?? "");
   var [hoveredChatId, setHoveredChatId] = useState<string>("");
+  var [deletingChatId, setDeletingChatId] = useState<string>("");
+  var [deletingChatTitle, setDeletingChatTitle] = useState<string>("");
 
   useEffect(() => {
     if (newChatId) {
@@ -103,17 +105,15 @@ const Sidebar: React.FC<SidebarProps> = ({ newChatId }) => {
     </div>
   );
 
-  const handleChatDelete = async (chatIdObj: any) => {
+  const handleChatDelete = async (chatId: string) => {
     if (!userId) {
       return;
     }
 
-    const chatId = chatIdObj.chatId;
-
     try {
       await deleteDoc(doc(db, "Users", userId, "Chats", chatId));
     } catch (error) {
-      console.error("Document ref:", userId, "Chats", chatId);
+      console.error("Document ref:", "Users", userId, "Chats", chatId);
       console.error("Error removing document: ", error);
     }
     
@@ -123,7 +123,9 @@ const Sidebar: React.FC<SidebarProps> = ({ newChatId }) => {
     } else {
       setHoveredChatId("");
     }
-    
+    setDeletingChatInfo({chatId: "", chatTitle: ""});
+
+    navigate('/');
   }
 
   const handleChatRename = (chatId: string) => {
@@ -134,11 +136,18 @@ const Sidebar: React.FC<SidebarProps> = ({ newChatId }) => {
     // Share the chat
   }
 
+  const setDeletingChatInfo= (chatInfo: any) => {
+    setDeletingChatId(chatInfo.chatId);
+    setDeletingChatTitle(chatInfo.chatTitle);
+    return;
+  }
+
   // Note chatIdObj is a struct { chatId: string }
   const DeleteChatButton = (chatId: any) => (
     <div className="flex bg-button-hover rounded-md cursor-pointer">
       <button type="button"
-        onClick={() => handleChatDelete(chatId)}
+        // onClick={() => handleChatDelete(chatId)}
+        onClick={()=>setDeletingChatInfo(chatId)}
         className="p-2 hover:bg-button-hover rounded-md cursor-pointer"
         >
         <img src={DeleteIcon} alt="delete" className="w-2 h-2" />
@@ -157,7 +166,7 @@ const Sidebar: React.FC<SidebarProps> = ({ newChatId }) => {
       data-testid={`chat-session-${chat.id}`}
     >
       <span>{chat.title || `Chat ${chat.id}`}</span> 
-      {(hoveredChatId === chat.id || selectedChatId === chat.id) && <DeleteChatButton chatId={chat.id} />}
+      {(hoveredChatId === chat.id || selectedChatId === chat.id) && <DeleteChatButton chatId={chat.id} chatTitle={chat.title || `Chat ${chat.id}`} />}
     </div>
     
   );
@@ -227,6 +236,33 @@ const Sidebar: React.FC<SidebarProps> = ({ newChatId }) => {
           <span className="px-2 text-light-grey">Settings</span>
         </button>
       </div>
+
+      {/* Popup delete confirmation panel */}
+      {deletingChatId && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-20"
+          data-testid="delete-panel"
+        >
+          <div className="bg-[#282C2C] p-6 rounded-lg w-[400px]">
+            <h2 className="text-xl font-bold mb-4">Delete Chat</h2>
+            <p className="text-light-grey">Are you sure you want to delete this chat?</p>
+            <p className="text-light-grey font-bold">{deletingChatTitle}</p>
+            <div className="flex justify-end mt-4">
+              <button
+                onClick={() => setDeletingChatInfo({chatId: "", chatTitle: ""})}
+                className="bg-button-hover p-2 rounded-md mr-2"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={() => handleChatDelete(deletingChatId)}
+                className="bg-red-500 p-2 rounded-md"
+              >
+                Delete
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Popup settings panel */}
       {isSettingsOpen && (
