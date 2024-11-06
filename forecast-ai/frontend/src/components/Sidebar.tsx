@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { getFirestore, collection, query, orderBy, onSnapshot } from 'firebase/firestore'; 
+import { getFirestore, collection, query, orderBy, onSnapshot, doc, deleteDoc } from 'firebase/firestore'; 
 import OwlLogo from '../assets/owl.svg';
 import SettingsLogo from '../assets/settings.svg';
 import { auth } from './firebase';
+import DeleteIcon from '../assets/close-menu-button.svg';
+
 
 type SidebarProps = {
   newChatId: string | null;
@@ -15,12 +17,14 @@ const Sidebar: React.FC<SidebarProps> = ({ newChatId }) => {
   const [chats, setChats] = useState<any[]>([]);
   const navigate = useNavigate();
   const userId = auth.currentUser?.uid;
-  var [selectedChatId, setSelectedChatId] = useState<string | null>(localStorage.getItem('selectedChatId') ?? null);
+  var [selectedChatId, setSelectedChatId] = useState<string>(localStorage.getItem('selectedChatId') ?? "");
+  var [hoveredChatId, setHoveredChatId] = useState<string>("");
+  var [deletingChatId, setDeletingChatId] = useState<string>("");
+  var [deletingChatTitle, setDeletingChatTitle] = useState<string>("");
 
   useEffect(() => {
     if (newChatId) {
-      setSelectedChatId(newChatId);
-      localStorage.setItem('selectedChatId', newChatId);
+      selectChatSession(newChatId);
     }
   }, [newChatId]);
 
@@ -41,7 +45,7 @@ const Sidebar: React.FC<SidebarProps> = ({ newChatId }) => {
 
     const savedChatId = localStorage.getItem('selectedChatId');
     if (savedChatId) {
-      setSelectedChatId(savedChatId);
+      selectChatSession(savedChatId);
     }
 
     return () => {
@@ -90,26 +94,102 @@ const Sidebar: React.FC<SidebarProps> = ({ newChatId }) => {
 
   const { todayChats, last7DaysChats, last30DaysChats, earlierChats } = categorizeChats(chats);
 
-  // Reusable component to display chat sessions by time period
-  const ChatSubList = ({ period, chatList }: { period: string; chatList: any[] }) => (
+  // A New Chat Session Button
+  const NewChatSessionButton = () => (
+    <div
+      className={`p-2 hover:bg-button-hover rounded-md cursor-pointer ${!selectedChatId ? 'bg-button-hover font-bold' : ''}`}
+      onClick={() => handleChatClick("")}
+      data-testid="new-chat-session-button"
+    >
+      New Session
+    </div>
+  );
+
+  const handleChatDelete = async (chatId: string) => {
+    if (!userId) {
+      return;
+    }
+
+    try {
+      await deleteDoc(doc(db, "Users", userId, "Chats", chatId));
+    } catch (error) {
+      console.error("Document ref:", "Users", userId, "Chats", chatId);
+      console.error("Error removing document: ", error);
+    }
+    
+    // If the chat is selected, then clear the selectedChatId
+    if (chatId === selectedChatId) {
+      selectChatSession("");
+    } else {
+      setHoveredChatId("");
+    }
+    setDeletingChatInfo({chatId: "", chatTitle: ""});
+
+    navigate('/');
+  }
+
+  const handleChatRename = (chatId: string) => {
+    // Rename the chat
+  }
+
+  const handleChatShare = (chatId: string) => {
+    // Share the chat
+  }
+
+  const setDeletingChatInfo= (chatInfo: any) => {
+    setDeletingChatId(chatInfo.chatId);
+    setDeletingChatTitle(chatInfo.chatTitle);
+    return;
+  }
+
+  // Note chatIdObj is a struct { chatId: string }
+  const DeleteChatButton = (chatId: any) => (
+    <div className="flex bg-button-hover rounded-md cursor-pointer">
+      <button type="button"
+        // onClick={() => handleChatDelete(chatId)}
+        onClick={()=>setDeletingChatInfo(chatId)}
+        className="p-2 hover:bg-button-hover rounded-md cursor-pointer"
+        >
+        <img src={DeleteIcon} alt="delete" className="w-2 h-2" />
+      </button>
+    </div>
+  );
+
+  // Individual chat session
+  const ChatSession = ({ chat }: { chat: any }) => (
+    <div
+      key={chat.id}
+      className={`p-2 hover:bg-button-hover rounded-md cursor-pointer flex justify-between ${chat.id === selectedChatId ? 'bg-button-hover font-bold' : ''}`}
+      onClick={() => handleChatClick(chat.id)}
+      onMouseEnter={() => setHoveredChatId(chat.id)}
+      onMouseLeave={() => setHoveredChatId("")}
+      data-testid={`chat-session-${chat.id}`}
+    >
+      <span>{chat.title || `Chat ${chat.id}`}</span> 
+      {(hoveredChatId === chat.id || selectedChatId === chat.id) && <DeleteChatButton chatId={chat.id} chatTitle={chat.title || `Chat ${chat.id}`} />}
+    </div>
+    
+  );
+
+  // Sub List of previous chat sessions by time period
+  const PrevChatSubList = ({ period, chatList }: { period: string; chatList: any[] }) => (
     <>
       {chatList.length > 0 && (
         <>
           <h3 className="p-1 text-sm text-light-grey mt-4">{period}</h3>
           {chatList.map((chat) => (
-            <div
-              key={chat.id}
-              className={`p-2 hover:bg-button-hover rounded-md cursor-pointer ${chat.id === selectedChatId ? 'bg-button-hover font-bold' : ''}`} // Highlight selected chat
-              onClick={() => handleChatClick(chat.id)}
-              data-testid={`chat-session-${chat.id}`}
-            >
-              {chat.title || `Chat ${chat.id}`}
-            </div>
+            <ChatSession chat={chat} />
           ))}
         </>
       )}
     </>
   );
+
+  const selectChatSession = (chatId: string) => {
+    setSelectedChatId(chatId);
+    localStorage.setItem('selectedChatId', chatId);
+    setHoveredChatId("");
+  }
 
   const toggleSettings = () => {
     setIsSettingsOpen(!isSettingsOpen);
@@ -117,13 +197,9 @@ const Sidebar: React.FC<SidebarProps> = ({ newChatId }) => {
 
   const handleChatClick = (chatId: string) => {
     if (chatId === selectedChatId) {
-      setSelectedChatId(null);
-      localStorage.setItem('selectedChatId', "");
-
+      selectChatSession("");
     } else {
-      setSelectedChatId(chatId);
-      localStorage.setItem('selectedChatId', chatId);
-      
+      selectChatSession(chatId);
     }
 
     // Reloading the MainContainer component to refresh the selectedChatId
@@ -133,19 +209,20 @@ const Sidebar: React.FC<SidebarProps> = ({ newChatId }) => {
   return (
     <div className="bg-sidebar-bg text-[#B0B1AF] h-screen flex flex-col justify-between w-1/5 min-w-[250px]">
       {/* Logo and program title */}
-      <div className="flex items-center justify-between p-4 fixed top-0 left-0 z-10">
+      <div className="flex items-center justify-between p-4 fixed top-0 left-0 z-10`"> 
         <div className="flex items-center">
           <img src={OwlLogo} alt="logo" className="w-8 h-8" data-testid="logo"/>
           <span className="text-2xl ps-2 text-light-grey font-light" data-testid="program-title">forecastAI</span>
         </div>
       </div>
-
-      {/* Chat history */}
-      <div className="overflow-y-auto mt-16 px-4 pb-20" data-testid="chat-history">
-        <ChatSubList period="Today" chatList={todayChats} />
-        <ChatSubList period="Previous 7 days" chatList={last7DaysChats} />
-        <ChatSubList period="Previous 30 days" chatList={last30DaysChats} />
-        <ChatSubList period="Earlier" chatList={earlierChats} />
+      
+      {/* Chat Sessions */}
+      <div className="overflow-y-auto mt-16 px-4 pb-20 pt-3" data-testid="chat-sessions">
+        <NewChatSessionButton />
+        <PrevChatSubList period="Today" chatList={todayChats} />
+        <PrevChatSubList period="Previous 7 days" chatList={last7DaysChats} />
+        <PrevChatSubList period="Previous 30 days" chatList={last30DaysChats} />
+        <PrevChatSubList period="Earlier" chatList={earlierChats} />
       </div>
 
       {/* Settings button */}
@@ -159,6 +236,33 @@ const Sidebar: React.FC<SidebarProps> = ({ newChatId }) => {
           <span className="px-2 text-light-grey">Settings</span>
         </button>
       </div>
+
+      {/* Popup delete confirmation panel */}
+      {deletingChatId && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-20"
+          data-testid="delete-panel"
+        >
+          <div className="bg-[#282C2C] p-6 rounded-lg w-[400px]">
+            <h2 className="text-xl font-bold mb-4">Delete Chat</h2>
+            <p className="text-light-grey">Are you sure you want to delete this chat?</p>
+            <p className="text-light-grey font-bold">{deletingChatTitle}</p>
+            <div className="flex justify-end mt-4">
+              <button
+                onClick={() => setDeletingChatInfo({chatId: "", chatTitle: ""})}
+                className="bg-button-hover p-2 rounded-md mr-2"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={() => handleChatDelete(deletingChatId)}
+                className="bg-red-500 p-2 rounded-md"
+              >
+                Delete
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Popup settings panel */}
       {isSettingsOpen && (

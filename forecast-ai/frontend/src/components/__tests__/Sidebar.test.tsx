@@ -175,7 +175,7 @@ describe('Sidebar :: Layout Tests', () => {
     (useNavigate as jest.Mock).mockReturnValue(mockNavigate);
   });
 
-  // Basic Components (logo, program-title, settings-button, chat-history)
+  // Basic Components (logo, program-title, settings-button, chat-sessions)
 
   it('displays logo', async () => {
     render(
@@ -196,7 +196,7 @@ describe('Sidebar :: Layout Tests', () => {
     render(
         <Sidebar newChatId={null} />
       );
-    expect(screen.getByTestId('chat-history')).toBeInTheDocument();
+    expect(screen.getByTestId('chat-sessions')).toBeInTheDocument();
   });
 
   it('displays settings button', async () => {
@@ -211,7 +211,7 @@ describe('Sidebar :: Layout Tests', () => {
     render(
         <Sidebar newChatId={null} />
       );
-    expect(screen.getByTestId('chat-history')).toBeInTheDocument();
+    expect(screen.getByTestId('chat-sessions')).toBeInTheDocument();
   });
 });
 
@@ -241,7 +241,7 @@ describe('Sidebar :: Chat Sessions Display Tests', () => {
     render(
         <Sidebar newChatId={null} />
       );
-    expect(screen.getByTestId('chat-history')).toBeInTheDocument();
+    expect(screen.getByTestId('chat-sessions')).toBeInTheDocument();
     // Expect exactly 1 chat session to be displayed
     expect(screen.getAllByTestId(/^chat-session-/)).toHaveLength(1);
 
@@ -260,7 +260,7 @@ describe('Sidebar :: Chat Sessions Display Tests', () => {
     render(
         <Sidebar newChatId={null} />
       );
-    expect(screen.getByTestId('chat-history')).toBeInTheDocument();
+    expect(screen.getByTestId('chat-sessions')).toBeInTheDocument();
     // Expect exactly 3 chat sessions to be displayed
     expect(screen.getAllByTestId(/^chat-session-/)).toHaveLength(3);
 
@@ -279,7 +279,7 @@ describe('Sidebar :: Chat Sessions Display Tests', () => {
     render(
         <Sidebar newChatId={null} />
       );
-    expect(screen.getByTestId('chat-history')).toBeInTheDocument();
+    expect(screen.getByTestId('chat-sessions')).toBeInTheDocument();
     // Expect exactly 4 chat sessions to be displayed
     expect(screen.getAllByTestId(/^chat-session-/)).toHaveLength(4);
 
@@ -299,7 +299,7 @@ describe('Sidebar :: Chat Sessions Display Tests', () => {
     render(
         <Sidebar newChatId={null} />
       );
-    expect(screen.getByTestId('chat-history')).toBeInTheDocument();
+    expect(screen.getByTestId('chat-sessions')).toBeInTheDocument();
     // Expect exactly 4 chat sessions to be displayed
     expect(screen.getAllByTestId(/^chat-session-/)).toHaveLength(4);
 
@@ -318,7 +318,7 @@ describe('Sidebar :: Chat Sessions Display Tests', () => {
     render(
         <Sidebar newChatId={null} />
       );
-    expect(screen.getByTestId('chat-history')).toBeInTheDocument();
+    expect(screen.getByTestId('chat-sessions')).toBeInTheDocument();
     // Expect exactly 6 chat sessions to be displayed
     expect(screen.getAllByTestId(/^chat-session-/)).toHaveLength(6);
 
@@ -348,7 +348,7 @@ it('clicking a chat session highlights it', async () => {
   render(<Sidebar newChatId={null} />);
   
   // Check if chat history is present
-  expect(screen.getByTestId('chat-history')).toBeInTheDocument();
+  expect(screen.getByTestId('chat-sessions')).toBeInTheDocument();
   
   // Expect exactly 6 chat sessions to be displayed
   let chatSessionElements = screen.getAllByTestId(/^chat-session-/);
