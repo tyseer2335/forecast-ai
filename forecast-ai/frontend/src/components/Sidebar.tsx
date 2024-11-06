@@ -1,14 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { getFirestore, collection, query, orderBy, onSnapshot } from 'firebase/firestore'; 
+import { getFirestore, collection, query, orderBy, onSnapshot, doc, deleteDoc } from 'firebase/firestore'; 
 import OwlLogo from '../assets/owl.svg';
 import SettingsLogo from '../assets/settings.svg';
 import { auth } from './firebase';
-import OptionsIcon from '../assets/options-button.svg';
-import { on } from 'events';
-import { set } from 'date-fns';
-import { doc, deleteDoc } from "firebase/firestore";
-import { hover } from '@testing-library/user-event/dist/hover';
+import DeleteIcon from '../assets/close-menu-button.svg';
 
 
 type SidebarProps = {
@@ -23,7 +19,6 @@ const Sidebar: React.FC<SidebarProps> = ({ newChatId }) => {
   const userId = auth.currentUser?.uid;
   var [selectedChatId, setSelectedChatId] = useState<string>(localStorage.getItem('selectedChatId') ?? "");
   var [hoveredChatId, setHoveredChatId] = useState<string>("");
-  var [editingChatId, setEditingChatId] = useState<string>("");
 
   useEffect(() => {
     if (newChatId) {
@@ -108,19 +103,25 @@ const Sidebar: React.FC<SidebarProps> = ({ newChatId }) => {
     </div>
   );
 
-  const handleChatDelete = async (chatId: string) => {
-    // Delete the chat
-    // console.log("Delete chat with id:", chatId);
-    // Now delete the chat from the firebase database (db)
+  const handleChatDelete = async (chatIdObj: any) => {
     if (!userId) {
       return;
     }
 
-    await deleteDoc(doc(db, "Users", userId, "Chats", chatId));
+    const chatId = chatIdObj.chatId;
 
+    try {
+      await deleteDoc(doc(db, "Users", userId, "Chats", chatId));
+    } catch (error) {
+      console.error("Document ref:", userId, "Chats", chatId);
+      console.error("Error removing document: ", error);
+    }
+    
     // If the chat is selected, then clear the selectedChatId
     if (chatId === selectedChatId) {
       selectChatSession("");
+    } else {
+      setHoveredChatId("");
     }
     
   }
@@ -133,36 +134,14 @@ const Sidebar: React.FC<SidebarProps> = ({ newChatId }) => {
     // Share the chat
   }
 
-  const EditChatButton = (chatId: any) => (
+  // Note chatIdObj is a struct { chatId: string }
+  const DeleteChatButton = (chatId: any) => (
     <div className="flex bg-button-hover rounded-md cursor-pointer">
-      <button type="button">
-        <img 
-          src={OptionsIcon}
-          alt="edit-btn"
-          onClick={(e) => 
-            {
-              e.stopPropagation()
-              setEditingChatId(chatId)
-            }
-          }
-          />
-      </button>
-      {/* {editingChatId == chatId && <ChatEditMenu chatId={chatId} />} */}
-    </div>
-  );
-  // Next Up:
-  {/* TASK 1. For each chat session, if hovered or selected, then show an edit button - Done */}
-  {/* TASK 2. When EditButton is clicked, show options block with options of Share, Delete, Rename at the right side of the options button like a small popup */}
-
-  // For TASK 2, I'll just implement Delete for now
-  const ChatEditMenu = ({ chatId }: { chatId: string }) => (
-    <div className=" bg-[#282C2C] p-2 rounded-md absolute left-40">
-      <button
+      <button type="button"
         onClick={() => handleChatDelete(chatId)}
-        className="p-1 hover:bg-button-hover rounded-md"
-        data-testid="delete-chat-button"
-      >
-        x
+        className="p-2 hover:bg-button-hover rounded-md cursor-pointer"
+        >
+        <img src={DeleteIcon} alt="delete" className="w-2 h-2" />
       </button>
     </div>
   );
@@ -178,8 +157,7 @@ const Sidebar: React.FC<SidebarProps> = ({ newChatId }) => {
       data-testid={`chat-session-${chat.id}`}
     >
       <span>{chat.title || `Chat ${chat.id}`}</span> 
-      {(hoveredChatId === chat.id || selectedChatId === chat.id) && <EditChatButton chatId={chat.id} />}
-      {editingChatId == chat.id && <ChatEditMenu chatId={chat.id} />}
+      {(hoveredChatId === chat.id || selectedChatId === chat.id) && <DeleteChatButton chatId={chat.id} />}
     </div>
     
   );
@@ -201,9 +179,7 @@ const Sidebar: React.FC<SidebarProps> = ({ newChatId }) => {
   const selectChatSession = (chatId: string) => {
     setSelectedChatId(chatId);
     localStorage.setItem('selectedChatId', chatId);
-
     setHoveredChatId("");
-    setEditingChatId("");
   }
 
   const toggleSettings = () => {
