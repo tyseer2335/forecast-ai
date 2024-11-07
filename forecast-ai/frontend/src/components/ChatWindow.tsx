@@ -33,7 +33,7 @@ const ChatWindow: React.FC<ChatWindowProps> = ({ chats }) => {
         0.95, 0.95, 0.95, 0.95, 0.95, 0.95, 0.95, 0.95, 0.95, 0.95, 0.95, 0.95,
         0.95, 0.95, 0.95, 0.95, 0.95, 0.95, 0.95, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
         0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0.3, 0.3, 0.3, 0.3, 0.3, 0.3, 0.3, 0.3, 0, 0, 0, 0.6, 0.6, 0.6, 0.6,
       ],
       feature2_overconfidence_bias: [
         0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -48,7 +48,7 @@ const ChatWindow: React.FC<ChatWindowProps> = ({ chats }) => {
       data-testid="chat-window"
     >
       {chats.map((chat) => (
-        <div className="flex flex-col items-center space-y-4 h-[150%]" key={uuidv4()}>
+        <div className="flex flex-col items-center space-y-4 max-h-[150%]" key={uuidv4()}>
           <div ref={bottomRef} data-testid="bottom-ref" />
           <ChatMessage query={chat.query} data-testid="chat-message" />
           <SourcesContainer

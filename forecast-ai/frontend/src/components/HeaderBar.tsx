@@ -15,8 +15,6 @@ const HeaderBar: React.FC<HeaderBarProps> = ({ title }) => {
     const checkServerStatus = async () => {
       try {
         const response = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/`);
-        // log  
-        console.log(response);
         if (response.status === 200 && response.data.status === "Server is running") {
           setServerStatus("up");
         } else {
