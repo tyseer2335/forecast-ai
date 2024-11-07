@@ -197,7 +197,7 @@ const Sidebar: React.FC<SidebarProps> = ({ newChatId }) => {
   };
 
   return (
-    <div className="bg-sidebar-bg text-[#B0B1AF] h-screen flex flex-col justify-between w-[300px] min-w-[300px]">
+    <div className="bg-sidebar-bg text-light-grey h-full flex flex-col justify-between w-[300px] min-w-[300px]">
       {/* Logo and program title */}
       <div className="flex items-center justify-between p-4 fixed top-0 left-0 z-10`"> 
         <div className="flex items-center">

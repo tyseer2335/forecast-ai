@@ -13,6 +13,7 @@ const SourceCard: React.FC<SourceCardProps> = ({ source }) => {
             <span key={index}>
                 {sentence}
                 <br />
+                <br />
             </span>
         ));
     };
