@@ -32,10 +32,12 @@ const SourcesContainer: React.FC<SourcesContainerProps> = ({ sources, error, loa
     return (
         <div className="w-full space-y-4 bg-screen-black flex flex-col h-[52%] min-h-[52%]">
             {loading ? (
-                <LoadingBar status={status} />
+                <div className="flex justify-center items-center h-full">
+                    <LoadingBar status={status} />
+                </div>
             ) : (
                 error ? (
-                    <ErrorMessage error={error} />
+                    <ErrorMessage error={error || 'Error generating answer to query'} />
                 ) : (
                     <div className="w-full space-y-4 bg-screen-black flex flex-col h-full relative">
                         <h1 className="font-bold text-chat-message-text text-sm md:text-base lg:text-lg xl:text-xl">Sources</h1>
