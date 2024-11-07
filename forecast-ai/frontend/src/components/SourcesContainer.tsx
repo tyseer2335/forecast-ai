@@ -38,7 +38,7 @@ const SourcesContainer: React.FC<SourcesContainerProps> = ({ sources, error, loa
                     <ErrorMessage error={error} />
                 ) : (
                     <div className="w-full space-y-4 bg-screen-black flex flex-col h-full relative">
-                        <h1 className="font-bold text-chat-message-text text-xl">Sources</h1>
+                        <h1 className="font-bold text-chat-message-text text-sm md:text-base lg:text-lg xl:text-xl">Sources</h1>
                         <SourceSection source={sources[currentSource]} />
                         <button onClick={decrementCurrentSource} className="absolute left-0 top-1/2 cursor-pointer" data-testid="decrement-btn">
                             <img src={ScrollLeftButton} alt="scroll-left-btn" className="w-5 h-5" />
