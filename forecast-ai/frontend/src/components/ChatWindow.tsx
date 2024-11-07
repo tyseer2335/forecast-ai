@@ -44,7 +44,7 @@ const ChatWindow: React.FC<ChatWindowProps> = ({ chats }) => {
 
   return (
     <div
-      className="w-[80%] h-full px-4 pt-4 bg-screen-black text-white space-y-[100px] flex flex-col overflow-y-auto"
+      className="w-[80%] max-w-[1300px] h-full px-4 pt-4 bg-screen-black text-white space-y-[100px] flex flex-col overflow-y-auto"
       data-testid="chat-window"
     >
       {chats.map((chat) => (

@@ -208,7 +208,7 @@ const PromptBar: React.FC<PromptBarProps> = ({
   return (
     <form
       onSubmit={handleSubmit}
-      className="bg-mid-dark-grey px-6 py-3 flex justify-between items-center rounded-full relative h-[64px] w-[80%]"
+      className="bg-mid-dark-grey px-6 py-3 flex justify-between items-center rounded-full relative h-[64px] w-[80%] max-w-[1300px]"
     >
       <AdvancedQueryOptionsMenu
         isMenuOpen={isMenuOpen}
