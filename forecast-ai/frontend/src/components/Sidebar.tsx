@@ -139,7 +139,7 @@ const Sidebar: React.FC<SidebarProps> = ({ newChatId }) => {
         onClick={(e) => {e.stopPropagation(); setDeletingChatInfo(chatId);}}
         className="p-2 hover:bg-button-hover rounded-md cursor-pointer"
         >
-        <img src={DeleteIcon} alt="delete" className="w-2 h-2" />
+        <img src={DeleteIcon} alt="delete" className="min-w-[8px] min-h-[8px]" />
       </button>
     </div>
   );
@@ -148,13 +148,13 @@ const Sidebar: React.FC<SidebarProps> = ({ newChatId }) => {
   const ChatSession = ({ chat }: { chat: any }) => (
     <div
       key={chat.id}
-      className={`p-2 hover:bg-button-hover rounded-md cursor-pointer flex justify-between ${chat.id === selectedChatId ? 'bg-button-hover font-bold' : ''}`}
+      className={`p-2 hover:bg-button-hover rounded-md cursor-pointer flex justify-between items-center ${chat.id === selectedChatId ? 'bg-button-hover font-bold' : ''}`}
       onClick={() => handleChatClick(chat.id)}
       onMouseEnter={() => setHoveredChatId(chat.id)}
       onMouseLeave={() => setHoveredChatId("")}
       data-testid={`chat-session-${chat.id}`}
     >
-      <span>{chat.title || `Chat ${chat.id}`}</span> 
+      <span className='text-sm'>{chat.title || `Chat ${chat.id}`}</span> 
       {(hoveredChatId === chat.id || selectedChatId === chat.id) && <DeleteChatButton chatId={chat.id} chatTitle={chat.title || `Chat ${chat.id}`} />}
     </div>
     
@@ -197,7 +197,7 @@ const Sidebar: React.FC<SidebarProps> = ({ newChatId }) => {
   };
 
   return (
-    <div className="bg-sidebar-bg text-[#B0B1AF] h-screen flex flex-col justify-between max-w-[250px] min-w-[250px]">
+    <div className="bg-sidebar-bg text-[#B0B1AF] h-screen flex flex-col justify-between w-[300px] min-w-[300px]">
       {/* Logo and program title */}
       <div className="flex items-center justify-between p-4 fixed top-0 left-0 z-10`"> 
         <div className="flex items-center">

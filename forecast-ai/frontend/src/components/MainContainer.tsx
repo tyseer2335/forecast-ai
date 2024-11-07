@@ -132,7 +132,7 @@ const MainContainer: React.FC = () => {
   return (
       <div className="max-h-screen max-w-screen flex bg-screen-black text-white font-inter">
         <Sidebar newChatId={chatId} />
-        <div className="flex flex-col w-[80%]">
+        <div className="flex flex-col flex-grow">
           <HeaderBar title={chatTitle} />
           <MainContent chats={chats} setChatTitle={setChatTitle} saveChatToDB={saveChatToDB} addQuery={addQuery} addSources={addSources} addError={addError} toggleLoading={toggleLoading} addStatus={addStatus} />
         </div>
