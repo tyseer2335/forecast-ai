@@ -113,11 +113,10 @@ const Sidebar: React.FC<SidebarProps> = ({ newChatId }) => {
     try {
       await deleteDoc(doc(db, "Users", userId, "Chats", chatId));
     } catch (error) {
-      console.error("Document ref:", "Users", userId, "Chats", chatId);
-      console.error("Error removing document: ", error);
+      alert(`Error deleting chat(ref: Users/${userId}/Chats/${chatId}): ${error}`);
     }
     
-    // If the chat is selected, then clear the selectedChatId
+    // If the chat is selected, then open a new chat session
     if (chatId === selectedChatId) {
       selectChatSession("");
     } else {
@@ -128,26 +127,16 @@ const Sidebar: React.FC<SidebarProps> = ({ newChatId }) => {
     navigate('/');
   }
 
-  const handleChatRename = (chatId: string) => {
-    // Rename the chat
-  }
-
-  const handleChatShare = (chatId: string) => {
-    // Share the chat
-  }
-
   const setDeletingChatInfo= (chatInfo: any) => {
     setDeletingChatId(chatInfo.chatId);
     setDeletingChatTitle(chatInfo.chatTitle);
-    return;
   }
 
-  // Note chatIdObj is a struct { chatId: string }
+  // Note chatId is a struct { chatId: string }
   const DeleteChatButton = (chatId: any) => (
     <div className="flex bg-button-hover rounded-md cursor-pointer">
       <button type="button"
-        // onClick={() => handleChatDelete(chatId)}
-        onClick={()=>setDeletingChatInfo(chatId)}
+        onClick={(e) => {e.stopPropagation(); setDeletingChatInfo(chatId);}}
         className="p-2 hover:bg-button-hover rounded-md cursor-pointer"
         >
         <img src={DeleteIcon} alt="delete" className="w-2 h-2" />
@@ -185,6 +174,7 @@ const Sidebar: React.FC<SidebarProps> = ({ newChatId }) => {
     </>
   );
 
+  // A function triggered when the user clicks on a chat session
   const selectChatSession = (chatId: string) => {
     setSelectedChatId(chatId);
     localStorage.setItem('selectedChatId', chatId);
@@ -207,7 +197,7 @@ const Sidebar: React.FC<SidebarProps> = ({ newChatId }) => {
   };
 
   return (
-    <div className="bg-sidebar-bg text-[#B0B1AF] h-screen flex flex-col justify-between w-1/5 min-w-[250px]">
+    <div className="bg-sidebar-bg text-[#B0B1AF] h-screen flex flex-col justify-between max-w-[250px] min-w-[250px]">
       {/* Logo and program title */}
       <div className="flex items-center justify-between p-4 fixed top-0 left-0 z-10`"> 
         <div className="flex items-center">
@@ -237,13 +227,12 @@ const Sidebar: React.FC<SidebarProps> = ({ newChatId }) => {
         </button>
       </div>
 
-      {/* Popup delete confirmation panel */}
+      {/* Popup delete confirmation window */}
       {deletingChatId && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-20"
-          data-testid="delete-panel"
         >
           <div className="bg-[#282C2C] p-6 rounded-lg w-[400px]">
-            <h2 className="text-xl font-bold mb-4">Delete Chat</h2>
+            <h2 className="text-xl font-bold mb-4">Delete Chat?</h2>
             <p className="text-light-grey">Are you sure you want to delete this chat?</p>
             <p className="text-light-grey font-bold">{deletingChatTitle}</p>
             <div className="flex justify-end mt-4">
