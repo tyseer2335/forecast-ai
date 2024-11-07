@@ -130,13 +130,11 @@ const MainContainer: React.FC = () => {
   }
 
   return (
-      <div className="h-screen flex flex-col bg-screen-black text-white font-inter">
-        <div className="flex flex-grow">
-          <Sidebar newChatId={chatId} />
-          <div className="flex flex-col flex-grow">
-            <HeaderBar title={chatTitle} />
-            <MainContent chats={chats} setChatTitle={setChatTitle} saveChatToDB={saveChatToDB} addQuery={addQuery} addSources={addSources} addError={addError} toggleLoading={toggleLoading} addStatus={addStatus} />
-          </div>
+      <div className="min-h-screen h-screen w-screen flex bg-screen-black text-white font-inter">
+        <Sidebar newChatId={chatId} />
+        <div className="flex flex-col flex-grow">
+          <HeaderBar title={chatTitle} />
+          <MainContent chats={chats} setChatTitle={setChatTitle} saveChatToDB={saveChatToDB} addQuery={addQuery} addSources={addSources} addError={addError} toggleLoading={toggleLoading} addStatus={addStatus} />
         </div>
       </div>
     );

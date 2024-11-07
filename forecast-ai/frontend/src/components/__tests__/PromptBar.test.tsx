@@ -4,9 +4,11 @@ import { render, fireEvent, waitFor } from "@testing-library/react";
 import axios from "axios";
 import PromptBar from "../PromptBar";
 import { auth } from "../firebase";
+import { v4 as uuidv4 } from "uuid";
 
 jest.mock("axios");
 jest.mock("../firebase");
+jest.mock("uuid");
 
 const mockedAxios = axios as jest.Mocked<typeof axios>;
 const mockUsedNavigate = jest.fn();
@@ -22,6 +24,7 @@ describe(PromptBar, () => {
   const addSources = jest.fn();
   const addError = jest.fn();
   const toggleLoading = jest.fn();
+  const addStatus = jest.fn();
 
   const setup = () => {
     const { getByTestId } = render(
@@ -33,6 +36,7 @@ describe(PromptBar, () => {
         addSources={addSources}
         addError={addError}
         toggleLoading={toggleLoading}
+        addStatus={addStatus}
       />
     );
     return getByTestId;
@@ -46,7 +50,9 @@ describe(PromptBar, () => {
     addSources.mockClear();
     addError.mockClear();
     toggleLoading.mockClear();
+    addStatus.mockClear();
     (auth.currentUser as unknown) = { uid: "testUserId" };
+    (uuidv4 as jest.Mock).mockReturnValue("8bb49e94-3854-4f72-a32b-ab37577e1071");
   });
 
   it("should send correct request when calling API", async () => {
@@ -89,7 +95,7 @@ describe(PromptBar, () => {
 
     await waitFor(() => {
       expect(mockedAxios.post).toHaveBeenCalledWith(
-        `${process.env.REACT_APP_BACKEND_URL}/query_to_answer`,
+        `${process.env.REACT_APP_BACKEND_URL}/query_to_answer?query_id=8bb49e94-3854-4f72-a32b-ab37577e1071`,
         { 
           question: "Sample query",
           before_ranking_num_articles: 15,
@@ -108,7 +114,7 @@ describe(PromptBar, () => {
           text: "Example text",
           image: "https://placehold.co/306x150?text=No+Image+Available",
           link: "https://example.com",
-          logo: "https://placehold.co/150x150?text=Logo",
+          logo: "http://www.google.com/s2/favicons?domain=https://example.com&sz=64",
           metrics: { viewsCount: 483, trendingRate: 22, region: "Atlanta, USA" },
         },
       ]);
