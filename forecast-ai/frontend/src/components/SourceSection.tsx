@@ -18,7 +18,7 @@ const SourceSection: React.FC<SourceSectionProps> = ({ source }) => {
     return (
         <div className="w-full flex-grow flex space-x-5 justify-center items-center rounded-md h-[90%]">
             <SourceCard source={source} />
-            <div className="flex flex-col justify-between w-100 h-full items-end w-[216px]">
+            <div className="flex flex-col justify-between w-100 h-full items-end w-[20%] max-w-[216px]">
                 <div className="flex flex-col bg-sidebar-bg p-4 pb-7 w-full space-y-3 rounded-md items-start">
                     <h4 className="font-semibold text-metrics-text">Detected Biases</h4>
                     <ul className="mt-2 space-y-3 w-full">

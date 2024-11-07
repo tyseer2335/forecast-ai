@@ -38,7 +38,7 @@ const AnswerDisplay: React.FC<AnswerDisplayProps> = ({ query, answer }) => {
   };
 
   return (
-    <div className="p-4 pb-7 bg-sidebar-bg rounded-md flex flex-col space-y-6 h-[40%] max-w-[1035px] overflow-y-auto" style={{ width: 'calc(55% + 235px)' }}>
+    <div className="p-4 pb-7 bg-sidebar-bg rounded-md flex flex-col space-y-6 flex-grow max-w-[933px] overflow-y-auto" style={{ width: 'calc(85% + 20px)' }}>
       <h3 className="text-xl font-bold text-white">Forecast Result</h3>
       <div className="flex flex-col space-y-4">
         <p className="text-white text-sm"><strong>Question:</strong> {query}</p>
@@ -46,7 +46,7 @@ const AnswerDisplay: React.FC<AnswerDisplayProps> = ({ query, answer }) => {
         <p className="text-white text-sm"><strong>Crowd Forecast Probability:</strong> {answer.crowd_forecast}</p>
         <p className="text-white text-sm"><strong>Ground Truth Label:</strong> {answer.ground_truth_label}</p>
         <p className="text-white text-sm"><strong>Forecaster Rationale:</strong></p>
-        <p className="text-white break-words text-sm">{renderRationale()}</p>
+        <p className="text-white break-all text-sm w-full">{renderRationale()}</p>
       </div>
     </div>
   );
