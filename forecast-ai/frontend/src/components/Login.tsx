@@ -52,6 +52,7 @@ const Login: React.FC = () => {
                 console.log("User logged in:", user);
                 // Check if a user document exists and create one if it doesn't
                 await checkAndCreateUserDocument(user.uid, user.email || "");
+                localStorage.setItem('userId', user.uid);
                 navigate("/"); // Navigate to home page after login
             } else {
                 // If the email is not verified, set the error message

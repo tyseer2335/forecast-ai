@@ -386,7 +386,7 @@ it('clicking a chat session highlights it', async () => {
   const markedSelectedChatSessionTestId = markedSelectedChatSession.getAttribute('data-testid');
   const strippedKey = markedSelectedChatSessionTestId?.split('chat-session-')[1];
 
-  expect(strippedKey).toBe(localStorage.getItem('selectedChatId'));
+  expect(strippedKey).toBe(sessionStorage.getItem("selectedChatId"));
   expect(chatCollection1Today2Previous7Days1Previous30Days1Earlier[chatListLength - 2].id).toBe(strippedKey);
   expect(clickedId).toBe(strippedKey);
 });

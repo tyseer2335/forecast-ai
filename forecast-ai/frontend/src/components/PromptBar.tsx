@@ -3,14 +3,12 @@ import React, { useState, useEffect, useRef } from "react";
 import OptionsButton from "../assets/options-button.svg";
 import SubmitButton from "../assets/submit-button.svg";
 import { useNavigate } from "react-router-dom";
-import { auth } from "./firebase";
 import AdvancedQueryOptionsMenu from "./AdvancedQueryOptionsMenu";
 import { Chat, SourceObject } from "../hooks/types";
 import axios from "axios";
 import { v4 as uuidv4 } from "uuid";
 
 type PromptBarProps = {
-  userId: string;
   chats: Chat[];
   setChatTitle: React.Dispatch<React.SetStateAction<string>>;
   saveChatToDB: (chat: Chat) => void;
@@ -32,7 +30,6 @@ export type Request = {
 };
 
 const PromptBar: React.FC<PromptBarProps> = ({
-  userId,
   chats,
   setChatTitle,
   saveChatToDB,

@@ -4,20 +4,20 @@ import { getFirestore, collection, query, orderBy, onSnapshot, doc, deleteDoc } 
 import OwlLogo from '../assets/owl.svg';
 import SettingsLogo from '../assets/settings.svg';
 import DeleteIcon from '../assets/close-menu-button.svg';
-import { auth } from './firebase';
 
 
 type SidebarProps = {
-  userId: string;
   newChatId: string | null;
 }
 
-const Sidebar: React.FC<SidebarProps> = ({ userId, newChatId }) => {
+const Sidebar: React.FC<SidebarProps> = ({ newChatId }) => {
   const db = getFirestore();
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [chats, setChats] = useState<any[]>([]);
   const navigate = useNavigate();
-  var [selectedChatId, setSelectedChatId] = useState<string>(localStorage.getItem('selectedChatId') ?? "");
+  var userId : string = localStorage.getItem('userId') || "";
+  if (!userId) window.location.href = '/login';
+  var [selectedChatId, setSelectedChatId] = useState<string>(sessionStorage.getItem("selectedChatId") ?? "");
   var [hoveredChatId, setHoveredChatId] = useState<string>("");
   var [deletingChatId, setDeletingChatId] = useState<string>("");
   var [deletingChatTitle, setDeletingChatTitle] = useState<string>("");
@@ -29,14 +29,7 @@ const Sidebar: React.FC<SidebarProps> = ({ userId, newChatId }) => {
   }, [newChatId]);
 
   useEffect(() => {
-    var safeUserId : string = userId;
-    if (!userId) {
-      const savedUser = Object.keys(window.localStorage)
-      .filter(item => item.startsWith('firebase:authUser'))[0]
-      safeUserId = JSON.parse(localStorage.getItem(savedUser) || '{}').uid;
-    }
-
-    const q = query(collection(db, 'Users', safeUserId, 'Chats'), orderBy('updated_at', 'desc'));
+    const q = query(collection(db, 'Users', userId, 'Chats'), orderBy('updated_at', 'desc'));
     const unsubscribe = onSnapshot(q, (querySnapshot) => {
       const chatList = querySnapshot.docs.map(doc => ({
         id: doc.id,
@@ -45,7 +38,7 @@ const Sidebar: React.FC<SidebarProps> = ({ userId, newChatId }) => {
       setChats(chatList);
     });
 
-    const savedChatId = localStorage.getItem('selectedChatId');
+    const savedChatId = sessionStorage.getItem("selectedChatId");
     if (savedChatId) {
       selectChatSession(savedChatId);
     }
@@ -179,7 +172,7 @@ const Sidebar: React.FC<SidebarProps> = ({ userId, newChatId }) => {
   // A function triggered when the user clicks on a chat session
   const selectChatSession = (chatId: string) => {
     setSelectedChatId(chatId);
-    localStorage.setItem('selectedChatId', chatId);
+    sessionStorage.setItem("selectedChatId", chatId);
     setHoveredChatId("");
   }
 

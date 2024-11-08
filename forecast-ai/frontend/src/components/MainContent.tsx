@@ -5,7 +5,6 @@ import PromptBar from "./PromptBar";
 import { Chat, SourceObject } from "../hooks/types";
 
 type MainContentProps = {
-    userId: string;
     chats: Chat[];
     setChatTitle: React.Dispatch<React.SetStateAction<string>>
     saveChatToDB: (chat: Chat) => void;
@@ -16,11 +15,11 @@ type MainContentProps = {
     addStatus: (status: string) => void;
 }
 
-const MainContent: React.FC<MainContentProps> = ({ userId, chats, setChatTitle, saveChatToDB, addQuery, addSources, addError, toggleLoading, addStatus }) => {
+const MainContent: React.FC<MainContentProps> = ({ chats, setChatTitle, saveChatToDB, addQuery, addSources, addError, toggleLoading, addStatus }) => {
     return (
         <div className="w-full h-[92vh] bg-screen-black text-white pb-7 space-y-6 flex flex-col justify-between items-center">
             <ChatWindow chats={chats} />
-            <PromptBar userId={userId} chats={chats} setChatTitle={setChatTitle} saveChatToDB={saveChatToDB} addQuery={addQuery} addSources={addSources} addError={addError} toggleLoading={toggleLoading} addStatus={addStatus} />
+            <PromptBar chats={chats} setChatTitle={setChatTitle} saveChatToDB={saveChatToDB} addQuery={addQuery} addSources={addSources} addError={addError} toggleLoading={toggleLoading} addStatus={addStatus} />
         </div>
     )
 }

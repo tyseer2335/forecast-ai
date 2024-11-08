@@ -13,23 +13,10 @@ import { onAuthStateChanged } from 'firebase/auth';
 
 
 const App: React.FC = () => {
-  // Auth Check
-  const [userId, setUserId] = useState("");  // State to store the user data
-
-  useEffect(() => {
-    // Set up a listener to check the authentication state
-    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
-      if (currentUser) {
-        setUserId(currentUser.uid);
-      } else {
-        console.log("User not logged in, redirecting to login page");
-        if (window.location.pathname == '/') window.location.href = '/login';
-      }
-    });
-
-    // Clean up the listener on unmount
-    return () => unsubscribe();
-  }, []);
+  // Auth Check: Set up a listener to check the authentication state
+  if (!localStorage.getItem("userId") && window.location.pathname == '/') {
+    window.location.href = '/login';
+  }
 
   return (
     <Router>
@@ -37,7 +24,7 @@ const App: React.FC = () => {
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
         <Route path="/logout" element={<Logout />} />
-        <Route path="/" element={<MainContainer userId={userId}/>} />
+        <Route path="/" element={<MainContainer/>} />
         <Route path="/recover-password" element={<RequestPasswordReset />} />
         <Route path="/handle-action" element={<HandleAction />} /> 
         <Route path="/reset-password" element={<ResetPassword />} /> 
