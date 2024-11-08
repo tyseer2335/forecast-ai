@@ -3,7 +3,6 @@ import { useNavigate } from 'react-router-dom';
 import { getFirestore, collection, query, orderBy, onSnapshot, doc, deleteDoc } from 'firebase/firestore'; 
 import OwlLogo from '../assets/owl.svg';
 import SettingsLogo from '../assets/settings.svg';
-import { auth } from './firebase';
 import DeleteIcon from '../assets/close-menu-button.svg';
 
 
@@ -16,8 +15,12 @@ const Sidebar: React.FC<SidebarProps> = ({ newChatId }) => {
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [chats, setChats] = useState<any[]>([]);
   const navigate = useNavigate();
-  const userId = auth.currentUser?.uid;
-  var [selectedChatId, setSelectedChatId] = useState<string>(localStorage.getItem('selectedChatId') ?? "");
+  var userId : string = localStorage.getItem('userId') || "";
+  if (!userId) {
+    window.location.href = '/login';
+    return null;
+  }
+  var [selectedChatId, setSelectedChatId] = useState<string>(sessionStorage.getItem("selectedChatId") ?? "");
   var [hoveredChatId, setHoveredChatId] = useState<string>("");
   var [deletingChatId, setDeletingChatId] = useState<string>("");
   var [deletingChatTitle, setDeletingChatTitle] = useState<string>("");
@@ -29,11 +32,6 @@ const Sidebar: React.FC<SidebarProps> = ({ newChatId }) => {
   }, [newChatId]);
 
   useEffect(() => {
-    if (!userId) {
-      navigate('/login');
-      return;
-    }
-
     const q = query(collection(db, 'Users', userId, 'Chats'), orderBy('updated_at', 'desc'));
     const unsubscribe = onSnapshot(q, (querySnapshot) => {
       const chatList = querySnapshot.docs.map(doc => ({
@@ -43,7 +41,7 @@ const Sidebar: React.FC<SidebarProps> = ({ newChatId }) => {
       setChats(chatList);
     });
 
-    const savedChatId = localStorage.getItem('selectedChatId');
+    const savedChatId = sessionStorage.getItem("selectedChatId");
     if (savedChatId) {
       selectChatSession(savedChatId);
     }
@@ -101,7 +99,7 @@ const Sidebar: React.FC<SidebarProps> = ({ newChatId }) => {
       onClick={() => handleChatClick("")}
       data-testid="new-chat-session-button"
     >
-      New Session
+      New Chat
     </div>
   );
 
@@ -177,7 +175,7 @@ const Sidebar: React.FC<SidebarProps> = ({ newChatId }) => {
   // A function triggered when the user clicks on a chat session
   const selectChatSession = (chatId: string) => {
     setSelectedChatId(chatId);
-    localStorage.setItem('selectedChatId', chatId);
+    sessionStorage.setItem("selectedChatId", chatId);
     setHoveredChatId("");
   }
 

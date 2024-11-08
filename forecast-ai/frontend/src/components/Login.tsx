@@ -18,10 +18,8 @@ const Login: React.FC = () => {
     const [loginError, setLoginError] = useState(""); // State for handling login errors
     const [showPassword, setShowPassword] = useState(false); // State for toggling password visibility
 
-    useEffect(() => {
-        localStorage.clear();
-        auth.signOut();
-    }, []);
+    // If user is already logged in, redirect to logout(which then clears the storage and redirects to login)
+    if (localStorage.getItem("userId")) navigate("/logout");
 
     // Function to toggle password visibility
     const togglePasswordVisibility = () => {
@@ -57,6 +55,7 @@ const Login: React.FC = () => {
                 console.log("User logged in:", user);
                 // Check if a user document exists and create one if it doesn't
                 await checkAndCreateUserDocument(user.uid, user.email || "");
+                localStorage.setItem('userId', user.uid);
                 navigate("/"); // Navigate to home page after login
             } else {
                 // If the email is not verified, set the error message

@@ -3,7 +3,6 @@ import React, { useState, useEffect, useRef } from "react";
 import OptionsButton from "../assets/options-button.svg";
 import SubmitButton from "../assets/submit-button.svg";
 import { useNavigate } from "react-router-dom";
-import { auth } from "./firebase";
 import AdvancedQueryOptionsMenu from "./AdvancedQueryOptionsMenu";
 import { Chat, SourceObject } from "../hooks/types";
 import axios from "axios";
@@ -45,14 +44,7 @@ const PromptBar: React.FC<PromptBarProps> = ({
   const [request, setRequest] = useState<Request>({});
   const [submitRequest, setSubmitRequest] = useState(false);
   const socketRef = useRef<WebSocket | null>(null); // WebSocket reference
-
   const navigate = useNavigate();
-  const userId = auth.currentUser?.uid;
-
-  if (!userId) {
-    navigate("/login");
-    return null;
-  }
 
   const convertResponseSourcesIntoSources = (responseSources: any) => {
     const result: SourceObject[] = [];
@@ -249,7 +241,7 @@ const PromptBar: React.FC<PromptBarProps> = ({
           autoComplete="off"
           placeholder="Ask query"
           disabled={isMenuOpen}
-          className="px-4 p-2 rounded-md bg-mid-dark-grey text-title-light-grey text-xs lg:text-sm xl:text-base rounded-2xl focus:outline-none flex-1"
+          className="px-4 p-2 bg-mid-dark-grey text-title-light-grey text-xs lg:text-sm xl:text-base rounded-2xl focus:outline-none flex-1"
           data-testid="query-input"
         />
       </div>
