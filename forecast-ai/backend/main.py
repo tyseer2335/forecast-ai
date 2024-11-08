@@ -22,6 +22,9 @@ load_dotenv()
 OPENAI_API_KEY = os.getenv('OPENAPI_API_KEY')
 client = OpenAI(api_key=OPENAI_API_KEY)
 LOCAL_OR_PROD = os.getenv('LOCAL_OR_PROD')
+DOCKER_OR_LAMBDATEST = os.getenv('DOCKER_OR_LAMBDATEST')
+USERNAME = os.getenv('USERNAME')
+ACCESS_KEY = os.getenv('ACCESS_KEY')
 
 app.add_middleware(
     CORSMiddleware,
