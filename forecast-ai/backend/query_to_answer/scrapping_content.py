@@ -70,36 +70,15 @@ def advanced_selenium_scrape_content(driver: webdriver.Chrome, url: str) -> dict
     }
 
 
-def multiple_scrape_content(urls: dict, env: str) -> dict:
-    """
-    Current Render hosting require docker for selenium.
-    However, our partner and the team is looking to migrate to 3rd party API instead of selenium.
-    For now, use env with local to test selenium, and remote for production where selenium is not supported.
-    :param urls:
-    :param env:
-    :return:
-    """
-    urls = urls.copy()
-    # if env == 'local':  # Init here for faster loading
+def scrape_content_process(url, env):
     driver = init_driver(env)
-
-    # Add 'content' key to each news
-    for _, news in urls.items():
-        for article in news:
-            article['content'] = _single_scrape_content(article['url'])
-    # if env == 'local':
-    for _, news in urls.items():
-        for article in news:
-            # if not article['content']['text']:
-            try:
-                res = advanced_selenium_scrape_content(driver, article['url'])
-                article['content']['text'] = res['text']
-                if not article['content']['media']:
-                    article['content']['media'] = res['media']
-            except Exception as e:
-                print(f"Error scraping content: {str(e)} for url: {article['url']}")
+    try:
+        res = advanced_selenium_scrape_content(driver, url)
+    except Exception as e:
+        print(f"Error scraping content: {str(e)} for url: {url}")
+        res = {'text': '', 'media': []}
     driver.quit()
-    return urls
+    return res
 
 
 
