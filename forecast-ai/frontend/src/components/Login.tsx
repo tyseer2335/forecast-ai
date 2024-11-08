@@ -18,6 +18,9 @@ const Login: React.FC = () => {
     const [loginError, setLoginError] = useState(""); // State for handling login errors
     const [showPassword, setShowPassword] = useState(false); // State for toggling password visibility
 
+    // If user is already logged in, redirect to logout(which then clears the storage and redirects to login)
+    if (localStorage.getItem("userId")) navigate("/logout");
+
     // Function to toggle password visibility
     const togglePasswordVisibility = () => {
         setShowPassword(!showPassword);
