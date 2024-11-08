@@ -22,7 +22,7 @@ const App: React.FC = () => {
       if (currentUser) {
         setUserId(currentUser.uid);
       } else {
-        console.log("[App.tsx] User not logged in.");
+        console.log("User not logged in, redirecting to login page");
         if (window.location.pathname == '/') window.location.href = '/login';
       }
     });
