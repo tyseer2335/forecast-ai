@@ -88,6 +88,8 @@ async def query_to_answer(request: ForecastRequest, query_id: str):
         # 'content': {'text': '...', 'media': ['...']}}]}
         print(time.time())
         news_with_content = scrapping_content.multiple_scrape_content(news, LOCAL_OR_PROD)
+        # print(news_with_content)
+        # await send_status_update(query_id, str(news_with_content))
 
         state = 4
         await asyncio.sleep(0)
