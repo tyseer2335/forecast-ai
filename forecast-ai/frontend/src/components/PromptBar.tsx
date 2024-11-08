@@ -241,7 +241,7 @@ const PromptBar: React.FC<PromptBarProps> = ({
           autoComplete="off"
           placeholder="Ask query"
           disabled={isMenuOpen}
-          className="px-4 p-2 rounded-md bg-mid-dark-grey text-title-light-grey text-xs lg:text-sm xl:text-base rounded-2xl focus:outline-none flex-1"
+          className="px-4 p-2 bg-mid-dark-grey text-title-light-grey text-xs lg:text-sm xl:text-base rounded-2xl focus:outline-none flex-1"
           data-testid="query-input"
         />
       </div>
