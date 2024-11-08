@@ -48,9 +48,28 @@ def init_driver(LOCAL_OR_PROD: str, DOCKER_OR_LAMBDATEST: str, USERNAME: str, AC
         options.add_argument('--disable-gpu')
         options.add_argument('--disable-extensions')
         options.add_argument('--ignore-certificate-errors')
-
         options.binary_location = '/usr/bin/google-chrome'
-    driver = webdriver.Chrome(options=options)
+
+    if DOCKER_OR_LAMBDATEST == 'docker':
+        driver = webdriver.Chrome(options=options)
+    else:
+        # LambdaTest specific configurations
+        lt_options = {
+            "browserName": "Chrome",
+            "browserVersion": "130",  # Ensure this version is supported on LambdaTest
+            "platformName": "Windows 10",
+            "username": USERNAME,
+            "accessKey": ACCESS_KEY,
+            "project": "ForecastAI",
+            "w3c": True,
+            "plugin": "python-python"
+        }
+        options.set_capability('LT:Options', lt_options)
+        # Initialize the WebDriver with LambdaTest capabilities
+        driver = webdriver.Remote(
+            command_executor='https://hub.lambdatest.com/wd/hub',
+            options=options
+        )
     return driver
 
 
