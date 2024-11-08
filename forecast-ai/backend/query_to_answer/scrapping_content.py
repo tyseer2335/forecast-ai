@@ -91,7 +91,7 @@ def scrape_content_process(url, env, DOCKER_OR_LAMBDATEST, USERNAME, ACCESS_KEY)
     return res
 
 
-# def multiple_scrape_content(urls: dict, env: str) -> dict:
+# def multiple_scrape_content(urls: dict, env: str, DOCKER_OR_LAMBDATEST: str, USERNAME: str, ACCESS_KEY: str) -> dict:
 #     """
 #     Current Render hosting require docker for selenium.
 #     However, our partner and the team is looking to migrate to 3rd party API instead of selenium.
@@ -102,7 +102,7 @@ def scrape_content_process(url, env, DOCKER_OR_LAMBDATEST, USERNAME, ACCESS_KEY)
 #     """
 #     urls = urls.copy()
 #     # if env == 'local':  # Init here for faster loading
-#     driver = init_driver(env)
+#     driver = init_driver(env, DOCKER_OR_LAMBDATEST, USERNAME, ACCESS_KEY)
 #
 #     # Add 'content' key to each news
 #     for _, news in urls.items():
@@ -141,23 +141,3 @@ def multiple_scrape_content(urls: dict, env: str, DOCKER_OR_LAMBDATEST: str, USE
                 # if not article['content']['media']:
                 #     article['content']['media'] = []
     return urls
-
-
-# if __name__ == '__main__':
-#     print(multiprocessing.cpu_count())
-#     env = "LOCAL"
-#     urls = {'query1': [{'title1': '...',
-#        'description': '...',
-#        'published date': '...',
-#        'url': 'https://x.com/elonmusk/status/1853260913690005634',
-#        'publisher': '...',
-#        'content': {'text': '...', 'media': ['...']}}],
-#
-#             'query2': [{'title1': '...',
-#                         'description': '...',
-#                         'published date': '...',
-#                         'url': 'https://x.com/elonmusk/status/1853260913690005634',
-#                         'publisher': '...',
-#                         'content': {'text': '...', 'media': ['...']}}]
-#             }
-#     print(multiple_scrape_content(urls, env))
