@@ -30,7 +30,7 @@ const SourcesContainer: React.FC<SourcesContainerProps> = ({ sources, error, loa
     }
 
     return (
-        <div className="w-full space-y-4 bg-screen-black flex flex-col h-[65%] min-h-[65%] max-h-[65%] lg:h-[52%] lg:min-h-[52%] lg:max-h-[52%]">
+        <div className="w-full space-y-4 bg-screen-black flex flex-col h-[65%] min-h-[65%] max-h-[65%] sm:h-[62%] sm:min-h-[62%] sm:max-h-[62%] md:h-[65%] md:min-h-[65%] md:max-h-[65%] lg:h-[52%] lg:min-h-[52%] lg:max-h-[52%]">
             {loading ? (
                 <div className="flex justify-center items-center h-full">
                     <LoadingBar status={status} />

@@ -44,7 +44,7 @@ const ChatWindow: React.FC<ChatWindowProps> = ({ chats }) => {
       data-testid="chat-window"
     >
       {chats.map((chat) => (
-        <div className="flex flex-col items-center space-y-4 max-h-[150%]" key={uuidv4()}>
+        <div className="flex flex-col items-center space-y-4 max-h-[110%] sm:max-h-[125%] md:max-h-[150%]" key={uuidv4()}>
           <div ref={bottomRef} data-testid="bottom-ref" />
           <ChatMessage query={chat.query} data-testid="chat-message" />
           <SourcesContainer

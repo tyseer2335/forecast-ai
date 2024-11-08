@@ -39,14 +39,14 @@ const AnswerDisplay: React.FC<AnswerDisplayProps> = ({ query, answer }) => {
 
   return (
     <div className="p-4 pb-7 bg-sidebar-bg rounded-md flex flex-col space-y-6 flex-grow max-w-[933px] overflow-y-auto" style={{ width: 'calc(85% + 20px)' }}>
-      <h3 className="text-xs md:text-sm lg:text-base xl:text-lg 2xl:text-xl font-bold text-white">Forecast Result</h3>
-      <div className="flex flex-col space-y-4 w-full">
-        <p className="text-white text-[10px] md:text-xs lg:text-sm"><strong>Question:</strong> {query}</p>
-        <p className="text-white text-[10px] md:text-xs lg:text-sm"><strong>Forecast Probability:</strong> {answer.forecast}</p>
-        <p className="text-white text-[10px] md:text-xs lg:text-sm"><strong>Crowd Forecast Probability:</strong> {answer.crowd_forecast}</p>
-        <p className="text-white text-[10px] md:text-xs lg:text-sm"><strong>Ground Truth Label:</strong> {answer.ground_truth_label}</p>
-        <p className="text-white text-[10px] md:text-xs lg:text-sm"><strong>Forecaster Rationale:</strong></p>
-        <p className="text-white text-[10px] md:text-xs lg:text-sm break-all">{renderRationale()}</p>
+      <h3 className="text-[10px] sm:text-xs md:text-sm lg:text-base xl:text-lg 2xl:text-xl font-bold text-white">Forecast Result</h3>
+      <div className="flex flex-col space-y-3 sm:space-y-4 w-full">
+        <p className="text-white text-[8px] sm:text-[10px] md:text-xs lg:text-sm"><strong>Question:</strong> {query}</p>
+        <p className="text-white text-[8px] sm:text-[10px] md:text-xs lg:text-sm"><strong>Forecast Probability:</strong> {answer.forecast}</p>
+        <p className="text-white text-[8px] sm:text-[10px] md:text-xs lg:text-sm"><strong>Crowd Forecast Probability:</strong> {answer.crowd_forecast}</p>
+        <p className="text-white text-[8px] sm:text-[10px] md:text-xs lg:text-sm"><strong>Ground Truth Label:</strong> {answer.ground_truth_label}</p>
+        <p className="text-white text-[8px] sm:text-[10px] md:text-xs lg:text-sm"><strong>Forecaster Rationale:</strong></p>
+        <p className="text-white text-[8px] sm:text-[10px] md:text-xs lg:text-sm break-all">{renderRationale()}</p>
       </div>
     </div>
   );
