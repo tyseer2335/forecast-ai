@@ -51,15 +51,20 @@ def init_driver(LOCAL_OR_PROD: str) -> webdriver.Chrome:
 
 def advanced_selenium_scrape_content(driver: webdriver.Chrome, url: str) -> dict:
     driver.get(url)
+    print(f"Scraping content for url: {url}")
     # once we get redirected to the page, we need to wait for the page to load
     # wait till news.google.com is not in the url
     while 'news.google.com' in driver.current_url:
+        # print(f"Redirected to {driver.current_url}, waiting for page to load...")
         pass
 
     # Extract text content
+    print("Extracting text content...")
     clean_text = driver.find_element(By.TAG_NAME, 'body').text
+    print(clean_text)
 
     # Extract media content
+    print("Extracting media content...")
     media = [img.get_attribute('src') for img in driver.find_elements(By.TAG_NAME, 'img')]
     # clean media: remove None and any text, only links
     media = [link for link in media if link]
