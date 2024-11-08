@@ -39,7 +39,7 @@ def _single_scrape_content(url: str) -> dict:
     }
 
 
-def init_driver(LOCAL_OR_PROD: str) -> webdriver.Chrome:
+def init_driver(LOCAL_OR_PROD: str, DOCKER_OR_LAMBDATEST: str, USERNAME: str, ACCESS_KEY: str) -> webdriver.Chrome:
     options = Options()
     if LOCAL_OR_PROD == 'prod':
         options.add_argument('--headless')
@@ -80,8 +80,8 @@ def advanced_selenium_scrape_content(driver: webdriver.Chrome, url: str) -> dict
     }
 
 
-def scrape_content_process(url, env):
-    driver = init_driver(env)
+def scrape_content_process(url, env, DOCKER_OR_LAMBDATEST, USERNAME, ACCESS_KEY):
+    driver = init_driver(env, DOCKER_OR_LAMBDATEST, USERNAME, ACCESS_KEY)
     try:
         res = advanced_selenium_scrape_content(driver, url)
     except Exception as e:
@@ -123,16 +123,23 @@ def scrape_content_process(url, env):
 #     return urls
 
 
-def multiple_scrape_content(urls: dict, env: str) -> dict:
+def multiple_scrape_content(urls: dict, env: str, DOCKER_OR_LAMBDATEST: str, USERNAME: str, ACCESS_KEY: str
+                            ) -> dict:
     urls = urls.copy()
     with concurrent.futures.ProcessPoolExecutor(max_workers=None) as executor:
-        future_to_url = {executor.submit(scrape_content_process, article['url'], env): article for news in urls.values() for article in news}
+        future_to_url = {executor.submit(scrape_content_process, article['url'],
+                                         env, DOCKER_OR_LAMBDATEST, USERNAME, ACCESS_KEY):article for
+                         news in urls.values() for article in news}
         for future in concurrent.futures.as_completed(future_to_url):
             article = future_to_url[future]
             try:
                 article['content'] = future.result()
+                print(f"Finished processing article: {article['url']}")
             except Exception as e:
                 print(f"Error processing article: {e}")
+                # article['content']['text'] = e
+                # if not article['content']['media']:
+                #     article['content']['media'] = []
     return urls
 
 
