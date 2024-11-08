@@ -200,7 +200,7 @@ const PromptBar: React.FC<PromptBarProps> = ({
   return (
     <form
       onSubmit={handleSubmit}
-      className="bg-mid-dark-grey px-6 py-3 flex justify-between items-center rounded-full relative h-[64px] w-[80%] max-w-[1300px]"
+      className="bg-mid-dark-grey px-6 py-3 flex justify-between items-center rounded-full relative h-[50px] lg:h-[57px] xl:h-[64px] w-[80%] max-w-[1300px]"
     >
       <AdvancedQueryOptionsMenu
         isMenuOpen={isMenuOpen}
@@ -248,10 +248,10 @@ const PromptBar: React.FC<PromptBarProps> = ({
       <button
         type="submit"
         disabled={isMenuOpen}
-        className="bg-submit-btn-bg hover:bg-mid-light-grey w-10 h-10 rounded-full flex items-center justify-center"
+        className="bg-submit-btn-bg hover:bg-mid-light-grey w-8 h-8 lg:w-9 lg:h-9 xl:w-10 xl:h-10 rounded-full flex items-center justify-center"
         data-testid="query-submit-btn"
       >
-        <img src={SubmitButton} alt="submit-btn" className="w-7 h-7" />
+        <img src={SubmitButton} alt="submit-btn" className="w-5 h-5 lg:w-6 lg:h-6 xl:w-7 xl:h-7" />
       </button>
     </form>
   );

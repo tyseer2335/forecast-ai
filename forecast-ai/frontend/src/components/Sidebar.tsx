@@ -152,7 +152,7 @@ const Sidebar: React.FC<SidebarProps> = ({ newChatId }) => {
       onMouseLeave={() => setHoveredChatId("")}
       data-testid={`chat-session-${chat.id}`}
     >
-      <span className='text-[10px] md:text-xs xl:text-sm 2xl:text-base'>{chat.title || `Chat ${chat.id}`}</span> 
+      <span className='text-[10px] md:text-xs xl:text-sm 2xl:text-[14px]'>{chat.title || `Chat ${chat.id}`}</span> 
       {(hoveredChatId === chat.id || selectedChatId === chat.id) && <DeleteChatButton chatId={chat.id} chatTitle={chat.title || `Chat ${chat.id}`} />}
     </div>
     
@@ -163,7 +163,7 @@ const Sidebar: React.FC<SidebarProps> = ({ newChatId }) => {
     <>
       {chatList.length > 0 && (
         <>
-          <h3 className="p-1 text-[10px] md:text-xs xl:text-sm text-light-grey mt-4">{period}</h3>
+          <h3 className="p-1 text-[10px] md:text-xs xl:text-sm text-light-grey mt-4 font-bold">{period}</h3>
           {chatList.map((chat) => (
             <ChatSession chat={chat} />
           ))}

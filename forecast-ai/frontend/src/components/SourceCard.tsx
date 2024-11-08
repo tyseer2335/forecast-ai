@@ -19,7 +19,7 @@ const SourceCard: React.FC<SourceCardProps> = ({ source }) => {
     };
 
     return (
-        <div className="bg-sidebar-bg px-4 py-10 rounded-md flex space-x-4 h-full pr-6 w-[60%] max-w-[697px] relative overflow-y-auto">
+        <div className="bg-sidebar-bg px-4 py-10 rounded-md flex space-x-4 h-full pr-6 w-[88%] lg:w-[60%] max-w-[697px] relative overflow-y-auto">
             <img src={source.logo} alt="source-logo" className="w-10 h-10 lg:w-12 lg:h-12 rounded-full" data-testid="source-logo" />
             <div className="space-y-6 h-full flex flex-col justify-start w-[95%]">
                 <h3 className="font-semibold text-sm lg:text-base xl:text-lg text-metrics-text" data-testid="source-title">{source.title}</h3>
