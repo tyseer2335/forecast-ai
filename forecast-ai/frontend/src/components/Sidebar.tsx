@@ -99,7 +99,7 @@ const Sidebar: React.FC<SidebarProps> = ({ userId, newChatId }) => {
   // A New Chat Session Button
   const NewChatSessionButton = () => (
     <div
-      className={`p-2 hover:bg-button-hover rounded-md cursor-pointer ${!selectedChatId ? 'bg-button-hover font-bold' : ''}`}
+      className={`p-2 hover:bg-button-hover rounded-md text-[10px] md:text-xs xl:text-sm cursor-pointer ${!selectedChatId ? 'bg-button-hover font-bold' : ''}`}
       onClick={() => handleChatClick("")}
       data-testid="new-chat-session-button"
     >
@@ -141,7 +141,7 @@ const Sidebar: React.FC<SidebarProps> = ({ userId, newChatId }) => {
         onClick={(e) => {e.stopPropagation(); setDeletingChatInfo(chatId);}}
         className="p-2 hover:bg-button-hover rounded-md cursor-pointer"
         >
-        <img src={DeleteIcon} alt="delete" className="w-2 h-2" />
+        <img src={DeleteIcon} alt="delete" className="min-w-[8px] min-h-[8px]" />
       </button>
     </div>
   );
@@ -150,13 +150,13 @@ const Sidebar: React.FC<SidebarProps> = ({ userId, newChatId }) => {
   const ChatSession = ({ chat }: { chat: any }) => (
     <div
       key={chat.id}
-      className={`p-2 hover:bg-button-hover rounded-md cursor-pointer flex justify-between ${chat.id === selectedChatId ? 'bg-button-hover font-bold' : ''}`}
+      className={`p-2 hover:bg-button-hover rounded-md cursor-pointer flex justify-between items-center ${chat.id === selectedChatId ? 'bg-button-hover font-bold' : ''}`}
       onClick={() => handleChatClick(chat.id)}
       onMouseEnter={() => setHoveredChatId(chat.id)}
       onMouseLeave={() => setHoveredChatId("")}
       data-testid={`chat-session-${chat.id}`}
     >
-      <span>{chat.title || `Chat ${chat.id}`}</span> 
+      <span className='text-[10px] md:text-xs xl:text-sm 2xl:text-base'>{chat.title || `Chat ${chat.id}`}</span> 
       {(hoveredChatId === chat.id || selectedChatId === chat.id) && <DeleteChatButton chatId={chat.id} chatTitle={chat.title || `Chat ${chat.id}`} />}
     </div>
     
@@ -167,7 +167,7 @@ const Sidebar: React.FC<SidebarProps> = ({ userId, newChatId }) => {
     <>
       {chatList.length > 0 && (
         <>
-          <h3 className="p-1 text-sm text-light-grey mt-4">{period}</h3>
+          <h3 className="p-1 text-[10px] md:text-xs xl:text-sm text-light-grey mt-4">{period}</h3>
           {chatList.map((chat) => (
             <ChatSession chat={chat} />
           ))}
@@ -199,12 +199,12 @@ const Sidebar: React.FC<SidebarProps> = ({ userId, newChatId }) => {
   };
 
   return (
-    <div className="bg-sidebar-bg text-[#B0B1AF] h-screen flex flex-col justify-between max-w-[250px] min-w-[250px]">
+    <div className="bg-sidebar-bg text-light-grey h-full flex flex-col justify-between w-[25%] max-w-[300px] min-w-[170px]">
       {/* Logo and program title */}
       <div className="flex items-center justify-between p-4 fixed top-0 left-0 z-10`"> 
         <div className="flex items-center">
-          <img src={OwlLogo} alt="logo" className="w-8 h-8" data-testid="logo"/>
-          <span className="text-2xl ps-2 text-light-grey font-light" data-testid="program-title">forecastAI</span>
+          <img src={OwlLogo} alt="logo" className="w-5 h-5 lg:w-6 lg:h-6 xl:w-8 xl:h-8" data-testid="logo"/>
+          <span className="lg:text-xl xl:text-2xl ps-2 text-light-grey font-light" data-testid="program-title">forecastAI</span>
         </div>
       </div>
       
@@ -224,8 +224,8 @@ const Sidebar: React.FC<SidebarProps> = ({ userId, newChatId }) => {
           className="flex items-center hover:bg-button-hover p-2 rounded-md"
           data-testid="settings-button"
         >
-          <img src={SettingsLogo} alt="settings" className="w-7 h-7" /> 
-          <span className="px-2 text-light-grey">Settings</span>
+          <img src={SettingsLogo} alt="settings" className="w-5 h-5 lg:w-6 lg:h-6 xl:w-7 xl:h-7" /> 
+          <span className="px-2 text-light-grey text-xs lg:text-sm xl:text-base">Settings</span>
         </button>
       </div>
 
