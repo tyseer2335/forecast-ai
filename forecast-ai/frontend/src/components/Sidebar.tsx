@@ -16,7 +16,10 @@ const Sidebar: React.FC<SidebarProps> = ({ newChatId }) => {
   const [chats, setChats] = useState<any[]>([]);
   const navigate = useNavigate();
   var userId : string = localStorage.getItem('userId') || "";
-  if (!userId) window.location.href = '/login';
+  if (!userId) {
+    window.location.href = '/login';
+    return null;
+  }
   var [selectedChatId, setSelectedChatId] = useState<string>(sessionStorage.getItem("selectedChatId") ?? "");
   var [hoveredChatId, setHoveredChatId] = useState<string>("");
   var [deletingChatId, setDeletingChatId] = useState<string>("");

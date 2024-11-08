@@ -16,7 +16,10 @@ const MainContainer: React.FC = () => {
   const saveChat = useSaveChat();
   var [chats, setChats] = useState<Chat[]>([]);
   var userId : string = localStorage.getItem('userId') || "";
-  if (!userId) window.location.href = '/login';
+  if (!userId) {
+    window.location.href = '/login';
+    return null;
+  }
   var chatId = sessionStorage.getItem("selectedChatId");
   const [chatTitle, setChatTitle] = useState<string>("New Chat");
 
