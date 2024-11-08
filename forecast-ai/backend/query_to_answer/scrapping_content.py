@@ -100,3 +100,24 @@ def multiple_scrape_content(urls: dict, env: str) -> dict:
                 print(f"Error scraping content: {str(e)} for url: {article['url']}")
     driver.quit()
     return urls
+
+
+
+# if __name__ == '__main__':
+#     print(multiprocessing.cpu_count())
+#     env = "LOCAL"
+#     urls = {'query1': [{'title1': '...',
+#        'description': '...',
+#        'published date': '...',
+#        'url': 'https://x.com/elonmusk/status/1853260913690005634',
+#        'publisher': '...',
+#        'content': {'text': '...', 'media': ['...']}}],
+#
+#             'query2': [{'title1': '...',
+#                         'description': '...',
+#                         'published date': '...',
+#                         'url': 'https://x.com/elonmusk/status/1853260913690005634',
+#                         'publisher': '...',
+#                         'content': {'text': '...', 'media': ['...']}}]
+#             }
+#     print(multiple_scrape_content(urls, env))
