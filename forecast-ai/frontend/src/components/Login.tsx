@@ -18,11 +18,6 @@ const Login: React.FC = () => {
     const [loginError, setLoginError] = useState(""); // State for handling login errors
     const [showPassword, setShowPassword] = useState(false); // State for toggling password visibility
 
-    useEffect(() => {
-        localStorage.clear();
-        auth.signOut();
-    }, []);
-
     // Function to toggle password visibility
     const togglePasswordVisibility = () => {
         setShowPassword(!showPassword);

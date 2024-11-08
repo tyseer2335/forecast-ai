@@ -10,6 +10,7 @@ import axios from "axios";
 import { v4 as uuidv4 } from "uuid";
 
 type PromptBarProps = {
+  userId: string;
   chats: Chat[];
   setChatTitle: React.Dispatch<React.SetStateAction<string>>;
   saveChatToDB: (chat: Chat) => void;
@@ -31,6 +32,7 @@ export type Request = {
 };
 
 const PromptBar: React.FC<PromptBarProps> = ({
+  userId,
   chats,
   setChatTitle,
   saveChatToDB,
@@ -45,14 +47,7 @@ const PromptBar: React.FC<PromptBarProps> = ({
   const [request, setRequest] = useState<Request>({});
   const [submitRequest, setSubmitRequest] = useState(false);
   const socketRef = useRef<WebSocket | null>(null); // WebSocket reference
-
   const navigate = useNavigate();
-  const userId = auth.currentUser?.uid;
-
-  if (!userId) {
-    navigate("/login");
-    return null;
-  }
 
   const convertResponseSourcesIntoSources = (responseSources: any) => {
     const result: SourceObject[] = [];

@@ -3,20 +3,20 @@ import { useNavigate } from 'react-router-dom';
 import { getFirestore, collection, query, orderBy, onSnapshot, doc, deleteDoc } from 'firebase/firestore'; 
 import OwlLogo from '../assets/owl.svg';
 import SettingsLogo from '../assets/settings.svg';
-import { auth } from './firebase';
 import DeleteIcon from '../assets/close-menu-button.svg';
+import { auth } from './firebase';
 
 
 type SidebarProps = {
+  userId: string;
   newChatId: string | null;
 }
 
-const Sidebar: React.FC<SidebarProps> = ({ newChatId }) => {
+const Sidebar: React.FC<SidebarProps> = ({ userId, newChatId }) => {
   const db = getFirestore();
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [chats, setChats] = useState<any[]>([]);
   const navigate = useNavigate();
-  const userId = auth.currentUser?.uid;
   var [selectedChatId, setSelectedChatId] = useState<string>(localStorage.getItem('selectedChatId') ?? "");
   var [hoveredChatId, setHoveredChatId] = useState<string>("");
   var [deletingChatId, setDeletingChatId] = useState<string>("");
@@ -29,12 +29,14 @@ const Sidebar: React.FC<SidebarProps> = ({ newChatId }) => {
   }, [newChatId]);
 
   useEffect(() => {
+    var safeUserId : string = userId;
     if (!userId) {
-      navigate('/login');
-      return;
+      const savedUser = Object.keys(window.localStorage)
+      .filter(item => item.startsWith('firebase:authUser'))[0]
+      safeUserId = JSON.parse(localStorage.getItem(savedUser) || '{}').uid;
     }
 
-    const q = query(collection(db, 'Users', userId, 'Chats'), orderBy('updated_at', 'desc'));
+    const q = query(collection(db, 'Users', safeUserId, 'Chats'), orderBy('updated_at', 'desc'));
     const unsubscribe = onSnapshot(q, (querySnapshot) => {
       const chatList = querySnapshot.docs.map(doc => ({
         id: doc.id,
@@ -101,7 +103,7 @@ const Sidebar: React.FC<SidebarProps> = ({ newChatId }) => {
       onClick={() => handleChatClick("")}
       data-testid="new-chat-session-button"
     >
-      New Session
+      New Chat
     </div>
   );
 

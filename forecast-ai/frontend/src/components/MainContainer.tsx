@@ -12,25 +12,19 @@ import { DocumentReference, DocumentData } from "@firebase/firestore";
 import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 
-const MainContainer: React.FC = () => {
+// Make the MainContainer to take userId(string) as a prop
+const MainContainer: React.FC<{ userId: string }> = ({ userId }) => {
   const db = getFirestore();
-  const navigate = useNavigate();
   const saveChat = useSaveChat();
   var [chats, setChats] = useState<Chat[]>([]);
-  var userId = auth.currentUser?.uid;
   var chatId = localStorage.getItem("selectedChatId");
-    
   const [chatTitle, setChatTitle] = useState<string>("New Chat");
 
-  // Sync User Login
-  useEffect(() => {
-    if (!auth.currentUser) {
-      console.error("User not logged in.");
-      navigate("/login");
-      return;
-    } 
-    userId = auth.currentUser.uid;
-  }, [auth]);
+  if (!userId) {
+    const savedUser = Object.keys(window.localStorage)
+    .filter(item => item.startsWith('firebase:authUser'))[0]
+    userId = JSON.parse(localStorage.getItem(savedUser) || '{}').uid;
+  }
 
   // Selected Chat Id
   useEffect(() => {
@@ -81,7 +75,6 @@ const MainContainer: React.FC = () => {
   }
 
   const saveChatToDB = async (chat: Chat) => {
-    userId = auth.currentUser?.uid ?? "";
     chatId = localStorage.getItem("selectedChatId") ?? "";
     saveChat(userId, chatId, chat.query, chat.sources);
     chatId = localStorage.getItem("selectedChatId");
@@ -132,10 +125,10 @@ const MainContainer: React.FC = () => {
   return (
       <div className="h-screen flex flex-col bg-screen-black text-white font-inter">
         <div className="flex flex-grow">
-          <Sidebar newChatId={chatId} />
+          <Sidebar userId={userId} newChatId={chatId} />
           <div className="flex flex-col flex-grow">
             <HeaderBar title={chatTitle} />
-            <MainContent chats={chats} setChatTitle={setChatTitle} saveChatToDB={saveChatToDB} addQuery={addQuery} addSources={addSources} addError={addError} toggleLoading={toggleLoading} addStatus={addStatus} />
+            <MainContent userId={userId} chats={chats} setChatTitle={setChatTitle} saveChatToDB={saveChatToDB} addQuery={addQuery} addSources={addSources} addError={addError} toggleLoading={toggleLoading} addStatus={addStatus} />
           </div>
         </div>
       </div>
