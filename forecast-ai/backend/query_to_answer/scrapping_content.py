@@ -10,6 +10,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 import multiprocessing
 import concurrent.futures
+# import time
 
 
 def _single_scrape_content(url: str) -> dict:
@@ -44,6 +45,10 @@ def init_driver(LOCAL_OR_PROD: str) -> webdriver.Chrome:
         options.add_argument('--headless')
         options.add_argument('--no-sandbox')
         options.add_argument('--disable-dev-shm-usage')
+        options.add_argument('--disable-gpu')
+        options.add_argument('--disable-extensions')
+        options.add_argument('--ignore-certificate-errors')
+
         options.binary_location = '/usr/bin/google-chrome'
     driver = webdriver.Chrome(options=options)
     return driver
