@@ -39,7 +39,7 @@ def _single_scrape_content(url: str) -> dict:
     }
 
 
-def init_driver(LOCAL_OR_PROD: str) -> webdriver.Chrome:
+def init_driver(LOCAL_OR_PROD: str, DOCKER_OR_LAMBDATEST: str, USERNAME: str, ACCESS_KEY: str) -> webdriver.Chrome:
     options = Options()
     if LOCAL_OR_PROD == 'prod':
         options.add_argument('--headless')
@@ -48,9 +48,28 @@ def init_driver(LOCAL_OR_PROD: str) -> webdriver.Chrome:
         options.add_argument('--disable-gpu')
         options.add_argument('--disable-extensions')
         options.add_argument('--ignore-certificate-errors')
-
         options.binary_location = '/usr/bin/google-chrome'
-    driver = webdriver.Chrome(options=options)
+
+    if DOCKER_OR_LAMBDATEST == 'docker':
+        driver = webdriver.Chrome(options=options)
+    else:
+        # LambdaTest specific configurations
+        lt_options = {
+            "browserName": "Chrome",
+            "browserVersion": "130",  # Ensure this version is supported on LambdaTest
+            "platformName": "Windows 10",
+            "username": USERNAME,
+            "accessKey": ACCESS_KEY,
+            "project": "ForecastAI",
+            "w3c": True,
+            "plugin": "python-python"
+        }
+        options.set_capability('LT:Options', lt_options)
+        # Initialize the WebDriver with LambdaTest capabilities
+        driver = webdriver.Remote(
+            command_executor='https://hub.lambdatest.com/wd/hub',
+            options=options
+        )
     return driver
 
 
@@ -80,8 +99,8 @@ def advanced_selenium_scrape_content(driver: webdriver.Chrome, url: str) -> dict
     }
 
 
-def scrape_content_process(url, env):
-    driver = init_driver(env)
+def scrape_content_process(url, env, DOCKER_OR_LAMBDATEST, USERNAME, ACCESS_KEY):
+    driver = init_driver(env, DOCKER_OR_LAMBDATEST, USERNAME, ACCESS_KEY)
     try:
         res = advanced_selenium_scrape_content(driver, url)
     except Exception as e:
@@ -91,7 +110,7 @@ def scrape_content_process(url, env):
     return res
 
 
-# def multiple_scrape_content(urls: dict, env: str) -> dict:
+# def multiple_scrape_content(urls: dict, env: str, DOCKER_OR_LAMBDATEST: str, USERNAME: str, ACCESS_KEY: str) -> dict:
 #     """
 #     Current Render hosting require docker for selenium.
 #     However, our partner and the team is looking to migrate to 3rd party API instead of selenium.
@@ -102,7 +121,7 @@ def scrape_content_process(url, env):
 #     """
 #     urls = urls.copy()
 #     # if env == 'local':  # Init here for faster loading
-#     driver = init_driver(env)
+#     driver = init_driver(env, DOCKER_OR_LAMBDATEST, USERNAME, ACCESS_KEY)
 #
 #     # Add 'content' key to each news
 #     for _, news in urls.items():
@@ -123,34 +142,21 @@ def scrape_content_process(url, env):
 #     return urls
 
 
-def multiple_scrape_content(urls: dict, env: str) -> dict:
+def multiple_scrape_content(urls: dict, env: str, DOCKER_OR_LAMBDATEST: str, USERNAME: str, ACCESS_KEY: str
+                            ) -> dict:
     urls = urls.copy()
     with concurrent.futures.ProcessPoolExecutor(max_workers=None) as executor:
-        future_to_url = {executor.submit(scrape_content_process, article['url'], env): article for news in urls.values() for article in news}
+        future_to_url = {executor.submit(scrape_content_process, article['url'],
+                                         env, DOCKER_OR_LAMBDATEST, USERNAME, ACCESS_KEY):article for
+                         news in urls.values() for article in news}
         for future in concurrent.futures.as_completed(future_to_url):
             article = future_to_url[future]
             try:
                 article['content'] = future.result()
+                print(f"Finished processing article: {article['url']}")
             except Exception as e:
                 print(f"Error processing article: {e}")
+                # article['content']['text'] = e
+                # if not article['content']['media']:
+                #     article['content']['media'] = []
     return urls
-
-
-# if __name__ == '__main__':
-#     print(multiprocessing.cpu_count())
-#     env = "LOCAL"
-#     urls = {'query1': [{'title1': '...',
-#        'description': '...',
-#        'published date': '...',
-#        'url': 'https://x.com/elonmusk/status/1853260913690005634',
-#        'publisher': '...',
-#        'content': {'text': '...', 'media': ['...']}}],
-#
-#             'query2': [{'title1': '...',
-#                         'description': '...',
-#                         'published date': '...',
-#                         'url': 'https://x.com/elonmusk/status/1853260913690005634',
-#                         'publisher': '...',
-#                         'content': {'text': '...', 'media': ['...']}}]
-#             }
-#     print(multiple_scrape_content(urls, env))

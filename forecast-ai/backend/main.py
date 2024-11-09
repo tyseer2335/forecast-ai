@@ -22,6 +22,9 @@ load_dotenv()
 OPENAI_API_KEY = os.getenv('OPENAPI_API_KEY')
 client = OpenAI(api_key=OPENAI_API_KEY)
 LOCAL_OR_PROD = os.getenv('LOCAL_OR_PROD')
+DOCKER_OR_LAMBDATEST = os.getenv('DOCKER_OR_LAMBDATEST')
+USERNAME = os.getenv('USERNAME')
+ACCESS_KEY = os.getenv('ACCESS_KEY')
 
 app.add_middleware(
     CORSMiddleware,
@@ -87,7 +90,8 @@ async def query_to_answer(request: ForecastRequest, query_id: str):
         # {'query1': [{'title1': '...', 'description': '...', 'published date': '...', 'url': '...', 'publisher': '...',
         # 'content': {'text': '...', 'media': ['...']}}]}
         print(time.time())
-        news_with_content = scrapping_content.multiple_scrape_content(news, LOCAL_OR_PROD)
+        news_with_content = scrapping_content.multiple_scrape_content(news, LOCAL_OR_PROD,
+                                                                      DOCKER_OR_LAMBDATEST, USERNAME, ACCESS_KEY)
         # print(news_with_content)
         # await send_status_update(query_id, str(news_with_content))
 
