@@ -12,6 +12,8 @@ from model.forecast_request import ForecastRequest
 from fastapi import WebSocket
 import asyncio
 
+import time
+
 # [Initialize FastAPI app]
 # pip install "uvicorn[standard]"
 # uvicorn main:app
@@ -59,6 +61,7 @@ async def send_status_update(query_id: str, message: str):
 @app.post("/query_to_answer")
 async def query_to_answer(request: ForecastRequest, query_id: str):
     state = 0
+    print("Start")
     try:
         state = 1
         await send_status_update(query_id, "Generating search queries...")
@@ -83,7 +86,10 @@ async def query_to_answer(request: ForecastRequest, query_id: str):
         # Example:
         # {'query1': [{'title1': '...', 'description': '...', 'published date': '...', 'url': '...', 'publisher': '...',
         # 'content': {'text': '...', 'media': ['...']}}]}
+        print(time.time())
         news_with_content = scrapping_content.multiple_scrape_content(news, LOCAL_OR_PROD)
+        # print(news_with_content)
+        # await send_status_update(query_id, str(news_with_content))
 
         state = 4
         await asyncio.sleep(0)

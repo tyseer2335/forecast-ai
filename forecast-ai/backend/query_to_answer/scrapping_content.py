@@ -8,6 +8,9 @@ from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
+import multiprocessing
+import concurrent.futures
+# import time
 
 
 def _single_scrape_content(url: str) -> dict:
@@ -42,6 +45,10 @@ def init_driver(LOCAL_OR_PROD: str) -> webdriver.Chrome:
         options.add_argument('--headless')
         options.add_argument('--no-sandbox')
         options.add_argument('--disable-dev-shm-usage')
+        options.add_argument('--disable-gpu')
+        options.add_argument('--disable-extensions')
+        options.add_argument('--ignore-certificate-errors')
+
         options.binary_location = '/usr/bin/google-chrome'
     driver = webdriver.Chrome(options=options)
     return driver
@@ -49,15 +56,20 @@ def init_driver(LOCAL_OR_PROD: str) -> webdriver.Chrome:
 
 def advanced_selenium_scrape_content(driver: webdriver.Chrome, url: str) -> dict:
     driver.get(url)
+    print(f"Scraping content for url: {url}")
     # once we get redirected to the page, we need to wait for the page to load
     # wait till news.google.com is not in the url
     while 'news.google.com' in driver.current_url:
+        # print(f"Redirected to {driver.current_url}, waiting for page to load...")
         pass
 
     # Extract text content
+    print("Extracting text content...")
     clean_text = driver.find_element(By.TAG_NAME, 'body').text
+    print(clean_text)
 
     # Extract media content
+    print("Extracting media content...")
     media = [img.get_attribute('src') for img in driver.find_elements(By.TAG_NAME, 'img')]
     # clean media: remove None and any text, only links
     media = [link for link in media if link]
@@ -68,33 +80,77 @@ def advanced_selenium_scrape_content(driver: webdriver.Chrome, url: str) -> dict
     }
 
 
-def multiple_scrape_content(urls: dict, env: str) -> dict:
-    """
-    Current Render hosting require docker for selenium.
-    However, our partner and the team is looking to migrate to 3rd party API instead of selenium.
-    For now, use env with local to test selenium, and remote for production where selenium is not supported.
-    :param urls:
-    :param env:
-    :return:
-    """
-    urls = urls.copy()
-    # if env == 'local':  # Init here for faster loading
+def scrape_content_process(url, env):
     driver = init_driver(env)
-
-    # Add 'content' key to each news
-    for _, news in urls.items():
-        for article in news:
-            article['content'] = _single_scrape_content(article['url'])
-    # if env == 'local':
-    for _, news in urls.items():
-        for article in news:
-            # if not article['content']['text']:
-            try:
-                res = advanced_selenium_scrape_content(driver, article['url'])
-                article['content']['text'] = res['text']
-                if not article['content']['media']:
-                    article['content']['media'] = res['media']
-            except Exception as e:
-                print(f"Error scraping content: {str(e)} for url: {article['url']}")
+    try:
+        res = advanced_selenium_scrape_content(driver, url)
+    except Exception as e:
+        print(f"Error scraping content: {str(e)} for url: {url}")
+        res = {'text': '', 'media': []}
     driver.quit()
+    return res
+
+
+# def multiple_scrape_content(urls: dict, env: str) -> dict:
+#     """
+#     Current Render hosting require docker for selenium.
+#     However, our partner and the team is looking to migrate to 3rd party API instead of selenium.
+#     For now, use env with local to test selenium, and remote for production where selenium is not supported.
+#     :param urls:
+#     :param env:
+#     :return:
+#     """
+#     urls = urls.copy()
+#     # if env == 'local':  # Init here for faster loading
+#     driver = init_driver(env)
+#
+#     # Add 'content' key to each news
+#     for _, news in urls.items():
+#         for article in news:
+#             article['content'] = _single_scrape_content(article['url'])
+#     # if env == 'local':
+#     for _, news in urls.items():
+#         for article in news:
+#             # if not article['content']['text']:
+#             try:
+#                 res = advanced_selenium_scrape_content(driver, article['url'])
+#                 article['content']['text'] = res['text']
+#                 if not article['content']['media']:
+#                     article['content']['media'] = res['media']
+#             except Exception as e:
+#                 print(f"Error scraping content: {str(e)} for url: {article['url']}")
+#     driver.quit()
+#     return urls
+
+
+def multiple_scrape_content(urls: dict, env: str) -> dict:
+    urls = urls.copy()
+    with concurrent.futures.ProcessPoolExecutor(max_workers=None) as executor:
+        future_to_url = {executor.submit(scrape_content_process, article['url'], env): article for news in urls.values() for article in news}
+        for future in concurrent.futures.as_completed(future_to_url):
+            article = future_to_url[future]
+            try:
+                article['content'] = future.result()
+            except Exception as e:
+                print(f"Error processing article: {e}")
     return urls
+
+
+# if __name__ == '__main__':
+#     print(multiprocessing.cpu_count())
+#     env = "LOCAL"
+#     urls = {'query1': [{'title1': '...',
+#        'description': '...',
+#        'published date': '...',
+#        'url': 'https://x.com/elonmusk/status/1853260913690005634',
+#        'publisher': '...',
+#        'content': {'text': '...', 'media': ['...']}}],
+#
+#             'query2': [{'title1': '...',
+#                         'description': '...',
+#                         'published date': '...',
+#                         'url': 'https://x.com/elonmusk/status/1853260913690005634',
+#                         'publisher': '...',
+#                         'content': {'text': '...', 'media': ['...']}}]
+#             }
+#     print(multiple_scrape_content(urls, env))
