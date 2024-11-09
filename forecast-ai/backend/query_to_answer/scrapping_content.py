@@ -155,12 +155,18 @@ def multiple_scrape_content(urls: dict, env: str, DOCKER_OR_LAMBDATEST: str, USE
     urls = urls.copy()
     with concurrent.futures.ProcessPoolExecutor(max_workers=None) as executor:
         future_to_url = {executor.submit(scrape_content_process, article['url'],
-                                         env, DOCKER_OR_LAMBDATEST, USERNAME, ACCESS_KEY):article for
+                                         env, DOCKER_OR_LAMBDATEST, USERNAME, ACCESS_KEY): article for
                          news in urls.values() for article in news}
         for future in concurrent.futures.as_completed(future_to_url):
             article = future_to_url[future]
             try:
-                article['content'] = future.result()
+                result = future.result()
+                # Update article with content and URLs
+                article['content'] = {
+                    'text': result['text'],
+                    'media': result['media']
+                }
+                article['url'] = result['final_url']  # Update the URL to the final redirected URL
                 print(f"Finished processing article: {article['url']}")
             except Exception as e:
                 print(f"Error processing article: {e}")
