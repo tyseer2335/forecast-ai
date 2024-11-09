@@ -30,7 +30,7 @@ const HeaderBar: React.FC<HeaderBarProps> = ({ title }) => {
 
   return (
     <header className="bg-screen-black text-header-bar-text px-6 py-6 w-full h-[8vh] flex items-center">
-        {title && <h3 className="flex-grow font-bold text-center text-xs xl:text-sm">{title}</h3>}
+        {title && <h3 className="flex-grow font-bold text-center text-[8px] sm:text-[10px] md:text-xs xl:text-sm">{title}</h3>}
         <div className="flex justify-between items-center space-x-5 ml-auto">
             <button>
                 <img src={BookmarkButton} alt="bookmark-btn" className="w-4 h-5 lg:w-4 lg:h-6 xl:w-5 xl:h-7" />
