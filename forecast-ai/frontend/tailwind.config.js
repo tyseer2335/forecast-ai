@@ -37,7 +37,11 @@ module.exports = {
         'query-options-date-picker-active-bg': '#6A6CDB',
         'prompt-bar-date-bg': '#767680',
         'error-message-box-border-bg': '#F56565',
-        'error-message-box-bg': '#4B1E1E'
+        'error-message-box-bg': '#4B1E1E',
+        'heatmap-green-bg': 'rgba(83, 168, 102, 0.7)',
+        'heatmap-yellow-bg': 'rgba(253, 209, 120, 0.7)',
+        'heatmap-purple-bg': 'rgba(174, 176, 255, 0.7)',
+        'heatmap-red-bg': 'rgba(255, 26, 0, 0.7)'
       },
       fontFamily: {
         inter: ['Inter', 'sans-serif'],

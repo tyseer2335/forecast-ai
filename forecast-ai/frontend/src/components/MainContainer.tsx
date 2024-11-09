@@ -4,47 +4,38 @@ import HeaderBar from "./HeaderBar";
 import MainContent from "./MainContent";
 import Sidebar from "./Sidebar";
 import { Chat, SourceObject } from "../hooks/types";
-import { auth } from "./firebase";
 import useSaveChat from "../hooks/saveChat/useSaveChat";
 import { doc, getDoc } from "firebase/firestore";
 import { getFirestore } from "firebase/firestore";
 import { DocumentReference, DocumentData } from "@firebase/firestore";
-import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 
+// Make the MainContainer to take userId(string) as a prop
 const MainContainer: React.FC = () => {
   const db = getFirestore();
-  const navigate = useNavigate();
   const saveChat = useSaveChat();
   var [chats, setChats] = useState<Chat[]>([]);
-  var userId = auth.currentUser?.uid;
-  var chatId = localStorage.getItem("selectedChatId");
-    
+  var userId : string = localStorage.getItem('userId') || "";
+  if (!userId) {
+    window.location.href = '/login';
+    return null;
+  }
+  var chatId = sessionStorage.getItem("selectedChatId");
   const [chatTitle, setChatTitle] = useState<string>("New Chat");
-
-  // Sync User Login
-  useEffect(() => {
-    if (!auth.currentUser) {
-      console.error("User not logged in.");
-      navigate("/login");
-      return;
-    } 
-    userId = auth.currentUser.uid;
-  }, [auth]);
 
   // Selected Chat Id
   useEffect(() => {
-    if (!localStorage.getItem("selectedChatId")) {
+    if (!sessionStorage.getItem("selectedChatId")) {
         setChats([]);
         setChatTitle("New Chat");
     } else {
-        chatId = localStorage.getItem("selectedChatId");
+        chatId = sessionStorage.getItem("selectedChatId");
         if (userId && chatId) {
             const chatRef : DocumentReference<DocumentData, DocumentData> = doc(db, "Users", userId, "Chats", chatId);
             fetchChatDoc(chatRef);
         }
     }
-  }, [localStorage["selectedChatId"]]);
+  }, [sessionStorage["selectedChatId"]]);
 
   // =============== Helper Functions ===============
   // I. fetchChatDoc: Fetch Doc and Extract Title & Messages
@@ -81,10 +72,9 @@ const MainContainer: React.FC = () => {
   }
 
   const saveChatToDB = async (chat: Chat) => {
-    userId = auth.currentUser?.uid ?? "";
-    chatId = localStorage.getItem("selectedChatId") ?? "";
+    chatId = sessionStorage.getItem("selectedChatId") ?? "";
     saveChat(userId, chatId, chat.query, chat.sources);
-    chatId = localStorage.getItem("selectedChatId");
+    chatId = sessionStorage.getItem("selectedChatId");
     if (userId && chatId) {
       const chatRef : DocumentReference<DocumentData, DocumentData> = doc(db, "Users", userId, "Chats", chatId);
       fetchChatDoc(chatRef);
@@ -130,13 +120,11 @@ const MainContainer: React.FC = () => {
   }
 
   return (
-      <div className="h-screen flex flex-col bg-screen-black text-white font-inter">
-        <div className="flex flex-grow">
-          <Sidebar newChatId={chatId} />
-          <div className="flex flex-col flex-grow">
-            <HeaderBar title={chatTitle} />
-            <MainContent chats={chats} setChatTitle={setChatTitle} saveChatToDB={saveChatToDB} addQuery={addQuery} addSources={addSources} addError={addError} toggleLoading={toggleLoading} addStatus={addStatus} />
-          </div>
+    <div className="min-h-screen h-screen w-screen flex bg-screen-black text-white font-inter">
+    <Sidebar newChatId={chatId} />
+    <div className="flex flex-col flex-grow">
+      <HeaderBar title={chatTitle} />
+      <MainContent chats={chats} setChatTitle={setChatTitle} saveChatToDB={saveChatToDB} addQuery={addQuery} addSources={addSources} addError={addError} toggleLoading={toggleLoading} addStatus={addStatus} />
         </div>
       </div>
     );

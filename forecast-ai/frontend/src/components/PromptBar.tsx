@@ -3,7 +3,6 @@ import React, { useState, useEffect, useRef } from "react";
 import OptionsButton from "../assets/options-button.svg";
 import SubmitButton from "../assets/submit-button.svg";
 import { useNavigate } from "react-router-dom";
-import { auth } from "./firebase";
 import AdvancedQueryOptionsMenu from "./AdvancedQueryOptionsMenu";
 import { Chat, SourceObject } from "../hooks/types";
 import axios from "axios";
@@ -45,14 +44,7 @@ const PromptBar: React.FC<PromptBarProps> = ({
   const [request, setRequest] = useState<Request>({});
   const [submitRequest, setSubmitRequest] = useState(false);
   const socketRef = useRef<WebSocket | null>(null); // WebSocket reference
-
   const navigate = useNavigate();
-  const userId = auth.currentUser?.uid;
-
-  if (!userId) {
-    navigate("/login");
-    return null;
-  }
 
   const convertResponseSourcesIntoSources = (responseSources: any) => {
     const result: SourceObject[] = [];
@@ -66,7 +58,7 @@ const PromptBar: React.FC<PromptBarProps> = ({
               ? source.content.media[0]
               : "https://placehold.co/306x150?text=No+Image+Available",
           link: source.url,
-          logo: "https://placehold.co/150x150?text=Logo",
+          logo: `http://www.google.com/s2/favicons?domain=${source.url}&sz=64`,
           metrics: {
             viewsCount: 483,
             trendingRate: 22,
@@ -208,7 +200,7 @@ const PromptBar: React.FC<PromptBarProps> = ({
   return (
     <form
       onSubmit={handleSubmit}
-      className="bg-mid-dark-grey px-6 py-3 flex justify-between items-center rounded-full relative h-[64px]"
+      className="bg-mid-dark-grey px-6 py-3 flex justify-between items-center rounded-full relative h-[64px] w-[80%] max-w-[1300px]"
     >
       <AdvancedQueryOptionsMenu
         isMenuOpen={isMenuOpen}
@@ -249,7 +241,7 @@ const PromptBar: React.FC<PromptBarProps> = ({
           autoComplete="off"
           placeholder="Ask query"
           disabled={isMenuOpen}
-          className="px-4 p-2 rounded-md bg-mid-dark-grey text-title-light-grey rounded-2xl focus:outline-none flex-1"
+          className="px-4 p-2 bg-mid-dark-grey text-title-light-grey text-xs lg:text-sm xl:text-base rounded-2xl focus:outline-none flex-1"
           data-testid="query-input"
         />
       </div>

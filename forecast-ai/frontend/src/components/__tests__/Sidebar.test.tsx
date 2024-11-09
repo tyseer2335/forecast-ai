@@ -6,7 +6,7 @@ import Sidebar from '../Sidebar';
 import { useNavigate } from 'react-router-dom';
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../firebase";
-import { onSnapshot } from 'firebase/firestore';
+import { collection, onSnapshot } from 'firebase/firestore';
 import { Message } from '../../hooks/types';
 import { Timestamp } from 'firebase/firestore';
 
@@ -18,8 +18,8 @@ import { Timestamp } from 'firebase/firestore';
 // 1. Sidebar :: Authentication Tests
 // These tests cover scenarios where user authentication impacts navigation.
 // Tests:
-// ✓ navigates to /login if user is not authenticated
-// ✓ navigates to /login if user is not authenticated with newChatId
+// ✓ returns to /login if user is not authenticated
+// ✓ returns to /login if user is not authenticated with newChatId
 //
 // 2. Sidebar :: Layout Tests
 // These tests ensure that specific elements of the sidebar are correctly rendered.
@@ -120,16 +120,16 @@ const chatCollection1Today1Previous7Days2Previous40Days : Array<DBChatSession> =
 const chatCollection1Today3Earlier : Array<DBChatSession> = [todayChat, sixtyDaysAgoChat, getChatWithNewId(sixtyDaysAgoChat, '60-2'), getChatWithNewId(sixtyDaysAgoChat, '60-3')];
 const chatCollection1Today2Previous7Days1Previous30Days1Earlier : Array<DBChatSession> = [todayChat, yesterdayChat, fiveDaysAgoChat, tenDaysAgoChat, thirtyDaysAgoChat, sixtyDaysAgoChat];
 
-// Mock firebase and react-router-dom functions
+// Mock Authentication
 jest.mock('../firebase', () => ({
   auth: {
     currentUser: { uid: 'user-id-to-test' },
   },
 }));
+localStorage.setItem('userId', 'user-id-to-test');
 
 describe('Sidebar :: Authentication Tests', () => {
   // These tests cover scenarios where user authentication impacts navigation.
-
 
   const mockNavigate = jest.fn();
   beforeEach(() => {
@@ -138,30 +138,41 @@ describe('Sidebar :: Authentication Tests', () => {
     localStorage.clear();
   });
 
-  it('navigates to /login if user is not authenticated', () => {
+  it('returns to /login if user is not authenticated', () => {
     (auth.currentUser as any) = null;
+    localStorage.removeItem('userId');
     expect(auth.currentUser).toBeNull();
+
     render(
       <Sidebar newChatId={null} />
     );
-    expect(mockNavigate).toHaveBeenCalledWith('/login');
+
+    // Since the user is not authenticated, the component should redirected to /login and return null
+    // Thus, the collection of chats should not be retrieved(if it is called, there should be an error)
+    expect(collection).not.toHaveBeenCalled();
   });
 
-  it('navigates to /login if user is not authenticated with newChatId', () => {
+  it('returns to /login if user is not authenticated with newChatId', () => {
     (auth.currentUser as any) = null;
+    localStorage.removeItem('userId');
+
     render(
       <Sidebar newChatId={'someRandomChatId'} />
     );
-    expect(mockNavigate).toHaveBeenCalledWith('/login');
+
+    expect(collection).not.toHaveBeenCalled();
   });
 
   it('does not navigate to /login if user is authenticated', () => {
     // Mock the user to be authenticated
     (auth.currentUser as any) = { uid: 'user-id-to-test' };
+    localStorage.setItem('userId', 'user-id-to-test');
+
     render(
       <Sidebar newChatId={null} />
     );
-    expect(mockNavigate).not.toHaveBeenCalled();
+
+    expect(collection).toHaveBeenCalled();
   }
   );
 
@@ -175,7 +186,7 @@ describe('Sidebar :: Layout Tests', () => {
     (useNavigate as jest.Mock).mockReturnValue(mockNavigate);
   });
 
-  // Basic Components (logo, program-title, settings-button, chat-history)
+  // Basic Components (logo, program-title, settings-button, chat-sessions)
 
   it('displays logo', async () => {
     render(
@@ -196,7 +207,7 @@ describe('Sidebar :: Layout Tests', () => {
     render(
         <Sidebar newChatId={null} />
       );
-    expect(screen.getByTestId('chat-history')).toBeInTheDocument();
+    expect(screen.getByTestId('chat-sessions')).toBeInTheDocument();
   });
 
   it('displays settings button', async () => {
@@ -211,7 +222,7 @@ describe('Sidebar :: Layout Tests', () => {
     render(
         <Sidebar newChatId={null} />
       );
-    expect(screen.getByTestId('chat-history')).toBeInTheDocument();
+    expect(screen.getByTestId('chat-sessions')).toBeInTheDocument();
   });
 });
 
@@ -241,7 +252,7 @@ describe('Sidebar :: Chat Sessions Display Tests', () => {
     render(
         <Sidebar newChatId={null} />
       );
-    expect(screen.getByTestId('chat-history')).toBeInTheDocument();
+    expect(screen.getByTestId('chat-sessions')).toBeInTheDocument();
     // Expect exactly 1 chat session to be displayed
     expect(screen.getAllByTestId(/^chat-session-/)).toHaveLength(1);
 
@@ -260,7 +271,7 @@ describe('Sidebar :: Chat Sessions Display Tests', () => {
     render(
         <Sidebar newChatId={null} />
       );
-    expect(screen.getByTestId('chat-history')).toBeInTheDocument();
+    expect(screen.getByTestId('chat-sessions')).toBeInTheDocument();
     // Expect exactly 3 chat sessions to be displayed
     expect(screen.getAllByTestId(/^chat-session-/)).toHaveLength(3);
 
@@ -279,7 +290,7 @@ describe('Sidebar :: Chat Sessions Display Tests', () => {
     render(
         <Sidebar newChatId={null} />
       );
-    expect(screen.getByTestId('chat-history')).toBeInTheDocument();
+    expect(screen.getByTestId('chat-sessions')).toBeInTheDocument();
     // Expect exactly 4 chat sessions to be displayed
     expect(screen.getAllByTestId(/^chat-session-/)).toHaveLength(4);
 
@@ -299,7 +310,7 @@ describe('Sidebar :: Chat Sessions Display Tests', () => {
     render(
         <Sidebar newChatId={null} />
       );
-    expect(screen.getByTestId('chat-history')).toBeInTheDocument();
+    expect(screen.getByTestId('chat-sessions')).toBeInTheDocument();
     // Expect exactly 4 chat sessions to be displayed
     expect(screen.getAllByTestId(/^chat-session-/)).toHaveLength(4);
 
@@ -318,7 +329,7 @@ describe('Sidebar :: Chat Sessions Display Tests', () => {
     render(
         <Sidebar newChatId={null} />
       );
-    expect(screen.getByTestId('chat-history')).toBeInTheDocument();
+    expect(screen.getByTestId('chat-sessions')).toBeInTheDocument();
     // Expect exactly 6 chat sessions to be displayed
     expect(screen.getAllByTestId(/^chat-session-/)).toHaveLength(6);
 
@@ -348,7 +359,7 @@ it('clicking a chat session highlights it', async () => {
   render(<Sidebar newChatId={null} />);
   
   // Check if chat history is present
-  expect(screen.getByTestId('chat-history')).toBeInTheDocument();
+  expect(screen.getByTestId('chat-sessions')).toBeInTheDocument();
   
   // Expect exactly 6 chat sessions to be displayed
   let chatSessionElements = screen.getAllByTestId(/^chat-session-/);
@@ -386,7 +397,7 @@ it('clicking a chat session highlights it', async () => {
   const markedSelectedChatSessionTestId = markedSelectedChatSession.getAttribute('data-testid');
   const strippedKey = markedSelectedChatSessionTestId?.split('chat-session-')[1];
 
-  expect(strippedKey).toBe(localStorage.getItem('selectedChatId'));
+  expect(strippedKey).toBe(sessionStorage.getItem("selectedChatId"));
   expect(chatCollection1Today2Previous7Days1Previous30Days1Earlier[chatListLength - 2].id).toBe(strippedKey);
   expect(clickedId).toBe(strippedKey);
 });

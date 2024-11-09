@@ -16,11 +16,11 @@ type SourceSectionProps = {
 
 const SourceSection: React.FC<SourceSectionProps> = ({ source }) => {
     return (
-        <div className="w-full flex-grow flex space-x-5 justify-center items-center rounded-md h-[95%]">
+        <div className="w-full flex-grow flex space-x-5 justify-center items-center rounded-md h-[90%]">
             <SourceCard source={source} />
-            <div className="flex flex-col justify-between w-100 h-full items-end w-[216px]">
+            <div className="flex flex-col justify-between w-100 h-full items-end w-[25%] max-w-[216px]">
                 <div className="flex flex-col bg-sidebar-bg p-4 pb-7 w-full space-y-3 rounded-md items-start">
-                    <h4 className="font-semibold text-metrics-text">Detected Biases</h4>
+                    <h4 className="font-semibold text-metrics-text text-sm xl:text-base">Detected Biases</h4>
                     <ul className="mt-2 space-y-3 w-full">
                         <li className="text-mid-light-grey text-xs font-semibold flex justify-between items-center space-x-3">
                             <button>
@@ -49,25 +49,25 @@ const SourceSection: React.FC<SourceSectionProps> = ({ source }) => {
                     </ul>
                 </div>
                 <div className="flex flex-col bg-sidebar-bg p-4 pb-7 w-full space-y-3 rounded-md items-start">
-                    <h4 className="font-semibold text-metrics-text">Metrics</h4>
+                    <h4 className="font-semibold text-metrics-text text-sm xl:text-base">Metrics</h4>
                     <ul className="mt-2 space-y-3 w-full">
                         <li className="text-mid-light-grey text-xs font-semibold flex justify-between items-center">
                             <div className="flex items-center space-x-2">
-                                <img src={ViewsCountImage} alt="green-toggle-btn" className="w-6 h-6" />
+                                <img src={ViewsCountImage} alt="views-count-image" className="w-4 h-4 lg:w-5 lg:h-5 xl:w-6 xl:h-6" />
                                 <p>Views Count</p>
                             </div>
                             <p className="text-metrics-text">{source.metrics.viewsCount}</p>
                         </li>
                         <li className="text-mid-light-grey text-xs font-semibold flex justify-between items-center">
                             <div className="flex items-center space-x-2">
-                                <img src={TrendingRateImage} alt="green-toggle-btn" className="w-6 h-6" />
+                                <img src={TrendingRateImage} alt="trending-rate-image" className="w-4 h-4 lg:w-5 lg:h-5 xl:w-6 xl:h-6" />
                                 <p>Trending Rate</p>
                             </div>
                             <p className="text-metrics-text">{source.metrics.trendingRate}%</p>
                         </li>
                         <li className="text-mid-light-grey text-xs font-semibold flex justify-between items-center">
                             <div className="flex items-center space-x-2">
-                                <img src={RegionImage} alt="green-toggle-btn" className="w-6 h-6" />
+                                <img src={RegionImage} alt="region-image" className="w-4 h-4 lg:w-5 lg:h-5 xl:w-6 xl:h-6" />
                                 <p>Region</p>
                             </div>
                             <p className="text-metrics-text">{source.metrics.region}</p>

@@ -7,6 +7,7 @@ const Logout = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
+    sessionStorage.clear();
     localStorage.clear();
     auth.signOut();
 

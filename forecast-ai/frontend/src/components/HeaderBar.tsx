@@ -15,8 +15,6 @@ const HeaderBar: React.FC<HeaderBarProps> = ({ title }) => {
     const checkServerStatus = async () => {
       try {
         const response = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/`);
-        // log  
-        console.log(response);
         if (response.status === 200 && response.data.status === "Server is running") {
           setServerStatus("up");
         } else {
@@ -32,16 +30,16 @@ const HeaderBar: React.FC<HeaderBarProps> = ({ title }) => {
 
   return (
     <header className="bg-screen-black text-header-bar-text px-6 py-6 w-full h-[8vh] flex items-center">
-        {title && <h3 className="flex-grow font-bold text-center text-sm">{title}</h3>}
+        {title && <h3 className="flex-grow font-bold text-center text-xs xl:text-sm">{title}</h3>}
         <div className="flex justify-between items-center space-x-5 ml-auto">
             <button>
-                <img src={BookmarkButton} alt="bookmark-btn" className="w-5 h-7" />
+                <img src={BookmarkButton} alt="bookmark-btn" className="w-4 h-5 lg:w-4 lg:h-6 xl:w-5 xl:h-7" />
             </button>
             <button className="ml-auto bg-share-btn-bg py-2.5 px-3 flex space-x-1 justify-center items-center rounded-md hover:bg-share-btn-hover-bg">
-                <img src={ShareButton} alt="export-btn" className="w-4 h-4" />
-                <p className="text-share-btn-text font-bold text-sm">Share</p>
+                <img src={ShareButton} alt="export-btn" className="w-3 h-3 xl:w-4 xl:h-4" />
+                <p className="text-share-btn-text font-bold text-xs xl:text-sm">Share</p>
             </button>
-            <button className="w-10 h-10 rounded-full">
+            <button className="w-8 h-8 lg:w-9 lg:h-9 xl:w-10 xl:h-10 rounded-full">
                 <img src="https://via.placeholder.com/150" alt="profile-pic" className="w-full h-full rounded-full" />
             </button>
             <div className="ml-4">
