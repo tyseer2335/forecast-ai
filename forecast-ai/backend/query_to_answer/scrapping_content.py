@@ -82,6 +82,9 @@ def advanced_selenium_scrape_content(driver: webdriver.Chrome, url: str) -> dict
         # print(f"Redirected to {driver.current_url}, waiting for page to load...")
         pass
 
+    # Get the final URL after all redirections
+    final_url = driver.current_url
+
     # Extract text content
     print("Extracting text content...")
     clean_text = driver.find_element(By.TAG_NAME, 'body').text
@@ -95,7 +98,8 @@ def advanced_selenium_scrape_content(driver: webdriver.Chrome, url: str) -> dict
 
     return {
         'text': clean_text,
-        'media': media
+        'media': media,
+        'final_url': final_url
     }
 
 
