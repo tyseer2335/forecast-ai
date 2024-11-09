@@ -109,7 +109,11 @@ def scrape_content_process(url, env, DOCKER_OR_LAMBDATEST, USERNAME, ACCESS_KEY)
         res = advanced_selenium_scrape_content(driver, url)
     except Exception as e:
         print(f"Error scraping content: {str(e)} for url: {url}")
-        res = {'text': '', 'media': []}
+        res = {
+            'text': '',
+            'media': [],
+            'final_url': url  # Keep original URL if scraping fails
+        }
     driver.quit()
     return res
 
