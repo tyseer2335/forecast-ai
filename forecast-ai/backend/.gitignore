@@ -4,3 +4,5 @@
 *.pyc
 .env
 venv/
+
+query_to_answer/prompt.py
