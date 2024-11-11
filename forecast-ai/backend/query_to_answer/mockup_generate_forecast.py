@@ -102,12 +102,12 @@ Content:
 
         # Get LLM response
         # Note: Implementation depends on your LLM client
-        # response = client.chat.completions.create(
-        #     model=self.model,
-        #     messages=[{"role": "system", "content": publishing_query}]
-        # ).to_dict() // TODO <--- start from here
-        # For now, we'll use a mock response
-        response = "Mock LLM response with <answer>*0.75*</answer>"
+        response = client.chat.completions.create(
+            model=self.model,
+            messages=[{"role": "user", "content": publishing_query}]
+        ).to_dict()["choices"][0]["message"]["content"]
+        
+        #response = "Mock LLM response with <answer>*0.75*</answer>"
 
         # Extract prediction and rationale
         prediction = self.extract_prediction(response)
