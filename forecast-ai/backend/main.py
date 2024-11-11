@@ -114,7 +114,8 @@ async def query_to_answer(request: ForecastRequest, query_id: str):
         state = 7
         await asyncio.sleep(0)
         await send_status_update(query_id, "Generating forecast answer...")
-        answer = generate_forecast.generate_forecast(request, ranked_news_with_content)
+        forecast_agent = generate_forecast.ForecastGenerator(client=client, model="gpt-4")
+        answer = forecast_agent.generate_forecast(request, ranked_news_with_content)["answer"]
 
         state = 8
         await asyncio.sleep(0)
