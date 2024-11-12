@@ -45,7 +45,7 @@ const PromptBar: React.FC<PromptBarProps> = ({
   const [submitRequest, setSubmitRequest] = useState(false);
   const socketRef = useRef<WebSocket | null>(null); // WebSocket reference
   const navigate = useNavigate();
-  const reconnectInterval = useRef<NodeJS.Timeout | null>(null); // Reconnection interval reference
+  // const reconnectInterval = useRef<NodeJS.Timeout | null>(null); // Reconnection interval reference
 
   const convertResponseSourcesIntoSources = (responseSources: any) => {
     const result: SourceObject[] = [];
@@ -87,9 +87,9 @@ const PromptBar: React.FC<PromptBarProps> = ({
 
     socket.onopen = () => {
       console.log("WebSocket connection established");
-      if (reconnectInterval.current) {
-        clearInterval(reconnectInterval.current); // Clear reconnection interval on successful connection
-      }
+      // if (reconnectInterval.current) {
+      //   clearInterval(reconnectInterval.current); // Clear reconnection interval on successful connection
+      // }
     };
 
     socket.onmessage = (event) => {
@@ -102,12 +102,12 @@ const PromptBar: React.FC<PromptBarProps> = ({
 
     socket.onclose = () => {
       console.log("WebSocket connection closed");
-      if (!reconnectInterval.current) {
-        reconnectInterval.current = setInterval(() => {
-          console.log("Attempting to reconnect WebSocket...");
-          connectWebSocket(queryId); // Attempt to reconnect
-        }, 5000); // Reconnect every 5 seconds
-      }
+      // if (!reconnectInterval.current) {
+      //   reconnectInterval.current = setInterval(() => {
+      //     console.log("Attempting to reconnect WebSocket...");
+      //     connectWebSocket(queryId); // Attempt to reconnect
+      //   }, 5000); // Reconnect every 5 seconds
+      // }
     };
 
     socketRef.current = socket; // Save WebSocket instance to ref
@@ -118,9 +118,9 @@ const PromptBar: React.FC<PromptBarProps> = ({
     if (socketRef.current) {
       socketRef.current.close();
     }
-    if (reconnectInterval.current) {
-      clearInterval(reconnectInterval.current); // Clear reconnection interval on component unmount
-    }
+    // if (reconnectInterval.current) {
+    //   clearInterval(reconnectInterval.current); // Clear reconnection interval on component unmount
+    // }
   };
 
   useEffect(() => {
