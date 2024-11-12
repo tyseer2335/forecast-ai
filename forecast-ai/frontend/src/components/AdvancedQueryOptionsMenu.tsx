@@ -21,6 +21,7 @@ const AdvancedQueryOptionsMenu: React.FC<AdvancedQueryOptionsMenuProps> = ({ isM
     const [fromDate, setFromDate] = useState<Date>();
     const [toDate, setToDate] = useState<Date>();
     const [totalSourcesToDisplay, setTotalSourcesToDisplay] = useState<number>(5);
+    const [displayTotalRatioUnder100Menu, setDisplayTotalRatioUnder100Menu] = useState<boolean>(false);
 
     const menuRef = useRef<HTMLDivElement | null>(null);
 
@@ -31,6 +32,12 @@ const AdvancedQueryOptionsMenu: React.FC<AdvancedQueryOptionsMenuProps> = ({ isM
 
     const handleApply = (e: React.MouseEvent<HTMLButtonElement>) => {
         e.preventDefault();
+
+        if (newsRatio + xRatio + facebookRatio < 100) {
+            setDisplayTotalRatioUnder100Menu(true);
+            return;
+        }
+
         setRequest(prevRequest => ({
             ...prevRequest,
             before_ranking_num_articles: totalSourcesToCollect,
@@ -215,6 +222,23 @@ const AdvancedQueryOptionsMenu: React.FC<AdvancedQueryOptionsMenuProps> = ({ isM
                     <button className="px-4 py-2 rounded-lg text-source-text border border-source-text text-sm" onClick={handleApply} data-testid="apply-btn">Apply</button>
                 </div>
             </div>
+            {displayTotalRatioUnder100Menu && (
+                <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-20">
+                  <div className="bg-[#282C2C] p-6 rounded-lg w-[420px]">
+                    <h2 className="text-xl font-bold mb-4">Warning</h2>
+                    <p className="text-light-grey">The total platform ratio percentage is under 100.</p>
+                    <p className="text-light-grey font-bold">Please adjust the platform ratio percentage to apply the new changes.</p>
+                    <div className="flex justify-end mt-4">
+                      <button
+                        onClick={() => setDisplayTotalRatioUnder100Menu(false)}
+                        className="bg-button-hover p-2 rounded-md mr-2"
+                      >
+                        Close
+                      </button>
+                    </div>
+                  </div>
+                </div>
+            )}
         </div>
     )
 }
