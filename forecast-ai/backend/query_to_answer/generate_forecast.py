@@ -5,6 +5,7 @@ import os
 from dotenv import load_dotenv
 from model.forecast_request import ForecastRequest
 from model.article import Article
+from openai import OpenAI
 from query_to_answer.prompt import planner_prompt, publisher_prompt
 
 # Import your LLM client/wrapper here
