@@ -135,6 +135,9 @@ Content:
             prediction = self.extract_prediction(response)
             rationale = self.extract_rationale(response)
 
+        if not prediction:
+            raise ValueError("Failed to extract prediction after 3 attempts")
+
         # Format the answer
         answer = {
             "Question": request.question,
