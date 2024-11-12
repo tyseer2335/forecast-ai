@@ -155,13 +155,24 @@ const PromptBar: React.FC<PromptBarProps> = ({
         // Open WebSocket connection to receive real-time status
         connectWebSocket(queryId);
 
+        // Retrieve token from local storage
+        const token = localStorage.getItem("authToken");
+        if (!token) throw new Error("User is not authenticated");
+
         // Send POST request with query ID
         if (!process.env.REACT_APP_BACKEND_URL) {
           throw new Error("REACT_APP_BACKEND_URL is not defined");
         }
+
+        // Add the auth token to request
         const response = await axios.post(
           `${process.env.REACT_APP_BACKEND_URL}/query_to_answer?query_id=${queryId}`,
-          updatedRequest
+          updatedRequest,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`, 
+            },
+          }
         );
         const sources = convertResponseSourcesIntoSources(
           response.data['Sources']
