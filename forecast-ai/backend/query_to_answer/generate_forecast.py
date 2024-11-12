@@ -31,6 +31,7 @@ class ForecastGenerator:
 
         for source, article_list in articles.items():
             for article in article_list:
+                summarized_text = self.summarize_article(article.content.get('text', ''))
                 content = f"""ID: {id_counter}
 Query: {article.query}
 Title: {article.title}
@@ -38,12 +39,28 @@ Date: {article.published_date}
 Source: {source}
 Content:
 [start content]
-{article.content.get('text', '')}
+{summarized_text}
 [end content]"""
                 formatted_results.append(content)
                 id_counter += 1
 
         return "\n\n----\n\n".join(formatted_results)
+
+    def summarize_article(self, article_content: str) -> str:
+        """Summarizes the article content to 250 words using the LLM"""
+        # Define the prompt for summarization
+        prompt = f"Please summarize the following article to 250 words:\n\n{article_content}"
+
+        # Get the LLM response
+        response = self.client.chat.completions.create(
+            model=self.model,
+            messages=[{"role": "user", "content": prompt}]
+        ).to_dict()["choices"][0]["message"]["content"]
+
+        # Print the summarized content for debugging purposes
+        print(f"Summarized Content (250 words):\n{response.strip()}")
+
+        return response.strip()
 
     def extract_prediction(self, response: str) -> float:
         """Extract the final prediction from the LLM response"""
@@ -107,6 +124,9 @@ Content:
                 model=self.model,
                 messages=[{"role": "user", "content": publishing_query}]
             ).to_dict()["choices"][0]["message"]["content"]
+
+            # Print the summarized content for debugging purposes
+            print(f"LLM Response:\n{response}")
 
             # Extract prediction and rationale
             prediction = self.extract_prediction(response)
