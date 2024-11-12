@@ -4,7 +4,7 @@ from model.forecast_request import ForecastRequest
 from model.article import Article
 
 # Import your updated generate_forecast.py
-from mockup_generate_forecast import ForecastGenerator
+from query_to_answer.mock_generate_forecast import ForecastGenerator
 
 
 def create_mock_article(query: str, platform: str, title: str, content_text: str) -> Article:

@@ -4,7 +4,7 @@ import OptionsButton from "../assets/options-button.svg";
 import SubmitButton from "../assets/submit-button.svg";
 import { useNavigate } from "react-router-dom";
 import AdvancedQueryOptionsMenu from "./AdvancedQueryOptionsMenu";
-import { Chat, SourceObject } from "../hooks/types";
+import { Answer, Chat, SourceObject } from "../hooks/types";
 import axios from "axios";
 import { v4 as uuidv4 } from "uuid";
 
@@ -14,6 +14,7 @@ type PromptBarProps = {
   saveChatToDB: (chat: Chat) => void;
   addQuery: (query: string) => void;
   addSources: (sources: SourceObject[]) => void;
+  addAnswer: (answer: Answer) => void;
   addError: (error: string) => void;
   toggleLoading: (loading: boolean) => void;
   addStatus: (status: string) => void;
@@ -35,6 +36,7 @@ const PromptBar: React.FC<PromptBarProps> = ({
   saveChatToDB,
   addQuery,
   addSources,
+  addAnswer,
   addError,
   toggleLoading,
   addStatus
@@ -69,6 +71,25 @@ const PromptBar: React.FC<PromptBarProps> = ({
     });
     return result;
   };
+
+  const convertResponseAnswerIntoAnswer = (responseAnswer: any) => {
+    return { 
+      forecast: responseAnswer['Forecast'], 
+      forecaster_rationale: responseAnswer['Forecaster Rationale'], 
+      llm_features: {
+        feature1_status_quo_bias: [
+          0.95, 0.95, 0.95, 0.95, 0.95, 0.95, 0.95, 0.95, 0.95, 0.95, 0.95, 0.95,
+          0.95, 0.95, 0.95, 0.95, 0.95, 0.95, 0.95, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+          0, 0, 0, 0.3, 0.3, 0.3, 0.3, 0.3, 0.3, 0.3, 0.3, 0, 0, 0, 0.6, 0.6, 0.6, 0.6,
+        ],
+        feature2_overconfidence_bias: [
+          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        ],
+      },
+    }
+  }
 
   // Function to handle WebSocket connection
   const connectWebSocket = (queryId: string) => {
@@ -143,14 +164,16 @@ const PromptBar: React.FC<PromptBarProps> = ({
           updatedRequest
         );
         const sources = convertResponseSourcesIntoSources(
-          response.data.sources
+          response.data['Sources']
         );
         addSources(sources);
+        const answer = convertResponseAnswerIntoAnswer(response.data);
+        addAnswer(answer);
         toggleLoading(false);
         setRequest({});
         setSubmitRequest(false);
         try {
-          saveChatToDB({ query: input, sources: sources, loading: false });
+          saveChatToDB({ query: input, sources: sources, answer: answer, loading: false });
           navigate("/");
         } catch (error) {
           console.error("Error handling submit:", error);

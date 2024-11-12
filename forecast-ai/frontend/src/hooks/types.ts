@@ -9,6 +9,7 @@ export type Metric = {
 export type Chat = {
   query: string;
   sources: SourceObject[];
+  answer?: Answer;
   error?: string;
   loading: boolean;
   status?: string;
@@ -71,4 +72,12 @@ export type Message = {
   sender: string;
   content: string | SourceObject;
   timestamp: Date;
+}
+
+export type Answer = {
+  forecast: string;
+  forecaster_rationale: string;
+  llm_features: {
+    [key: string]: number[];
+  };
 }

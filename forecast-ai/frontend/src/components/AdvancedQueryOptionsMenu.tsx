@@ -67,6 +67,12 @@ const AdvancedQueryOptionsMenu: React.FC<AdvancedQueryOptionsMenuProps> = ({ isM
     }, [submitRequest])
 
     useEffect(() => {
+        if (totalSourcesToCollect < totalSourcesToDisplay) {
+            setTotalSourcesToDisplay(totalSourcesToCollect);
+        }
+    }, [totalSourcesToCollect]);
+
+    useEffect(() => {
         const total = newsRatio + xRatio + facebookRatio;
         if (total > 100) {
             setNewsRatio(100 - xRatio - facebookRatio);
