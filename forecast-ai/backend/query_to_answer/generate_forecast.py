@@ -116,8 +116,11 @@ Content:
 
         # Retry mechanism to avoid situations when it fails to extract prediction
         prediction = None
+        attempts = 0
+        max_attempts = 3
 
-        while not prediction:
+        while not prediction and attempts < max_attempts:
+            attempts += 1
             # Get LLM response
             # Note: Implementation depends on your LLM client
             response = self.client.chat.completions.create(
@@ -131,6 +134,9 @@ Content:
             # Extract prediction and rationale
             prediction = self.extract_prediction(response)
             rationale = self.extract_rationale(response)
+
+        if not prediction:
+            raise ValueError("Failed to extract prediction after 3 attempts")
 
         # Format the answer
         answer = {
