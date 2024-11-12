@@ -1,7 +1,9 @@
 import os
 
+# Load environment variables
 from dotenv import load_dotenv
-from fastapi import FastAPI, HTTPException
+load_dotenv()
+from fastapi import FastAPI, HTTPException, Request, WebSocket, Depends
 from fastapi.middleware.cors import CORSMiddleware
 from openai import OpenAI
 
@@ -9,13 +11,11 @@ from query_to_answer import break_down_query, collect_news, scrapping_content, f
 from utils import convert_to_article
 from model.forecast_request import ForecastRequest
 
-from fastapi import WebSocket
 import asyncio
 
-from fastapi import Depends
 import firebase_admin
-from firebase_admin import auth, credentials
-from fastapi import Request
+from firebase_admin import credentials, auth as firebase_auth
+from firebase_admin.auth import verify_id_token
 
 import time
 
@@ -31,7 +31,7 @@ LOCAL_OR_PROD = os.getenv('LOCAL_OR_PROD')
 DOCKER_OR_LAMBDATEST = os.getenv('DOCKER_OR_LAMBDATEST')
 USERNAME = os.getenv('USERNAME')
 ACCESS_KEY = os.getenv('ACCESS_KEY')
-cred = credentials.Certificate("path/to/serviceAccountKey.json")
+cred = credentials.Certificate(os.getenv("FIREBASE_SERVICE_ACCOUNT_KEY"))
 firebase_admin.initialize_app(cred)
 
 app.add_middleware(
