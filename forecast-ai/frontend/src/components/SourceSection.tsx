@@ -1,51 +1,85 @@
 // src/components/SourceSection.tsx
 import React from "react";
 import SourceCard from "./SourceCard";
-import GreenToggleButton from "../assets/green-toggle-button.svg";
-import YellowToggleButton from "../assets/yellow-toggle-button.svg";
-import PurpleToggleButton from "../assets/purple-toggle-button.svg";
-import RedToggleButton from "../assets/red-toggle-button.svg";
+import GreenToggleButtonOn from "../assets/green-toggle-button.svg";
+import YellowToggleButtonOn from "../assets/yellow-toggle-button.svg";
+import PurpleToggleButtonOn from "../assets/purple-toggle-button.svg";
+import RedToggleButtonOn from "../assets/red-toggle-button.svg";
+import GreenToggleButtonOff from "../assets/green-toggle-button-off.svg";
+import YellowToggleButtonOff from "../assets/yellow-toggle-button-off.svg";
+import PurpleToggleButtonOff from "../assets/purple-toggle-button-off.svg";
+import RedToggleButtonOff from "../assets/red-toggle-button-off.svg";
 import ViewsCountImage from "../assets/views-count-image.svg";
 import TrendingRateImage from "../assets/trending-rate-image.svg";
 import RegionImage from "../assets/region-image.svg";
-import { SourceObject } from "../hooks/types";
+import { BiasColor, BiasToBooleanMap, SourceObject } from "../hooks/types";
+import { set } from "date-fns";
+
 
 type SourceSectionProps = {
     source: SourceObject;
+    biasVisibility: BiasToBooleanMap;
+    setBiasVisibility: React.Dispatch<React.SetStateAction<BiasToBooleanMap>>;
+    biasIsDetectedMap: BiasToBooleanMap;
 }
 
-const SourceSection: React.FC<SourceSectionProps> = ({ source }) => {
+const SourceSection: React.FC<SourceSectionProps> = ({ source, biasVisibility, setBiasVisibility, biasIsDetectedMap }) => {
+
+    const handleToggleVisibility = (biasColor: BiasColor) => {
+        console.log("Toggling visibility of", biasColor);
+        setBiasVisibility((prev) => {
+            return {
+                ...prev,
+                [biasColor]: !prev[biasColor]
+            }
+        })
+    }
+
+
+    const getButtonImg = (color: BiasColor) => {
+        switch (color) {
+            case "green":
+                if (biasVisibility.green) return GreenToggleButtonOn;
+                else return GreenToggleButtonOff;
+            case "yellow":
+                if (biasVisibility.yellow) return YellowToggleButtonOn;
+                else return YellowToggleButtonOff;
+            case "purple":
+                if (biasVisibility.purple) return PurpleToggleButtonOn;
+                else return PurpleToggleButtonOff;
+            case "red":
+                if (biasVisibility.red) return RedToggleButtonOn;
+                else return RedToggleButtonOff;
+            default:
+                return GreenToggleButtonOn;
+        }
+    }
+
+    // Reusable component for individual Detected Bias
+    const DetectedBias: React.FC<{ color: BiasColor }> = ({ color }) => {
+        if (!biasIsDetectedMap[color]) return null;
+        return (
+            <li className="text-mid-light-grey text-[8px] md:text-[10px] lg:text-[11px] xl:text-xs font-semibold flex justify-between items-center space-x-3">
+                <button>
+                    <img src={getButtonImg(color)} alt={`${color}-toggle-btn`} className="w-4 h-2 md:w-5 md:h-3 lg:w-6 lg:h-3 xl:w-7 xl:h-4" onClick={() => handleToggleVisibility(color)} />
+                </button>
+                <p>Bias Description</p>
+            </li>
+        )
+    }
+
     return (
         <div className="w-full flex-grow flex flex-col lg:flex-row space-y-4 lg:space-y-0 lg:space-x-5 justify-center items-center rounded-md h-[90%]">
             <SourceCard source={source} />
             <div className="flex flex-row lg:flex-col justify-between h-[168px] lg:h-full items-start lg:items-end w-[88%] lg:w-[25%] lg:max-w-[216px]">
                 <div className="flex flex-col bg-sidebar-bg p-4 pb-7 w-full space-y-3 h-full lg:h-auto rounded-md items-start max-w-[150px] md:max-w-[192px] lg:max-w-[216px]">
                     <h4 className="font-semibold text-metrics-text text-[10px] md:text-xs lg:text-sm xl:text-base">Detected Biases</h4>
+                    {/* List of Detected Biases */}
                     <ul className="mt-2 space-y-3 w-full">
-                        <li className="text-mid-light-grey text-[8px] md:text-[10px] lg:text-[11px] xl:text-xs font-semibold flex justify-between items-center space-x-3">
-                            <button>
-                                <img src={GreenToggleButton} alt="green-toggle-btn" className="w-4 h-2 md:w-5 md:h-3 lg:w-6 lg:h-3 xl:w-7 xl:h-4" />
-                            </button>
-                            <p>Bias Description</p>
-                        </li>
-                        <li className="text-mid-light-grey text-[8px] md:text-[10px] lg:text-[11px] xl:text-xs font-semibold flex justify-between items-center space-x-3">
-                            <button>
-                                <img src={YellowToggleButton} alt="green-toggle-btn" className="w-4 h-2 md:w-5 md:h-3 lg:w-6 lg:h-3 xl:w-7 xl:h-4" />
-                            </button>
-                            <p>Bias Description</p>
-                        </li>
-                        <li className="text-mid-light-grey text-[8px] md:text-[10px] lg:text-[11px] xl:text-xs font-semibold flex justify-between items-center space-x-3">
-                            <button>
-                                <img src={PurpleToggleButton} alt="green-toggle-btn" className="w-4 h-2 md:w-5 md:h-3 lg:w-6 lg:h-3 xl:w-7 xl:h-4" />
-                            </button>
-                            <p>Bias Description</p>
-                        </li>
-                        <li className="text-mid-light-grey text-[8px] md:text-[10px] lg:text-[11px] xl:text-xs font-semibold flex justify-between items-center space-x-3">
-                            <button>
-                                <img src={RedToggleButton} alt="green-toggle-btn" className="w-4 h-2 md:w-5 md:h-3 lg:w-6 lg:h-3 xl:w-7 xl:h-4" />
-                            </button>
-                            <p>Bias Description</p>
-                        </li>
+                        <DetectedBias color="green" />
+                        <DetectedBias color="yellow" />
+                        <DetectedBias color="purple" />
+                        <DetectedBias color="red" />
                     </ul>
                 </div>
                 <div className="flex flex-col bg-sidebar-bg p-4 pb-7 w-full h-full lg:h-auto space-y-4 md:space-y-6 lg:space-y-3 rounded-md items-start max-w-[150px] md:max-w-[192px] lg:max-w-[216px]">
