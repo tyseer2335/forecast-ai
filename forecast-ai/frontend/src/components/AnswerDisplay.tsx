@@ -1,5 +1,5 @@
 import React from "react";
-import { BiasColor, BiasVisibility } from "../hooks/types";
+import { BiasColor, BiasToBooleanMap } from "../hooks/types";
 
 type AnswerDisplayProps = {
   query: string;
@@ -10,24 +10,43 @@ type AnswerDisplayProps = {
       [key: string]: number[];
     };
   };
-  biasVisibility: BiasVisibility;
+  biasVisibility: BiasToBooleanMap;
+  setBiasIsDetectedMap: React.Dispatch<React.SetStateAction<BiasToBooleanMap>>;
 };
 
 
-const AnswerDisplay: React.FC<AnswerDisplayProps> = ({ query, answer, biasVisibility }) => {
+const AnswerDisplay: React.FC<AnswerDisplayProps> = ({ query, answer, biasVisibility, setBiasIsDetectedMap }) => {
   const { forecaster_rationale: rationale, llm_features: llmFeatures } = answer;
+
+  // A variable that maps each color to the boolean whether the bias of that color is detected or not
+  var biasIsDetectedMap : BiasToBooleanMap = {
+    green: false,
+    yellow: false,
+    purple: false,
+    red: false,
+  };
 
   const getTokenColor = (tokenIndex: number, feature: string) => {
     const metric = llmFeatures[feature][tokenIndex];
-    if (metric > 0.75) return "bg-heatmap-green-bg";
-    if (metric > 0.5) return "bg-heatmap-yellow-bg";
-    if (metric > 0.25) return "bg-heatmap-purple-bg";
+    if (metric > 0.75) {
+      biasIsDetectedMap.green = true;
+      return "bg-heatmap-green-bg";
+    }
+    if (metric > 0.5) {
+      biasIsDetectedMap.yellow = true;
+      return "bg-heatmap-yellow-bg";
+    }
+    if (metric > 0.25) {
+      biasIsDetectedMap.purple = true;
+      return "bg-heatmap-purple-bg";
+    }
+    biasIsDetectedMap.red = true;
     return "bg-heatmap-red-bg";
   };
 
   const renderRationale = () => {
     const tokens = rationale.split(" ");
-    return tokens.map((token, index) => {
+    const coloredTokens = tokens.map((token, index) => {
       const feature = Object.keys(llmFeatures).find((key) => llmFeatures[key][index] !== undefined);
       var colorClass = feature ? getTokenColor(index, feature) : "";
       let biasColor : BiasColor = "green";
@@ -38,13 +57,14 @@ const AnswerDisplay: React.FC<AnswerDisplayProps> = ({ query, answer, biasVisibi
       if (biasVisibility[biasColor] === false) {
         colorClass = "";
       }
-      console.log(biasVisibility);
       return (
         <span key={index} className={`px-1 ${colorClass}`}>
           {token}
         </span>
       );
     });
+    setBiasIsDetectedMap(biasIsDetectedMap);
+    return coloredTokens;
   };
 
   return (

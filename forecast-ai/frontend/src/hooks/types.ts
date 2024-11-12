@@ -82,8 +82,12 @@ export type Answer = {
   };
 }
 
-// BiasVisibility
+// BiasColor is a type that represents the different colors that can be used to represent bias in the forecaster rationale
 export type BiasColor = "green" | "yellow" | "purple" | "red";
-export type BiasVisibility = {
+// BiasToBooleanMap is a type that represents a map from BiasColor to a boolean value
+// The use of this type is to represent the visibility of each bias color in the forecaster rationale:
+  // BiasVisibility = maps each BiasColor to a boolean value that represents whether the bias of that color should be visible or not (user can toggle visibility)
+  // BiasIsDetectedMap = maps each BiasColor to a boolean value that represents whether the bias of that color is detected in the forecaster rationale
+export type BiasToBooleanMap = {
   [key in BiasColor]: boolean;
 }

@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import ScrollLeftButton from "../assets/scroll-left-button.svg";
 import ScrollRightButton from "../assets/scroll-right-button.svg";
 import SourceSection from "./SourceSection";
-import { BiasVisibility, SourceObject } from "../hooks/types";
+import { BiasToBooleanMap, SourceObject } from "../hooks/types";
 import ErrorMessage from "./ErrorMessage";
 import LoadingBar from "./LoadingBar";
 
@@ -12,11 +12,12 @@ type SourcesContainerProps = {
     error: string | undefined;
     loading: boolean;
     status: string | undefined;
-    biasVisibility: BiasVisibility;
-    setbiasVisibility: React.Dispatch<React.SetStateAction<BiasVisibility>>;
+    biasVisibility: BiasToBooleanMap;
+    setbiasVisibility: React.Dispatch<React.SetStateAction<BiasToBooleanMap>>;
+    biasIsDetectedMap: BiasToBooleanMap;
 }
 
-const SourcesContainer: React.FC<SourcesContainerProps> = ({ sources, error, loading, status, biasVisibility, setbiasVisibility }) => {
+const SourcesContainer: React.FC<SourcesContainerProps> = ({ sources, error, loading, status, biasVisibility, setbiasVisibility, biasIsDetectedMap }) => {
     const [currentSource, setCurrentSource] = useState(0);
 
     const decrementCurrentSource = () => {
@@ -44,7 +45,7 @@ const SourcesContainer: React.FC<SourcesContainerProps> = ({ sources, error, loa
                     <div className="w-full space-y-4 bg-screen-black flex flex-col h-full relative">
                         <h1 className="font-bold text-chat-message-text text-sm md:text-base lg:text-lg xl:text-xl">Sources</h1>
                         {/* <SourceSection source={sources[currentSource]} biasVisibility={sources[currentSource].biasVisibility} setBiasVisibility={setbiasVisibility} /> */}
-                        <SourceSection source={sources[currentSource]} biasVisibility={biasVisibility} setBiasVisibility={setbiasVisibility} />
+                        <SourceSection source={sources[currentSource]} biasVisibility={biasVisibility} setBiasVisibility={setbiasVisibility} biasIsDetectedMap={biasIsDetectedMap} />
                         <button onClick={decrementCurrentSource} className="absolute left-0 top-[38%] lg:top-1/2 cursor-pointer" data-testid="decrement-btn">
                             <img src={ScrollLeftButton} alt="scroll-left-btn" className="w-5 h-5" />
                         </button>

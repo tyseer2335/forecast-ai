@@ -5,7 +5,7 @@ import SourcesContainer from "./SourcesContainer";
 import AnswerDisplay from "./AnswerDisplay";
 import { Chat } from "../hooks/types";
 import { v4 as uuidv4 } from "uuid";
-import { BiasVisibility } from "../hooks/types";
+import { BiasToBooleanMap } from "../hooks/types";
 
 type ChatWindowProps = {
   chats: Chat[];
@@ -14,11 +14,18 @@ type ChatWindowProps = {
 const ChatWindow: React.FC<ChatWindowProps> = ({ chats }) => {
     
   const bottomRef = useRef<HTMLDivElement>(null);
-  const [biasVisibility, setbiasVisibility] = useState<BiasVisibility>({
+  const [biasVisibility, setbiasVisibility] = useState<BiasToBooleanMap>({
     green: true,
     yellow: true,
     purple: true,
     red: true,
+  });
+
+  const [biasIsDetectedMap, setBiasIsDetectedMap] = useState<BiasToBooleanMap>({
+    green: false,
+    yellow: false,
+    purple: false,
+    red: false,
   });
 
   useEffect(() => {
@@ -42,8 +49,9 @@ const ChatWindow: React.FC<ChatWindowProps> = ({ chats }) => {
             data-testid="sources-container"
             biasVisibility={biasVisibility}
             setbiasVisibility={setbiasVisibility}
+            biasIsDetectedMap={biasIsDetectedMap}
           />
-          {chat.answer && <AnswerDisplay query={chat.query} answer={chat.answer} biasVisibility={biasVisibility} />}
+          {chat.answer && <AnswerDisplay query={chat.query} answer={chat.answer} biasVisibility={biasVisibility} setBiasIsDetectedMap={setBiasIsDetectedMap} />}
         </div>
       ))}
     </div>

@@ -12,17 +12,18 @@ import RedToggleButtonOff from "../assets/red-toggle-button-off.svg";
 import ViewsCountImage from "../assets/views-count-image.svg";
 import TrendingRateImage from "../assets/trending-rate-image.svg";
 import RegionImage from "../assets/region-image.svg";
-import { BiasColor, BiasVisibility, SourceObject } from "../hooks/types";
+import { BiasColor, BiasToBooleanMap, SourceObject } from "../hooks/types";
 import { set } from "date-fns";
 
 
 type SourceSectionProps = {
     source: SourceObject;
-    biasVisibility: BiasVisibility;
-    setBiasVisibility: React.Dispatch<React.SetStateAction<BiasVisibility>>;
+    biasVisibility: BiasToBooleanMap;
+    setBiasVisibility: React.Dispatch<React.SetStateAction<BiasToBooleanMap>>;
+    biasIsDetectedMap: BiasToBooleanMap;
 }
 
-const SourceSection: React.FC<SourceSectionProps> = ({ source, biasVisibility, setBiasVisibility }) => {
+const SourceSection: React.FC<SourceSectionProps> = ({ source, biasVisibility, setBiasVisibility, biasIsDetectedMap }) => {
 
     const handleToggleVisibility = (biasColor: BiasColor) => {
         setBiasVisibility((prev) => {
@@ -33,7 +34,7 @@ const SourceSection: React.FC<SourceSectionProps> = ({ source, biasVisibility, s
         })
     }
 
-    // To 
+
     const getButtonImg = (color: BiasColor) => {
         switch (color) {
             case "green":
@@ -54,7 +55,8 @@ const SourceSection: React.FC<SourceSectionProps> = ({ source, biasVisibility, s
     }
 
     // Reusable component for individual Detected Bias
-    const getDetectedBias: React.FC<{ color: BiasColor }> = ({ color }) => {
+    const DetectedBias: React.FC<{ color: BiasColor }> = ({ color }) => {
+        if (!biasIsDetectedMap[color]) return null;
         return (
             <li className="text-mid-light-grey text-[8px] md:text-[10px] lg:text-[11px] xl:text-xs font-semibold flex justify-between items-center space-x-3">
                 <button>
@@ -73,12 +75,12 @@ const SourceSection: React.FC<SourceSectionProps> = ({ source, biasVisibility, s
                     <h4 className="font-semibold text-metrics-text text-[10px] md:text-xs lg:text-sm xl:text-base">Detected Biases</h4>
                     {/* List of Detected Biases */}
                     <ul className="mt-2 space-y-3 w-full">
-                        getDetectedBias({ "green" })
-                        getDetectedBias({ "yellow" })
-                        getDetectedBias({ "purple" })
-                        getDetectedBias({ "red" })
+                        <DetectedBias color="green" />
+                        <DetectedBias color="yellow" />
+                        <DetectedBias color="purple" />
+                        <DetectedBias color="red" />
                     </ul>
-                </div>
+                </div>DetectedBias
                 <div className="flex flex-col bg-sidebar-bg p-4 pb-7 w-full h-full lg:h-auto space-y-4 md:space-y-6 lg:space-y-3 rounded-md items-start max-w-[150px] md:max-w-[192px] lg:max-w-[216px]">
                     <h4 className="font-semibold text-metrics-text text-[10px] md:text-xs lg:text-sm xl:text-base">Metrics</h4>
                     <div className="mt-2 space-y-3 w-full">
