@@ -32,13 +32,14 @@ class ForecastGenerator:
         for source, article_list in articles.items():
             for article in article_list:
                 content = f"""ID: {id_counter}
-                              Query: {article.query}
-                              Title: {article.title}
-                              Date: {article.published_date}
-                              Source: {source}
-                              Content:
-                              [start content]{article.content.get('text', '')}
-                              [end content]"""
+Query: {article.query}
+Title: {article.title}
+Date: {article.published_date}
+Source: {source}
+Content:
+[start content]
+{article.content.get('text', '')}
+[end content]"""
                 formatted_results.append(content)
                 id_counter += 1
 
@@ -96,18 +97,20 @@ class ForecastGenerator:
             question=request.question
         )
 
-        # Get LLM response
-        # Note: Implementation depends on your LLM client
-        response = self.client.chat.completions.create(
-            model=self.model,
-            messages=[{"role": "user", "content": publishing_query}]
-        ).to_dict()["choices"][0]["message"]["content"]
-        
-        #response = "Mock LLM response with <answer>*0.75*</answer>"
+        # Retry mechanism to avoid situations when it fails to extract prediction
+        prediction = None
 
-        # Extract prediction and rationale
-        prediction = self.extract_prediction(response)
-        rationale = self.extract_rationale(response)
+        while not prediction:
+            # Get LLM response
+            # Note: Implementation depends on your LLM client
+            response = self.client.chat.completions.create(
+                model=self.model,
+                messages=[{"role": "user", "content": publishing_query}]
+            ).to_dict()["choices"][0]["message"]["content"]
+
+            # Extract prediction and rationale
+            prediction = self.extract_prediction(response)
+            rationale = self.extract_rationale(response)
 
         # Format the answer
         answer = {

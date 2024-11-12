@@ -17,27 +17,6 @@ const ChatWindow: React.FC<ChatWindowProps> = ({ chats }) => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [chats]);
 
-  // Mock data for the answer
-  const mockAnswer = {
-    forecast: "8%",
-    crowd_forecast: "29%",
-    ground_truth_label: "Yes",
-    forecaster_rationale:
-      "By default, I assume that the incumbent will stay in power. Sifting through news for Nigeria is tough - there is sooo much coverage and I don't know the biases of each outlet. This paper - the 6th most read, according to their banner - is very confident that he'll be re-elected. I will start aggressive and walk back if polls start to appear indicating that he has real competition. Right now, I'd put irreducible uncertainty at 8% (illness, scandal), but I don't have a very scientific rationale for that number. By default, I assume that the incumbent will stay in power. Sifting through news for Nigeria is tough - there is sooo much coverage and I don't know the biases of each outlet. This paper - the 6th most read, according to their banner - is very confident that he'll be re-elected. I will start aggressive and walk back if polls start to appear indicating that he has real competition. Right now, I'd put irreducible uncertainty at 8% (illness, scandal), but I don't have a very scientific rationale for that number.",
-    llm_features: {
-      feature1_status_quo_bias: [
-        0.95, 0.95, 0.95, 0.95, 0.95, 0.95, 0.95, 0.95, 0.95, 0.95, 0.95, 0.95,
-        0.95, 0.95, 0.95, 0.95, 0.95, 0.95, 0.95, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-        0, 0, 0, 0.3, 0.3, 0.3, 0.3, 0.3, 0.3, 0.3, 0.3, 0, 0, 0, 0.6, 0.6, 0.6, 0.6,
-      ],
-      feature2_overconfidence_bias: [
-        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-      ],
-    },
-  };
-
   return (
     <div
       className="w-[80%] max-w-[1300px] h-full px-4 pt-4 bg-screen-black text-white space-y-[100px] flex flex-col overflow-y-auto"
@@ -54,7 +33,7 @@ const ChatWindow: React.FC<ChatWindowProps> = ({ chats }) => {
             status={chat.status}
             data-testid="sources-container"
           />
-          <AnswerDisplay query={chat.query} answer={mockAnswer} />
+          {chat.answer && <AnswerDisplay query={chat.query} answer={chat.answer} />}
         </div>
       ))}
     </div>

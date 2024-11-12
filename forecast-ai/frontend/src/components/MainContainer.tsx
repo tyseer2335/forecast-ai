@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import HeaderBar from "./HeaderBar";
 import MainContent from "./MainContent";
 import Sidebar from "./Sidebar";
-import { Chat, SourceObject } from "../hooks/types";
+import { Answer, Chat, SourceObject } from "../hooks/types";
 import useSaveChat from "../hooks/saveChat/useSaveChat";
 import { doc, getDoc } from "firebase/firestore";
 import { getFirestore } from "firebase/firestore";
@@ -58,14 +58,15 @@ const MainContainer: React.FC = () => {
 
     // 3. Convert the messages array to chats array as discussed
     var tempChats: Chat[] = [];
-    var tempChat = { query: "", sources: [], loading: false };
+    var tempChat = { query: "", sources: [], answer: undefined, loading: false };
     for (let i = 0; i < messages.length; i++) {
         if (messages[i].sender === "user") {
           tempChat.query = messages[i].content;
         } else {
-          tempChat.sources = messages[i].content;
+          tempChat.sources = messages[i].content.sources;
+          tempChat.answer = messages[i].content.answer;
           tempChats.push(tempChat);
-          tempChat = { query: "", sources: [], loading: false };
+          tempChat = { query: "", sources: [], answer: undefined, loading: false };
         }
     }
     setChats(tempChats);
@@ -73,7 +74,7 @@ const MainContainer: React.FC = () => {
 
   const saveChatToDB = async (chat: Chat) => {
     chatId = sessionStorage.getItem("selectedChatId") ?? "";
-    saveChat(userId, chatId, chat.query, chat.sources);
+    saveChat(userId, chatId, chat.query, chat.sources, chat.answer);
     chatId = sessionStorage.getItem("selectedChatId");
     if (userId && chatId) {
       const chatRef : DocumentReference<DocumentData, DocumentData> = doc(db, "Users", userId, "Chats", chatId);
@@ -92,6 +93,14 @@ const MainContainer: React.FC = () => {
           const newChats = [...prevChats];
           newChats[newChats.length - 1] = { ...newChats[newChats.length - 1], sources: sources };
           return newChats;
+      })
+  }
+
+  const addAnswer = (answer: Answer) => {
+      setChats((prevChats): Chat[] => {
+        const newChats = [...prevChats];
+        newChats[newChats.length - 1] = { ...newChats[newChats.length - 1], answer: answer };
+        return newChats;
       })
   }
 
@@ -124,7 +133,7 @@ const MainContainer: React.FC = () => {
     <Sidebar newChatId={chatId} />
     <div className="flex flex-col flex-grow">
       <HeaderBar title={chatTitle} />
-      <MainContent chats={chats} setChatTitle={setChatTitle} saveChatToDB={saveChatToDB} addQuery={addQuery} addSources={addSources} addError={addError} toggleLoading={toggleLoading} addStatus={addStatus} />
+      <MainContent chats={chats} setChatTitle={setChatTitle} saveChatToDB={saveChatToDB} addQuery={addQuery} addSources={addSources} addAnswer={addAnswer} addError={addError} toggleLoading={toggleLoading} addStatus={addStatus} />
         </div>
       </div>
     );

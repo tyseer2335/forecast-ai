@@ -4,8 +4,6 @@ type AnswerDisplayProps = {
   query: string;
   answer: {
     forecast: string;
-    crowd_forecast: string;
-    ground_truth_label: string;
     forecaster_rationale: string;
     llm_features: {
       [key: string]: number[];
@@ -43,8 +41,6 @@ const AnswerDisplay: React.FC<AnswerDisplayProps> = ({ query, answer }) => {
       <div className="flex flex-col space-y-3 sm:space-y-4 w-full">
         <p className="text-white text-[8px] sm:text-[10px] md:text-xs lg:text-sm"><strong>Question:</strong> {query}</p>
         <p className="text-white text-[8px] sm:text-[10px] md:text-xs lg:text-sm"><strong>Forecast Probability:</strong> {answer.forecast}</p>
-        <p className="text-white text-[8px] sm:text-[10px] md:text-xs lg:text-sm"><strong>Crowd Forecast Probability:</strong> {answer.crowd_forecast}</p>
-        <p className="text-white text-[8px] sm:text-[10px] md:text-xs lg:text-sm"><strong>Ground Truth Label:</strong> {answer.ground_truth_label}</p>
         <p className="text-white text-[8px] sm:text-[10px] md:text-xs lg:text-sm"><strong>Forecaster Rationale:</strong></p>
         <p className="text-white text-[8px] sm:text-[10px] md:text-xs lg:text-sm break-all">{renderRationale()}</p>
       </div>

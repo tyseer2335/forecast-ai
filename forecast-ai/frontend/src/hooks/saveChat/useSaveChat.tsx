@@ -1,14 +1,14 @@
 // src/hooks/useSaveChat.tsx
 import { _saveUserMessage } from "./_saveUserMessage";
 import { _saveAISourcesMessage } from "./_saveAISourcesMessage";
-import { SourceObject } from "../types";
+import { Answer, SourceObject } from "../types";
 import { doc, collection, addDoc, getFirestore } from "firebase/firestore";
 import { useNavigate } from "react-router-dom";
 
 const useSaveChat = () => {
   const db = getFirestore();
   const navigate = useNavigate();
-  const saveChat = async (userId: string, chatId: string, messageContent: string, sources: SourceObject[]) => {
+  const saveChat = async (userId: string, chatId: string, messageContent: string, sources: SourceObject[], answer: Answer | undefined) => {
     try {
       // 1. Get the chat reference
       var chatRef = chatId 
@@ -25,7 +25,7 @@ const useSaveChat = () => {
       _saveUserMessage(chatRef, messageContent);
 
       // 3. Save the AI source message
-      _saveAISourcesMessage(chatRef, sources);
+      _saveAISourcesMessage(chatRef, sources, answer);
       
       navigate("/");
     } catch (e) {
