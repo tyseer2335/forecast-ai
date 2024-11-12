@@ -1,4 +1,5 @@
 import React from "react";
+import { BiasColor, BiasVisibility } from "../hooks/types";
 
 type AnswerDisplayProps = {
   query: string;
@@ -9,9 +10,11 @@ type AnswerDisplayProps = {
       [key: string]: number[];
     };
   };
+  biasVisibility: BiasVisibility;
 };
 
-const AnswerDisplay: React.FC<AnswerDisplayProps> = ({ query, answer }) => {
+
+const AnswerDisplay: React.FC<AnswerDisplayProps> = ({ query, answer, biasVisibility }) => {
   const { forecaster_rationale: rationale, llm_features: llmFeatures } = answer;
 
   const getTokenColor = (tokenIndex: number, feature: string) => {
@@ -26,7 +29,16 @@ const AnswerDisplay: React.FC<AnswerDisplayProps> = ({ query, answer }) => {
     const tokens = rationale.split(" ");
     return tokens.map((token, index) => {
       const feature = Object.keys(llmFeatures).find((key) => llmFeatures[key][index] !== undefined);
-      const colorClass = feature ? getTokenColor(index, feature) : "";
+      var colorClass = feature ? getTokenColor(index, feature) : "";
+      let biasColor : BiasColor = "green";
+      if (colorClass.includes("green")) biasColor = "green";
+      else if (colorClass.includes("yellow")) biasColor = "yellow";
+      else if (colorClass.includes("purple")) biasColor = "purple";
+      else if (colorClass.includes("red")) biasColor = "red";
+      if (biasVisibility[biasColor] === false) {
+        colorClass = "";
+      }
+      console.log(biasVisibility);
       return (
         <span key={index} className={`px-1 ${colorClass}`}>
           {token}

@@ -81,3 +81,9 @@ export type Answer = {
     [key: string]: number[];
   };
 }
+
+// BiasVisibility
+export type BiasColor = "green" | "yellow" | "purple" | "red";
+export type BiasVisibility = {
+  [key in BiasColor]: boolean;
+}

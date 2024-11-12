@@ -1,17 +1,25 @@
 // src/components/ChatWindow.tsx
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import ChatMessage from "./ChatMessage";
 import SourcesContainer from "./SourcesContainer";
 import AnswerDisplay from "./AnswerDisplay";
 import { Chat } from "../hooks/types";
 import { v4 as uuidv4 } from "uuid";
+import { BiasVisibility } from "../hooks/types";
 
 type ChatWindowProps = {
   chats: Chat[];
 };
 
 const ChatWindow: React.FC<ChatWindowProps> = ({ chats }) => {
+    
   const bottomRef = useRef<HTMLDivElement>(null);
+  const [biasVisibility, setbiasVisibility] = useState<BiasVisibility>({
+    green: true,
+    yellow: true,
+    purple: true,
+    red: true,
+  });
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -32,8 +40,10 @@ const ChatWindow: React.FC<ChatWindowProps> = ({ chats }) => {
             loading={chat.loading}
             status={chat.status}
             data-testid="sources-container"
+            biasVisibility={biasVisibility}
+            setbiasVisibility={setbiasVisibility}
           />
-          {chat.answer && <AnswerDisplay query={chat.query} answer={chat.answer} />}
+          {chat.answer && <AnswerDisplay query={chat.query} answer={chat.answer} biasVisibility={biasVisibility} />}
         </div>
       ))}
     </div>
