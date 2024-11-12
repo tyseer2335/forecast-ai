@@ -33,45 +33,50 @@ const SourceSection: React.FC<SourceSectionProps> = ({ source, biasVisibility, s
         })
     }
 
+    // To 
+    const getButtonImg = (color: BiasColor) => {
+        switch (color) {
+            case "green":
+                if (biasVisibility.green) return GreenToggleButtonOn;
+                else return GreenToggleButtonOff;
+            case "yellow":
+                if (biasVisibility.yellow) return YellowToggleButtonOn;
+                else return YellowToggleButtonOff;
+            case "purple":
+                if (biasVisibility.purple) return PurpleToggleButtonOn;
+                else return PurpleToggleButtonOff;
+            case "red":
+                if (biasVisibility.red) return RedToggleButtonOn;
+                else return RedToggleButtonOff;
+            default:
+                return GreenToggleButtonOn;
+        }
+    }
+
+    // Reusable component for individual Detected Bias
+    const getDetectedBias: React.FC<{ color: BiasColor }> = ({ color }) => {
+        return (
+            <li className="text-mid-light-grey text-[8px] md:text-[10px] lg:text-[11px] xl:text-xs font-semibold flex justify-between items-center space-x-3">
+                <button>
+                    <img src={getButtonImg(color)} alt={`${color}-toggle-btn`} className="w-4 h-2 md:w-5 md:h-3 lg:w-6 lg:h-3 xl:w-7 xl:h-4" onClick={() => handleToggleVisibility(color)} />
+                </button>
+                <p>Bias Description</p>
+            </li>
+        )
+    }
+
     return (
         <div className="w-full flex-grow flex flex-col lg:flex-row space-y-4 lg:space-y-0 lg:space-x-5 justify-center items-center rounded-md h-[90%]">
             <SourceCard source={source} />
             <div className="flex flex-row lg:flex-col justify-between h-[168px] lg:h-full items-start lg:items-end w-[88%] lg:w-[25%] lg:max-w-[216px]">
                 <div className="flex flex-col bg-sidebar-bg p-4 pb-7 w-full space-y-3 h-full lg:h-auto rounded-md items-start max-w-[150px] md:max-w-[192px] lg:max-w-[216px]">
                     <h4 className="font-semibold text-metrics-text text-[10px] md:text-xs lg:text-sm xl:text-base">Detected Biases</h4>
+                    {/* List of Detected Biases */}
                     <ul className="mt-2 space-y-3 w-full">
-                        <li className="text-mid-light-grey text-[8px] md:text-[10px] lg:text-[11px] xl:text-xs font-semibold flex justify-between items-center space-x-3">
-                            <button>
-                                <img src={
-                                    biasVisibility.green ? GreenToggleButtonOn : GreenToggleButtonOff
-                                } alt="green-toggle-btn" className="w-4 h-2 md:w-5 md:h-3 lg:w-6 lg:h-3 xl:w-7 xl:h-4" onClick={() => handleToggleVisibility('green')} />
-                            </button>
-                            <p>Bias Description</p>
-                        </li>
-                        <li className="text-mid-light-grey text-[8px] md:text-[10px] lg:text-[11px] xl:text-xs font-semibold flex justify-between items-center space-x-3">
-                            <button>
-                                <img src={
-                                    biasVisibility.yellow ? YellowToggleButtonOn : YellowToggleButtonOff
-                                } alt="green-toggle-btn" className="w-4 h-2 md:w-5 md:h-3 lg:w-6 lg:h-3 xl:w-7 xl:h-4" onClick={() => handleToggleVisibility('yellow')} />
-                            </button>
-                            <p>Bias Description</p>
-                        </li>
-                        <li className="text-mid-light-grey text-[8px] md:text-[10px] lg:text-[11px] xl:text-xs font-semibold flex justify-between items-center space-x-3">
-                            <button>
-                                <img src={
-                                    biasVisibility.purple ? PurpleToggleButtonOn : PurpleToggleButtonOff
-                                } alt="green-toggle-btn" className="w-4 h-2 md:w-5 md:h-3 lg:w-6 lg:h-3 xl:w-7 xl:h-4" onClick={() => handleToggleVisibility('purple')} />
-                            </button>
-                            <p>Bias Description</p>
-                        </li>
-                        <li className="text-mid-light-grey text-[8px] md:text-[10px] lg:text-[11px] xl:text-xs font-semibold flex justify-between items-center space-x-3">
-                            <button>
-                                <img src={
-                                    biasVisibility.red ? RedToggleButtonOn : RedToggleButtonOff
-                                } alt="green-toggle-btn" className="w-4 h-2 md:w-5 md:h-3 lg:w-6 lg:h-3 xl:w-7 xl:h-4" onClick={() => handleToggleVisibility('red')} />
-                            </button>
-                            <p>Bias Description</p>
-                        </li>
+                        getDetectedBias({ "green" })
+                        getDetectedBias({ "yellow" })
+                        getDetectedBias({ "purple" })
+                        getDetectedBias({ "red" })
                     </ul>
                 </div>
                 <div className="flex flex-col bg-sidebar-bg p-4 pb-7 w-full h-full lg:h-auto space-y-4 md:space-y-6 lg:space-y-3 rounded-md items-start max-w-[150px] md:max-w-[192px] lg:max-w-[216px]">
