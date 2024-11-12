@@ -18,52 +18,50 @@ type AnswerDisplayProps = {
 const AnswerDisplay: React.FC<AnswerDisplayProps> = ({ query, answer, biasVisibility, setBiasIsDetectedMap }) => {
   const { forecaster_rationale: rationale, llm_features: llmFeatures } = answer;
 
-  // A variable that maps each color to the boolean whether the bias of that color is detected or not
-  var biasIsDetectedMap : BiasToBooleanMap = {
-    green: false,
-    yellow: false,
-    purple: false,
-    red: false,
-  };
-
   const getTokenColor = (tokenIndex: number, feature: string) => {
     const metric = llmFeatures[feature][tokenIndex];
     if (metric > 0.75) {
-      biasIsDetectedMap.green = true;
       return "bg-heatmap-green-bg";
     }
     if (metric > 0.5) {
-      biasIsDetectedMap.yellow = true;
       return "bg-heatmap-yellow-bg";
     }
     if (metric > 0.25) {
-      biasIsDetectedMap.purple = true;
       return "bg-heatmap-purple-bg";
     }
-    biasIsDetectedMap.red = true;
     return "bg-heatmap-red-bg";
   };
 
   const renderRationale = () => {
     const tokens = rationale.split(" ");
-    const coloredTokens = tokens.map((token, index) => {
+    var colorToIsDetectedMap: BiasToBooleanMap = {
+      green: false,
+      yellow: false,
+      purple: false,
+      red: false,
+    };
+    var coloredTokens = tokens.map((token, index) => {
       const feature = Object.keys(llmFeatures).find((key) => llmFeatures[key][index] !== undefined);
       var colorClass = feature ? getTokenColor(index, feature) : "";
       let biasColor : BiasColor = "green";
       if (colorClass.includes("green")) biasColor = "green";
       else if (colorClass.includes("yellow")) biasColor = "yellow";
       else if (colorClass.includes("purple")) biasColor = "purple";
-      else if (colorClass.includes("red")) biasColor = "red";
-      if (biasVisibility[biasColor] === false) {
-        colorClass = "";
-      }
+      else biasColor = "red";
+      colorToIsDetectedMap[biasColor] = true;
+      if (biasVisibility[biasColor] === false) colorClass = "";
       return (
         <span key={index} className={`px-1 ${colorClass}`}>
           {token}
         </span>
       );
     });
-    setBiasIsDetectedMap(biasIsDetectedMap);
+    // TODO: Fix this uncaught timeout in the below setState
+    // try {
+    //   setBiasIsDetectedMap(colorToIsDetectedMap);
+    // } catch (error) {
+    //   console.log(error);
+    // }
     return coloredTokens;
   };
 

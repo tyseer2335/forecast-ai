@@ -22,10 +22,15 @@ const ChatWindow: React.FC<ChatWindowProps> = ({ chats }) => {
   });
 
   const [biasIsDetectedMap, setBiasIsDetectedMap] = useState<BiasToBooleanMap>({
-    green: false,
-    yellow: false,
-    purple: false,
-    red: false,
+    // green: false,
+  //   yellow: false,
+  //   purple: false,
+  //   red: false,
+  // });
+    green: true,
+    yellow: true,
+    purple: true,
+    red: true,
   });
 
   useEffect(() => {

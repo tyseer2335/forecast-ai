@@ -26,6 +26,7 @@ type SourceSectionProps = {
 const SourceSection: React.FC<SourceSectionProps> = ({ source, biasVisibility, setBiasVisibility, biasIsDetectedMap }) => {
 
     const handleToggleVisibility = (biasColor: BiasColor) => {
+        console.log("Toggling visibility of", biasColor);
         setBiasVisibility((prev) => {
             return {
                 ...prev,
@@ -80,7 +81,7 @@ const SourceSection: React.FC<SourceSectionProps> = ({ source, biasVisibility, s
                         <DetectedBias color="purple" />
                         <DetectedBias color="red" />
                     </ul>
-                </div>DetectedBias
+                </div>
                 <div className="flex flex-col bg-sidebar-bg p-4 pb-7 w-full h-full lg:h-auto space-y-4 md:space-y-6 lg:space-y-3 rounded-md items-start max-w-[150px] md:max-w-[192px] lg:max-w-[216px]">
                     <h4 className="font-semibold text-metrics-text text-[10px] md:text-xs lg:text-sm xl:text-base">Metrics</h4>
                     <div className="mt-2 space-y-3 w-full">
