@@ -6,7 +6,7 @@ from dotenv import load_dotenv
 from model.forecast_request import ForecastRequest
 from model.article import Article
 from openai import OpenAI
-from prompt import planner_prompt, publisher_prompt
+from query_to_answer.prompt import planner_prompt, publisher_prompt
 
 # Import your LLM client/wrapper here
 # from your_llm_module import LLMClient
@@ -32,13 +32,13 @@ class ForecastGenerator:
         for source, article_list in articles.items():
             for article in article_list:
                 content = f"""ID: {id_counter}
-Query: {article.query}
-Title: {article.title}
-Date: {article.published_date}
-Source: {source}
-Content:
-[start content]{article.content.get('text', '')}
-[end content]"""
+                              Query: {article.query}
+                              Title: {article.title}
+                              Date: {article.published_date}
+                              Source: {source}
+                              Content:
+                              [start content]{article.content.get('text', '')}
+                              [end content]"""
                 formatted_results.append(content)
                 id_counter += 1
 
@@ -77,7 +77,7 @@ Content:
 
         return "\n\n".join(sections)
 
-    async def generate_forecast(self, request: ForecastRequest, news: Dict[str, List[Article]]) -> dict:
+    def generate_forecast(self, request: ForecastRequest, news: Dict[str, List[Article]]) -> dict:
         """
         Generate forecast based on the news articles collected.
 
@@ -119,6 +119,7 @@ Content:
                 source: [
                     {
                         "title": article.title,
+                        "content": article.content,
                         "url": article.url,
                         "published_date": article.published_date,
                         "platform": article.platform
