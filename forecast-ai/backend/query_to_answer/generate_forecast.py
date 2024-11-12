@@ -31,6 +31,7 @@ class ForecastGenerator:
 
         for source, article_list in articles.items():
             for article in article_list:
+                summarized_text = self.summarize_article(article.content.get('text', ''))
                 content = f"""ID: {id_counter}
 Query: {article.query}
 Title: {article.title}
@@ -38,7 +39,7 @@ Date: {article.published_date}
 Source: {source}
 Content:
 [start content]
-{article.content.get('text', '')}
+{summarized_text}
 [end content]"""
                 formatted_results.append(content)
                 id_counter += 1
@@ -60,20 +61,6 @@ Content:
         print(f"Summarized Content (250 words):\n{response.strip()}")
 
         return response.strip()
-
-    def summarize_content(self, news: Dict[str, List[Article]]) -> Dict[str, List[str]]:
-        """Summarize the content of all articles"""
-        summarized_articles = {}
-
-        for source, article_list in news.items():
-            summarized_articles[source] = []
-
-            for article in article_list:
-                # Summarize each article's content
-                summarized_text = self.summarize_article(article.content.get('text', ''))
-                summarized_articles[source].append(summarized_text)
-
-        return summarized_articles
 
     def extract_prediction(self, response: str) -> float:
         """Extract the final prediction from the LLM response"""
@@ -116,11 +103,8 @@ Content:
         :param news: The news articles collected per source
         :return: The forecast answer
         """
-        # Summarize the content in all the retrieved articles
-        summarized_content = self.summarize_content(news)
-
         # Format the articles for the LLM
-        formatted_sources = self.format_articles_for_llm(summarized_content)
+        formatted_sources = self.format_articles_for_llm(news)
 
         # Prepare the publishing prompt
         today_string = datetime.now().strftime(self.GOOGLE_SEARCH_DATE_FORMAT)
@@ -140,6 +124,9 @@ Content:
                 model=self.model,
                 messages=[{"role": "user", "content": publishing_query}]
             ).to_dict()["choices"][0]["message"]["content"]
+
+            # Print the summarized content for debugging purposes
+            print(f"LLM Response:\n{response}")
 
             # Extract prediction and rationale
             prediction = self.extract_prediction(response)
