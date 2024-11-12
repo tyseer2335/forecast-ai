@@ -45,6 +45,36 @@ Content:
 
         return "\n\n----\n\n".join(formatted_results)
 
+    def summarize_article(self, article_content: str) -> str:
+        """Summarizes the article content to 250 words using the LLM"""
+        # Define the prompt for summarization
+        prompt = f"Please summarize the following article to 250 words:\n\n{article_content}"
+
+        # Get the LLM response
+        response = self.client.chat.completions.create(
+            model=self.model,
+            messages=[{"role": "user", "content": prompt}]
+        ).to_dict()["choices"][0]["message"]["content"]
+
+        # Print the summarized content for debugging purposes
+        print(f"Summarized Content (250 words):\n{response.strip()}")
+
+        return response.strip()
+
+    def summarize_content(self, news: Dict[str, List[Article]]) -> Dict[str, List[str]]:
+        """Summarize the content of all articles"""
+        summarized_articles = {}
+
+        for source, article_list in news.items():
+            summarized_articles[source] = []
+
+            for article in article_list:
+                # Summarize each article's content
+                summarized_text = self.summarize_article(article.content.get('text', ''))
+                summarized_articles[source].append(summarized_text)
+
+        return summarized_articles
+
     def extract_prediction(self, response: str) -> float:
         """Extract the final prediction from the LLM response"""
         import re
@@ -86,8 +116,11 @@ Content:
         :param news: The news articles collected per source
         :return: The forecast answer
         """
+        # Summarize the content in all the retrieved articles
+        summarized_content = self.summarize_content(news)
+
         # Format the articles for the LLM
-        formatted_sources = self.format_articles_for_llm(news)
+        formatted_sources = self.format_articles_for_llm(summarized_content)
 
         # Prepare the publishing prompt
         today_string = datetime.now().strftime(self.GOOGLE_SEARCH_DATE_FORMAT)
