@@ -12,11 +12,17 @@ from model.forecast_request import ForecastRequest
 from fastapi import WebSocket
 import asyncio
 
+from fastapi import Depends
+import firebase_admin
+from firebase_admin import auth, credentials
+from fastapi import Request
+
 import time
 
 # [Initialize FastAPI app]
 # pip install "uvicorn[standard]"
 # uvicorn main:app
+# Initialize Firebase Admin with a service account key
 app = FastAPI()
 load_dotenv()
 OPENAI_API_KEY = os.getenv('OPENAPI_API_KEY')
@@ -25,6 +31,8 @@ LOCAL_OR_PROD = os.getenv('LOCAL_OR_PROD')
 DOCKER_OR_LAMBDATEST = os.getenv('DOCKER_OR_LAMBDATEST')
 USERNAME = os.getenv('USERNAME')
 ACCESS_KEY = os.getenv('ACCESS_KEY')
+cred = credentials.Certificate("path/to/serviceAccountKey.json")
+firebase_admin.initialize_app(cred)
 
 app.add_middleware(
     CORSMiddleware,
@@ -38,7 +46,19 @@ app.add_middleware(
 # Dictionary to store WebSocket connections
 active_connections = {}
 
+# dependency function to verify the token
+async def verify_token(request: Request):
+    auth_header = request.headers.get("Authorization")
+    if not auth_header:
+        raise HTTPException(status_code=401, detail="Authorization header missing")
 
+    token = auth_header.split(" ")[1]
+    try:
+        decoded_token = auth.verify_id_token(token)
+        request.state.user = decoded_token  # Store user info in request state
+    except:
+        raise HTTPException(status_code=401, detail="Invalid or expired token")
+    
 # WebSocket endpoint to send real-time status updates
 @app.websocket("/status")
 async def websocket_status(websocket: WebSocket, query_id: str):
@@ -61,7 +81,7 @@ async def send_status_update(query_id: str, message: str):
             del active_connections[query_id]
 
 
-@app.post("/query_to_answer")
+@app.post("/query_to_answer", dependencies=[Depends(verify_token)])
 async def query_to_answer(request: ForecastRequest, query_id: str):
     state = 0
     print("Start")
