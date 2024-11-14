@@ -1,7 +1,7 @@
 import os
 
 from dotenv import load_dotenv
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Request, WebSocket, Depends
 from fastapi.middleware.cors import CORSMiddleware
 from openai import OpenAI
 
@@ -9,9 +9,11 @@ from query_to_answer import break_down_query, collect_news, scrapping_content, f
     generate_bias
 from utils import convert_to_article
 from model.forecast_request import ForecastRequest
-
-from fastapi import WebSocket
 import asyncio
+
+import firebase_admin
+from firebase_admin import credentials, auth as firebase_auth
+from firebase_admin.auth import verify_id_token
 
 import time
 
@@ -27,6 +29,9 @@ DOCKER_OR_LAMBDATEST = os.getenv('DOCKER_OR_LAMBDATEST')
 SINGLE_OR_PARALLEL = os.getenv('SINGLE_OR_PARALLEL')
 USERNAME = "glad7cu"
 ACCESS_KEY = os.getenv('ACCESS_KEY')
+# Initialize Firebase Admin with a service account key
+cred = credentials.Certificate(os.getenv("FIREBASE_SERVICE_ACCOUNT_KEY"))
+firebase_admin.initialize_app(cred)
 
 app.add_middleware(
     CORSMiddleware,
@@ -39,6 +44,23 @@ app.add_middleware(
 
 # Dictionary to store WebSocket connections
 active_connections = {}
+
+
+# dependency function to verify the token
+async def verify_token(request: Request):
+    auth_header = request.headers.get("Authorization")
+    print("Received Authorization header:", auth_header)
+    if not auth_header:
+        raise HTTPException(status_code=401, detail="Authorization header missing")
+
+    token = auth_header.split(" ")[1]
+    try:
+        decoded_token = firebase_auth.verify_id_token(token)
+        print("Decoded Token:", decoded_token)
+        request.state.user = decoded_token  # Store user info in request state
+    except:
+        print("Token verification failed:", str(e))
+        raise HTTPException(status_code=401, detail="Invalid or expired token")
 
 
 # WebSocket endpoint to send real-time status updates
@@ -64,11 +86,17 @@ async def send_status_update(query_id: str, message: str):
             del active_connections[query_id]
 
 
-@app.post("/query_to_answer")
-async def query_to_answer(request: ForecastRequest, query_id: str):
+@app.post("/query_to_answer", dependencies=[Depends(verify_token)])
+async def query_to_answer(check_request: Request, request: ForecastRequest, query_id: str):
     state = 0
     print("Start")
     try:
+        if not check_request.state.user:
+            raise HTTPException(status_code=500, detail="User info not set in request state")
+
+        # Log to confirm user info is set before external API calls
+        print("Authenticated user info:", check_request.state.user)
+
         state = 1
         await send_status_update(query_id, "Generating search queries...")
         # Generate search queries

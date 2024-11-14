@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 import OwlLogo from '../assets/owl.svg';
 import GoogleLogo from '../assets/google-logo.svg';
 import { signInWithEmailAndPassword } from "firebase/auth";
-import { auth, signInWithGoogle } from "./firebase";
+import { auth, signInWithGoogle, getAuthToken } from "./firebase";
 import { useNavigate, NavLink } from "react-router-dom"; 
 import { getFirestore, doc, getDoc, setDoc, serverTimestamp } from "firebase/firestore"; // Firestore imports
 import { EyeIcon, EyeSlashIcon } from '@heroicons/react/24/solid';
@@ -84,6 +84,11 @@ const Login: React.FC = () => {
                 // Check if a user document exists and create one if it doesn't
                 await checkAndCreateUserDocument(user.uid, user.email || "");
                 localStorage.setItem('userId', user.uid);
+                const token = await getAuthToken();
+                if (token) {
+                    localStorage.setItem('authToken', token);
+                    console.log("Sending token:", token);
+                }
                 navigate("/"); // Navigate to home page after login
             } else {
                 // If the email is not verified, set the error message
@@ -103,6 +108,10 @@ const Login: React.FC = () => {
             console.log("Google login successful:", user);
             // Check if a user document exists and create one if it doesn't
             await checkAndCreateUserDocument(user.uid, user.email || "");
+            const token = await getAuthToken();
+                if (token) {
+                    localStorage.setItem('authToken', token);
+                }
             navigate("/");
         } catch (error: any) {
             console.log("Google login error:", error);

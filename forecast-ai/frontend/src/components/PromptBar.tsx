@@ -204,13 +204,25 @@ const PromptBar: React.FC<PromptBarProps> = ({
         // Open WebSocket connection to receive real-time status
         connectWebSocket(queryId);
 
+        // Retrieve token from local storage
+        const token = localStorage.getItem("authToken");
+        if (!token) throw new Error("User is not authenticated");
+        console.log("Auth Token:", token);
+
         // Send POST request with query ID
         if (!process.env.REACT_APP_BACKEND_URL) {
           throw new Error("REACT_APP_BACKEND_URL is not defined");
         }
+        
+        // Add the auth token to request
         const response = await axios.post(
           `${process.env.REACT_APP_BACKEND_URL}/query_to_answer?query_id=${queryId}`,
-          updatedRequest
+          updatedRequest,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`, 
+            },
+          }
         );
         const sources = convertResponseSourcesIntoSources(
           response.data["Sources"]
@@ -233,6 +245,7 @@ const PromptBar: React.FC<PromptBarProps> = ({
           console.error("Error handling submit:", error);
         }
       } catch (error) {
+        console.error("Detailed Error:", error);
         let serverDown = false;
         try {
           if (!process.env.REACT_APP_BACKEND_URL) {
@@ -260,6 +273,7 @@ const PromptBar: React.FC<PromptBarProps> = ({
           errorMessage =
             "Server is down. Please wait for the server to load up in 1 minute.";
         }
+        console.error("Final Error Message:", errorMessage);
         addError(errorMessage);
       }
     }

@@ -46,4 +46,13 @@ export const signInWithGoogle = (): Promise<UserCredential> => {
   return signInWithPopup(auth, provider);
 };
 
+// Function to get the current user's ID token
+export const getAuthToken = async (): Promise<string | null> => {
+  const user = auth.currentUser;
+  if (user) {
+    return await user.getIdToken(true);
+  }
+  return null;
+};
+
 export default app;
