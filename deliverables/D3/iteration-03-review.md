@@ -7,7 +7,6 @@
 
 ## Process - Reflection
 
-
 #### Q1. What worked well
 1. **Clear Communication Channels for Feature Development and Partner Coordination**  
    We established dedicated Discord channels for each subteam, as well as one for communication with our project partner. This setup enabled seamless collaboration within our subteams on individual features while also fostering smooth coordination with the partner team on shared features and integration points. By having separate channels for different aspects of the project—such as feature development and partner updates—we kept conversations focused, organized, and efficient, ensuring everyone stayed aligned on the project's progress.  
@@ -27,10 +26,6 @@
    We made sure to document key features and their functionality in detail. This thorough documentation made it easier for subteams to implement their respective code or integrate with existing components. Clear documentation minimized the need for back-and-forth clarification, ensuring that everyone understood the functionality and behavior of critical features, and speeding up the development process.
 
 #### Q2. What did not work well
-
- * 2 - 4 important decisions, processes, actions, or anything else that did not work well for you, ordered from most to least important.
- * Give a supporting argument about what makes you think that way.
- * Feel free to refer/link to process artifact(s).
 
 1. **Underestimating Feature Completion Time**  
    At times, we underestimated how long certain features would take to complete, which led to needing extension on some tasks. This created a bit of pressure as deadlines approached. However, despite the initial time estimation challenges, we were able to overcome this by adjusting our schedules and redistributing tasks where necessary, ensuring we met all the critical milestones.
