@@ -38,10 +38,12 @@ module.exports = {
         'prompt-bar-date-bg': '#767680',
         'error-message-box-border-bg': '#F56565',
         'error-message-box-bg': '#4B1E1E',
-        'heatmap-green-bg': 'rgba(83, 168, 102, 0.7)',
-        'heatmap-yellow-bg': 'rgba(253, 209, 120, 0.7)',
-        'heatmap-purple-bg': 'rgba(174, 176, 255, 0.7)',
-        'heatmap-red-bg': 'rgba(255, 26, 0, 0.7)'
+        
+        'heatmap-green-bg': 'rgba(83, 168, 102, 1)',
+        'heatmap-yellow-bg': 'rgba(253, 209, 120, 1)',
+        'heatmap-purple-bg': 'rgba(174, 176, 255, 1)',
+        'heatmap-red-bg': 'rgba(255, 26, 0, 1)',
+
       },
       fontFamily: {
         inter: ['Inter', 'sans-serif'],

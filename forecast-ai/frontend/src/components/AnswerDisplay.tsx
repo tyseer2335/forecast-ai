@@ -23,8 +23,8 @@ const AnswerDisplay: React.FC<AnswerDisplayProps> = ({ query, answer, biasVisibi
 
   var localVisibility : BiasColorToBooleanMap = biasVisibility;
 
-  const getTokenColor = (tokenIndex: number, feature: string) => {
-    const metric = llmFeatures[feature][`token_${tokenIndex}`];
+  const getTokenColorOpacity = (tokenIndex: number, feature: string) => {
+    const metric = llmFeatures[feature][tokenIndex];
 
     if (metric === 0) {
       return "";
@@ -50,22 +50,25 @@ const AnswerDisplay: React.FC<AnswerDisplayProps> = ({ query, answer, biasVisibi
     biasColorToBiasNameMap[assignableColor] = feature;
 
     // Assign the style based on the metric
-    return `bg-heatmap-${assignableColor}-bg bg-opacity-${metric * 100}`;
+    return `${assignableColor}-${metric * 100}`;
   };
 
   const renderRationale = () => {
     const tokens = rationale.split(" ");
     var coloredTokens = tokens.map((token, index) => {
-      const feature = Object.keys(llmFeatures).find((key) => llmFeatures[key][`token_${index}`] !== undefined);
-      var colorClass = feature ? getTokenColor(index, feature) : "";
+      const feature = Object.keys(llmFeatures).find((key) => llmFeatures[key][index] !== undefined);
+      var colorClass = feature ? getTokenColorOpacity(index, feature) : "";
+
       if (colorClass) {
-        const biasColor = colorClass.split("-")[2];
+        const [biasColor, opacity] = colorClass.split("-");
         if (!localVisibility[biasColor as BiasColor]) {
           colorClass = "";
+        } else {
+          colorClass = `bg-heatmap-${biasColor}-bg/${opacity}`;
         }
       }
       return (
-        <span key={index} className={`px-1 ${colorClass}`}>
+        <span key={index} className={`${colorClass} px-1`}>
           {token}
         </span>
       );
@@ -81,7 +84,6 @@ const AnswerDisplay: React.FC<AnswerDisplayProps> = ({ query, answer, biasVisibi
       setBiasColorToBiasNameMap(biasColorToBiasNameMap);
       setRenderStage(1);
     } else if (renderStage >= 2) {
-      // Because the above code is printing object Object, we need to use JSON.stringify
       localVisibility = biasVisibility;
     }
   }, [renderStage, isBiasNamesReady, biasVisibility]);
