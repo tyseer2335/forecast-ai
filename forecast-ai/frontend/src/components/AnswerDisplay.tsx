@@ -23,19 +23,12 @@ const AnswerDisplay: React.FC<AnswerDisplayProps> = ({ query, answer, biasVisibi
   const { forecaster_rationale: rationale, llm_features: llmFeatures } = answer;
   var isBiasNamesReady = false;
   var biasColorToBiasNameMap : BiasColorToBiasNameMap = {
-    // all colors are initially unassigned
     green: "",
     yellow: "",
     purple: "",
     red: ""
   };
 
-  // var localVisibility : BiasColorToBooleanMap = {
-  //   green: true,
-  //   yellow: true,
-  //   purple: true,
-  //   red: true
-  // }
   var localVisibility : BiasColorToBooleanMap = biasVisibility;
 
   const getTokenColor = (tokenIndex: number, feature: string) => {

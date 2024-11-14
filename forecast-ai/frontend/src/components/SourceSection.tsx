@@ -14,7 +14,6 @@ import ViewsCountImage from "../assets/views-count-image.svg";
 import TrendingRateImage from "../assets/trending-rate-image.svg";
 import RegionImage from "../assets/region-image.svg";
 import { BiasColor, BiasColorToBooleanMap, BiasColorToBiasNameMap, SourceObject, isBiasColorToBiasNameMap } from "../hooks/types";
-import { set } from "date-fns";
 
 
 type SourceSectionProps = {
@@ -56,7 +55,6 @@ const SourceSection: React.FC<SourceSectionProps> = ({ source, biasVisibility, s
 
 
     const handleToggleVisibility = (color: BiasColor) => {
-        console.log("local names now: ", localNames, " and actual names: ", biasColorToBiasNameMap, "and stage: ", renderStage);
         setBiasVisibility((prev) => {
             return {
                 ...prev,
@@ -69,8 +67,7 @@ const SourceSection: React.FC<SourceSectionProps> = ({ source, biasVisibility, s
         if (renderStage === 0) {
             return null;
         } else if (renderStage >= 1 && !isToggleMenuReadyWithNames) {
-            localNames = JSON.parse(JSON.stringify(biasColorToBiasNameMap));
-            console.log("Got updated: ", localNames);
+            localNames = biasColorToBiasNameMap;
         }
         const listOfBiases = (
             <ul className="mt-2 space-y-3 w-full">
@@ -103,7 +100,6 @@ const SourceSection: React.FC<SourceSectionProps> = ({ source, biasVisibility, s
 
     useEffect(() => {
         if (renderStage === 1 && isToggleMenuReadyWithNames) {
-            console.log("Stage 1 --> 2");
             setRenderStage(2);
         }
     }, [isToggleMenuReadyWithNames]);
