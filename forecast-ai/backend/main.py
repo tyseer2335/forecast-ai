@@ -45,6 +45,7 @@ app.add_middleware(
 # Dictionary to store WebSocket connections
 active_connections = {}
 
+
 # dependency function to verify the token
 async def verify_token(request: Request):
     auth_header = request.headers.get("Authorization")
@@ -61,7 +62,7 @@ async def verify_token(request: Request):
         print("Token verification failed:", str(e))
         raise HTTPException(status_code=401, detail="Invalid or expired token")
 
-    
+
 # WebSocket endpoint to send real-time status updates
 @app.websocket("/status")
 async def websocket_status(websocket: WebSocket, query_id: str):
@@ -86,15 +87,16 @@ async def send_status_update(query_id: str, message: str):
 
 
 @app.post("/query_to_answer", dependencies=[Depends(verify_token)])
-async def query_to_answer(check_request:  Request, request: ForecastRequest, query_id: str):
-    if not check_request.state.user:
-        raise HTTPException(status_code=403, detail="User is not authenticated")
-
-    # Log to confirm user info is set before external API calls
-    print("Authenticated user info:", check_request.state.user)
+async def query_to_answer(check_request: Request, request: ForecastRequest, query_id: str):
     state = 0
     print("Start")
     try:
+        if not check_request.state.user:
+            raise HTTPException(status_code=500, detail="User info not set in request state")
+
+        # Log to confirm user info is set before external API calls
+        print("Authenticated user info:", check_request.state.user)
+
         state = 1
         await send_status_update(query_id, "Generating search queries...")
         # Generate search queries
