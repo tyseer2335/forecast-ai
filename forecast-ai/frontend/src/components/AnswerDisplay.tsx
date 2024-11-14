@@ -65,36 +65,9 @@ const AnswerDisplay: React.FC<AnswerDisplayProps> = ({ query, answer, biasVisibi
     biasColorToBiasNameMap[assignableColor] = feature;
 
     // Assign the style based on the metric
-    // return `bg-rgba(83, 168, 102, 0.7)`;
     return `bg-heatmap-${assignableColor}-bg bg-opacity-${metric * 100}`;
   };
 
-  // React Element Version
-  const Rationale : React.FC = () => {
-    const tokens = rationale.split(" ");
-    var coloredTokens = tokens.map((token, index) => {
-      const feature = Object.keys(llmFeatures).find((key) => llmFeatures[key][index] !== undefined);
-      var colorClass = feature ? getTokenColor(index, feature) : "";
-      if (colorClass) {
-        const biasColor = colorClass.split("-")[2];
-        if (!localVisibility[biasColor as BiasColor]) {
-          colorClass = "";
-        }
-      }
-      return (
-        <span key={index} className={`px-1 ${colorClass}`}>
-          {token}
-        </span>
-      );
-    });
-    if (renderStage === 0) { 
-      isBiasNamesReady = true;} 
-    return <>{coloredTokens}</>;
-  }
-
-  
-  
-  // JSX version
   const renderRationale = () => {
     const tokens = rationale.split(" ");
     var coloredTokens = tokens.map((token, index) => {
@@ -135,9 +108,8 @@ const AnswerDisplay: React.FC<AnswerDisplayProps> = ({ query, answer, biasVisibi
         <p className="text-white text-[8px] sm:text-[10px] md:text-xs lg:text-sm"><strong>Question:</strong> {query}</p>
         <p className="text-white text-[8px] sm:text-[10px] md:text-xs lg:text-sm"><strong>Forecast Probability:</strong> {answer.forecast}</p>
         <p className="text-white text-[8px] sm:text-[10px] md:text-xs lg:text-sm"><strong>Forecaster Rationale:</strong></p>
-        {/* <p className="text-white text-[8px] sm:text-[10px] md:text-xs lg:text-sm break-all">{renderRationale()}</p> */}
         <p className="text-white text-[8px] sm:text-[10px] md:text-xs lg:text-sm break-all">
-          <Rationale />
+          {renderRationale()}
         </p>
       </div>
     </div>
