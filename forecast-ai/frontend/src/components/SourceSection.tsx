@@ -1,6 +1,5 @@
 // src/components/SourceSection.tsx
 import React from "react";
-import { useEffect } from "react";
 import SourceCard from "./SourceCard";
 import GreenToggleButtonOn from "../assets/green-toggle-button.svg";
 import YellowToggleButtonOn from "../assets/yellow-toggle-button.svg";
@@ -13,7 +12,7 @@ import RedToggleButtonOff from "../assets/red-toggle-button-off.svg";
 import ViewsCountImage from "../assets/views-count-image.svg";
 import TrendingRateImage from "../assets/trending-rate-image.svg";
 import RegionImage from "../assets/region-image.svg";
-import { BiasColor, BiasColorToBooleanMap, BiasColorToBiasNameMap, SourceObject, isBiasColorToBiasNameMap } from "../hooks/types";
+import { BiasColor, SourceObject } from "../hooks/types";
 import { biasColorToBiasNameMap } from "../hooks/constants";
 
 /**

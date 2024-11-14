@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import ScrollLeftButton from "../assets/scroll-left-button.svg";
 import ScrollRightButton from "../assets/scroll-right-button.svg";
 import SourceSection from "./SourceSection";
-import { BiasColor, BiasColorToBiasNameMap, BiasColorToBooleanMap, SourceObject } from "../hooks/types";
+import { BiasColor, SourceObject } from "../hooks/types";
 import ErrorMessage from "./ErrorMessage";
 import LoadingBar from "./LoadingBar";
 
