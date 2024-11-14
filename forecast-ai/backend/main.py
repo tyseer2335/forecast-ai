@@ -89,12 +89,12 @@ async def send_status_update(query_id: str, message: str):
 
 
 @app.post("/query_to_answer", dependencies=[Depends(verify_token)])
-async def query_to_answer(request: ForecastRequest, query_id: str):
-    if not request.state.user:
+async def query_to_answer(check_request:  Request, request: ForecastRequest, query_id: str):
+    if not check_request.state.user:
         raise HTTPException(status_code=403, detail="User is not authenticated")
 
     # Log to confirm user info is set before external API calls
-    print("Authenticated user info:", request.state.user)
+    print("Authenticated user info:", check_request.state.user)
     state = 0
     print("Start")
     try:
