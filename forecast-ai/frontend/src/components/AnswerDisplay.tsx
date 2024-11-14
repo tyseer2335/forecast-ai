@@ -21,6 +21,7 @@ type AnswerDisplayProps = {
 
 const AnswerDisplay: React.FC<AnswerDisplayProps> = ({ query, answer, biasVisibility, setBiasColorToBiasNameMap, renderStage, setRenderStage }) => {
   const { forecaster_rationale: rationale, llm_features: llmFeatures } = answer;
+  var isBiasNamesReady = false;
   var biasColorToBiasNameMap : BiasColorToBiasNameMap = {
     // all colors are initially unassigned
     green: "",
@@ -28,8 +29,14 @@ const AnswerDisplay: React.FC<AnswerDisplayProps> = ({ query, answer, biasVisibi
     purple: "",
     red: ""
   };
-  // deep copy of biasVisibility
-  var biasVisibilityCopy : BiasColorToBooleanMap = JSON.parse(JSON.stringify(biasVisibility));
+
+  // var localVisibility : BiasColorToBooleanMap = {
+  //   green: true,
+  //   yellow: true,
+  //   purple: true,
+  //   red: true
+  // }
+  var localVisibility : BiasColorToBooleanMap = biasVisibility;
 
   const getTokenColor = (tokenIndex: number, feature: string) => {
     const metric = llmFeatures[feature][tokenIndex];
@@ -60,12 +67,6 @@ const AnswerDisplay: React.FC<AnswerDisplayProps> = ({ query, answer, biasVisibi
     // Assign the style based on the metric
     return `bg-heatmap-${assignableColor}-bg bg-opacity-${metric * 100}`;
   };
-
-  useEffect(() => {
-    if (renderStage >= 2) {
-      biasVisibilityCopy = biasVisibility;
-    }
-  }, [renderStage]);
   
 
   const renderRationale = () => {
@@ -73,23 +74,19 @@ const AnswerDisplay: React.FC<AnswerDisplayProps> = ({ query, answer, biasVisibi
     var coloredTokens = tokens.map((token, index) => {
       const feature = Object.keys(llmFeatures).find((key) => llmFeatures[key][index] !== undefined);
       var colorClass = feature ? getTokenColor(index, feature) : "";
-      if (renderStage === 0) {
-        setRenderStage(1);
-      } else if (renderStage >= 2) {
-        if (colorClass) {
-          if (index === 0) console.log("Got into colorClass determination");
-          // extract biascolor to see if it should be visible
-          const biasColor = colorClass.split("-")[2];
-          if (!biasVisibility[biasColor as BiasColor]) {
-            colorClass = "";
-            if (index === 0) console.log("colorClass resetted");
-          } else {
-            if (index === 0) console.log("colorClass not resetted");
-          }
-
-        }
+      if (colorClass) {
+        const biasColor = colorClass.split("-")[2];
+      //   if (!localVisibility[biasColor as BiasColor]) {
+      //     console.log(`color ${biasColor} is not visible`);
+      //     colorClass = "";
+      //   } else {
+      //     console.log(`color ${biasColor} is visible`);
+      //   }
       }
-      if (index === 0) console.log(`px-1 ${colorClass} token: ${token}`);
+      // // How can this: colorClass = Something
+      // if (colorClass) console.log(`Returning token ${token} with color ${colorClass}`);
+      // // But this: colorClass = ""; in the below code
+      // // 
       return (
         <span key={index} className={`px-1 ${colorClass}`}>
           {token}
@@ -100,13 +97,25 @@ const AnswerDisplay: React.FC<AnswerDisplayProps> = ({ query, answer, biasVisibi
     // localStorage.setItem("biasColorToBiasNameMap", JSON.stringify(biasColorToBiasNameMap));
     
     if (renderStage === 0) { 
-      console.log("Stage 0 --> 1");
-      setRenderStage(1);
-      setBiasColorToBiasNameMap(biasColorToBiasNameMap);
-     }
-
+      isBiasNamesReady = true;
+      // setRenderStage(1);
+      // setRenderStage(1);
+      // setBiasColorToBiasNameMap(biasColorToBiasNameMap);
+     } 
     return coloredTokens;
   };
+
+  useEffect(() => {
+    if (renderStage === 0 && isBiasNamesReady) {
+      setBiasColorToBiasNameMap(biasColorToBiasNameMap);
+      setRenderStage(1);
+    } else if (renderStage >= 2) {
+      // Because the above code is printing object Object, we need to use JSON.stringify
+      console.log(`Updating local Visibility ${JSON.stringify(localVisibility)} -> ${JSON.stringify(biasVisibility)}`);
+      localVisibility = biasVisibility;
+    }
+  }, [renderStage, isBiasNamesReady]);
+
 
   return (
     <div className="p-4 pb-7 bg-sidebar-bg rounded-md flex flex-col space-y-6 flex-grow max-w-[933px] overflow-y-auto" style={{ width: 'calc(85% + 20px)' }}>

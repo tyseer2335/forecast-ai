@@ -28,15 +28,14 @@ const ChatWindow: React.FC<ChatWindowProps> = ({ chats }) => {
     red: "",
   });
   const [renderStage, setRenderStage] = useState(0);
+  // Time Line of renderStage
   // 0: initial stage
-  //    AnswerDisplay can be rendered
+  // 0 --> 1(exclusive): AnswerDisplay can be rendered with dummy biasColorVisiility
   // 1: AnswerDisplay rendered and biasColorToBiasNameMap updated
-  //    SourceSection can use biasColorToBiasNameMap now (1*)
-  // 2: (1*) is done, 
-  //    AnswerDisplay can use biasVisibility now
-  // > 3: From here,
-  //    AnswerDisplay should listen to changes in biasVisibility continuously
-  //    but SourceSection can stop listening to changes in biasVisibility(even if there is a change, ignore.)
+  // 1 --> 2(exclusive): SourceSection can use biasColorToBiasNameMap now(update local NamesDict )
+  // 2: SourceSection is rendered with Visibility map ready to use.
+  // 2 --> ...: AnswerDisplay listen to changes in biasVisibility continuously,
+  //            SourceSection can stop listening to changes in biasVisibility
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });

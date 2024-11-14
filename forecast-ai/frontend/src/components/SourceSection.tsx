@@ -27,7 +27,13 @@ type SourceSectionProps = {
 }
 
 const SourceSection: React.FC<SourceSectionProps> = ({ source, biasVisibility, setBiasVisibility, biasColorToBiasNameMap, renderStage, setRenderStage }) => {
-    var biasColorToBiasNameMapCopy : BiasColorToBiasNameMap = JSON.parse(JSON.stringify(biasColorToBiasNameMap));
+    var isToggleMenuReadyWithNames = false;
+    var localNames : BiasColorToBiasNameMap = {
+        green: "feature1_bias_1",
+        yellow: "feature2_bias_2",
+        purple: "feature3_bias_3",
+        red: "feature4_bias_4"
+    }
 
     const getButtonImg = (color: BiasColor) => {
         switch (color) {
@@ -48,16 +54,9 @@ const SourceSection: React.FC<SourceSectionProps> = ({ source, biasVisibility, s
         }
     }
 
-    useEffect(() => {
-        if (renderStage === 1) {
-            biasColorToBiasNameMapCopy = JSON.parse(JSON.stringify(biasColorToBiasNameMap));
-        }
-    }, [renderStage])
-
-
-            
 
     const handleToggleVisibility = (color: BiasColor) => {
+        console.log("local names now: ", localNames, " and actual names: ", biasColorToBiasNameMap, "and stage: ", renderStage);
         setBiasVisibility((prev) => {
             return {
                 ...prev,
@@ -67,17 +66,22 @@ const SourceSection: React.FC<SourceSectionProps> = ({ source, biasVisibility, s
     }
 
     const DetectedBiases: React.FC = () => {
+        if (renderStage === 0) {
+            return null;
+        } else if (renderStage >= 1 && !isToggleMenuReadyWithNames) {
+            localNames = JSON.parse(JSON.stringify(biasColorToBiasNameMap));
+            console.log("Got updated: ", localNames);
+        }
         const listOfBiases = (
             <ul className="mt-2 space-y-3 w-full">
-                {Object.keys(biasColorToBiasNameMapCopy).map((color) => {
-                    if (!biasColorToBiasNameMapCopy[color as BiasColor]) return null;
-                    return <DetectedBias color={color as BiasColor} name={biasColorToBiasNameMapCopy[color as BiasColor]} />
+                {Object.keys(localNames).map((color) => {
+                    if (!localNames[color as BiasColor]) return null;
+                    return <DetectedBias color={color as BiasColor} name={localNames[color as BiasColor]} />
                 })}
             </ul>
         )
         if (renderStage === 1) {
-            console.log("Stage 1 --> 2");
-            setRenderStage(2);
+            isToggleMenuReadyWithNames = true;
         }
         return listOfBiases;
     }
@@ -96,6 +100,14 @@ const SourceSection: React.FC<SourceSectionProps> = ({ source, biasVisibility, s
             </li>
         )
     }
+
+    useEffect(() => {
+        if (renderStage === 1 && isToggleMenuReadyWithNames) {
+            console.log("Stage 1 --> 2");
+            setRenderStage(2);
+        }
+    }, [isToggleMenuReadyWithNames]);
+
 
     return (
         <div className="w-full flex-grow flex flex-col lg:flex-row space-y-4 lg:space-y-0 lg:space-x-5 justify-center items-center rounded-md h-[90%]">
