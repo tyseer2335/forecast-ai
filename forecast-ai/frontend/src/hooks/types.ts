@@ -96,6 +96,9 @@ export type BiasColorToBooleanMap = {
 export type BiasColorToBiasNameMap = {
   [key in BiasColor]: string;
 }
+export type BiasColorToHexCodeMap = {
+  [key in BiasColor]: string;
+}
 
 export const isBiasColorToBiasNameMap = (content: any): content is BiasColorToBiasNameMap => {
   return (

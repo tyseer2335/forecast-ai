@@ -1,6 +1,6 @@
-import React, { useEffect, useRef } from "react";
-import { Answer, BiasColor, BiasColorToBiasNameMap, BiasColorToBooleanMap } from "../hooks/types";
-import { biasColorToBiasNameMap } from "../hooks/constants";
+import React from "react";
+import { Answer, BiasColor } from "../hooks/types";
+import { biasColorToBiasNameMap, biasColorToHexCodeMap } from "../hooks/constants";
 
 type AnswerDisplayProps = {
   query: string;
@@ -17,7 +17,11 @@ const AnswerDisplay: React.FC<AnswerDisplayProps> = ({ query, answer, visibleBia
   const getTokenColorOpacity = (tokenIndex: number, feature: string) => {
     // Note we can assume that visibleBiasColor is not ""
     const metric = llmFeatures[feature][`token_${tokenIndex}`];
-    return`bg-heatmap-${visibleBiasColor}-bg/${metric * 100}`;
+    return visibleBiasColor ? 
+    {
+      backgroundColor: biasColorToHexCodeMap[visibleBiasColor],
+      opacity: metric
+    } : {}
   };
 
   const renderRationale = () => {
@@ -27,10 +31,10 @@ const AnswerDisplay: React.FC<AnswerDisplayProps> = ({ query, answer, visibleBia
       feature = biasColorToBiasNameMap[visibleBiasColor];
     }
     var coloredTokens = tokens.map((token, index) => {
-      var highlightStyle = "";
+      var highlightStyle = {};
       if (visibleBiasColor) highlightStyle = getTokenColorOpacity(index, feature);
       return (
-        <span key={index} className={`${highlightStyle} px-1`}>
+        <span key={index} className="px-1" style={highlightStyle} >
           {token}
         </span>
       );
