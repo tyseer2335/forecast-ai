@@ -3,6 +3,22 @@ from openai import OpenAI
 from query_to_answer.prompt import get_feature_prompt, FEATURE_DESCRIPTIONS
 
 
+def summarize_rationale(rationale: str, client: OpenAI) -> str:
+        """Summarizes the forecast rationale to 250 words using the LLM"""
+        # Define the prompt for summarization
+        prompt = f"Please summarize the following rationale to 250 words:\n\n{rationale}"
+
+        # Get the LLM response
+        response = client.chat.completions.create(
+            model="gpt-4o-mini",
+            messages=[{"role": "user", "content": prompt}]
+        ).to_dict()["choices"][0]["message"]["content"]
+
+        # Print the summarized content for debugging purposes
+        print(f"Summarized Forecast Rationale (250 words):\n{response.strip()}")
+
+        return response.strip()
+
 def get_feature_schema(token_count: int, feature: str) -> dict:
     """
     Creates a JSON schema for a single feature to enforce exact lengths.
@@ -50,7 +66,7 @@ def analyze_features(rationale: str, client: OpenAI) -> Dict[str, List[float]]:
         schema = get_feature_schema(token_count, feature)
 
         response = client.chat.completions.create(
-            model="gpt-4-0613",
+            model="gpt-4o-mini",
             messages=[{"role": "user", "content": prompt}],
             functions=[{
                 "name": "analyze_features",
@@ -85,6 +101,7 @@ def generate_bias(answer: Dict[str, Any], client: OpenAI) -> Dict[str, Any]:
     if not answer.get("Forecaster Rationale"):
         return answer
 
+    answer["Forecaster Rationale"] = summarize_rationale(answer["Forecaster Rationale"], client)
     features = analyze_features(answer["Forecaster Rationale"], client)
     answer["llm_features"] = features
     print(answer)
