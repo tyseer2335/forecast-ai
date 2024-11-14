@@ -1,5 +1,7 @@
-import React from "react";
-import { BiasColor, BiasToBooleanMap } from "../hooks/types";
+import React, { useEffect, useRef } from "react";
+import { BiasColor, BiasColorToBiasNameMap, BiasColorToBooleanMap } from "../hooks/types";
+import { set } from "date-fns";
+import { render } from "@testing-library/react";
 
 type AnswerDisplayProps = {
   query: string;
@@ -10,60 +12,87 @@ type AnswerDisplayProps = {
       [key: string]: number[];
     };
   };
-  biasVisibility: BiasToBooleanMap;
-  setBiasIsDetectedMap: React.Dispatch<React.SetStateAction<BiasToBooleanMap>>;
+  biasVisibility: BiasColorToBooleanMap;
+  setBiasColorToBiasNameMap: React.Dispatch<React.SetStateAction<BiasColorToBiasNameMap>>;
+  renderStage: number;
+  setRenderStage: React.Dispatch<React.SetStateAction<number>>;
 };
 
 
-const AnswerDisplay: React.FC<AnswerDisplayProps> = ({ query, answer, biasVisibility, setBiasIsDetectedMap }) => {
+const AnswerDisplay: React.FC<AnswerDisplayProps> = ({ query, answer, biasVisibility, setBiasColorToBiasNameMap, renderStage, setRenderStage }) => {
   const { forecaster_rationale: rationale, llm_features: llmFeatures } = answer;
+  var isBiasNamesReady = false;
+  var biasColorToBiasNameMap : BiasColorToBiasNameMap = {
+    green: "",
+    yellow: "",
+    purple: "",
+    red: ""
+  };
+
+  var localVisibility : BiasColorToBooleanMap = biasVisibility;
 
   const getTokenColor = (tokenIndex: number, feature: string) => {
     const metric = llmFeatures[feature][tokenIndex];
-    if (metric > 0.75) {
-      return "bg-heatmap-green-bg";
+
+    if (metric === 0) {
+      return "";
     }
-    if (metric > 0.5) {
-      return "bg-heatmap-yellow-bg";
+
+    // Find the assignable color
+    var assignableColor : BiasColor = "green";
+    var color : BiasColor;
+    var notFound = true;
+    for (color in biasColorToBiasNameMap) {
+      if (biasColorToBiasNameMap[color] === "" || biasColorToBiasNameMap[color] === feature) {
+        assignableColor = color as BiasColor;
+        notFound = false;
+        break;
+      }
     }
-    if (metric > 0.25) {
-      return "bg-heatmap-purple-bg";
+    if (notFound) {
+      console.log("No assignable color found for feature: ", feature);
+      return "";
     }
-    return "bg-heatmap-red-bg";
+
+    // Assign the assignable color to the feature
+    biasColorToBiasNameMap[assignableColor] = feature;
+
+    // Assign the style based on the metric
+    return `bg-heatmap-${assignableColor}-bg bg-opacity-${metric * 100}`;
   };
 
   const renderRationale = () => {
     const tokens = rationale.split(" ");
-    var colorToIsDetectedMap: BiasToBooleanMap = {
-      green: false,
-      yellow: false,
-      purple: false,
-      red: false,
-    };
     var coloredTokens = tokens.map((token, index) => {
       const feature = Object.keys(llmFeatures).find((key) => llmFeatures[key][index] !== undefined);
       var colorClass = feature ? getTokenColor(index, feature) : "";
-      let biasColor : BiasColor = "green";
-      if (colorClass.includes("green")) biasColor = "green";
-      else if (colorClass.includes("yellow")) biasColor = "yellow";
-      else if (colorClass.includes("purple")) biasColor = "purple";
-      else biasColor = "red";
-      colorToIsDetectedMap[biasColor] = true;
-      if (biasVisibility[biasColor] === false) colorClass = "";
+      if (colorClass) {
+        const biasColor = colorClass.split("-")[2];
+        if (!localVisibility[biasColor as BiasColor]) {
+          colorClass = "";
+        }
+      }
       return (
         <span key={index} className={`px-1 ${colorClass}`}>
           {token}
         </span>
       );
     });
-    // TODO: Fix this uncaught timeout in the below setState
-    // try {
-    //   setBiasIsDetectedMap(colorToIsDetectedMap);
-    // } catch (error) {
-    //   console.log(error);
-    // }
+    if (renderStage === 0) { 
+      isBiasNamesReady = true;} 
     return coloredTokens;
   };
+
+  useEffect(() => {
+    if (renderStage === 0 && isBiasNamesReady) {
+      setBiasColorToBiasNameMap(biasColorToBiasNameMap);
+      setRenderStage(1);
+    } else if (renderStage >= 2) {
+      // Because the above code is printing object Object, we need to use JSON.stringify
+      localVisibility = biasVisibility;
+    }
+  }, [renderStage, isBiasNamesReady, biasVisibility]);
+
 
   return (
     <div className="p-4 pb-7 bg-sidebar-bg rounded-md flex flex-col space-y-6 flex-grow max-w-[933px] overflow-y-auto" style={{ width: 'calc(85% + 20px)' }}>
@@ -72,7 +101,9 @@ const AnswerDisplay: React.FC<AnswerDisplayProps> = ({ query, answer, biasVisibi
         <p className="text-white text-[8px] sm:text-[10px] md:text-xs lg:text-sm"><strong>Question:</strong> {query}</p>
         <p className="text-white text-[8px] sm:text-[10px] md:text-xs lg:text-sm"><strong>Forecast Probability:</strong> {answer.forecast}</p>
         <p className="text-white text-[8px] sm:text-[10px] md:text-xs lg:text-sm"><strong>Forecaster Rationale:</strong></p>
-        <p className="text-white text-[8px] sm:text-[10px] md:text-xs lg:text-sm break-all">{renderRationale()}</p>
+        <p className="text-white text-[8px] sm:text-[10px] md:text-xs lg:text-sm break-all">
+          {renderRationale()}
+        </p>
       </div>
     </div>
   );
