@@ -81,3 +81,26 @@ export type Answer = {
     [key: string]: number[];
   };
 }
+
+// BiasColor is a type that represents the different colors that can be used to represent bias in the forecaster rationale
+export type BiasColor = "green" | "yellow" | "purple" | "red" ;
+// BiasToBooleanMap is a type that represents a map from BiasColor to a boolean value
+// The use of this type is to represent the visibility of each bias color in the forecaster rationale:
+  // BiasVisibility = maps each BiasColor to a boolean value that represents whether the bias of that color should be visible or not (user can toggle visibility)
+  // BiasIsDetectedMap = maps each BiasColor to a boolean value that represents whether the bias of that color is detected in the forecaster rationale
+export type BiasColorToBooleanMap = {
+  [key in BiasColor]: boolean;
+}
+export type BiasColorToBiasNameMap = {
+  [key in BiasColor]: string;
+}
+
+export const isBiasColorToBiasNameMap = (content: any): content is BiasColorToBiasNameMap => {
+  return (
+    typeof content.green === 'string' &&
+    typeof content.yellow === 'string' &&
+    typeof content.purple === 'string' &&
+    typeof content.red === 'string'
+  );
+}
+

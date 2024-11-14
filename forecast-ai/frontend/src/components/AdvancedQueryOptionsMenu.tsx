@@ -14,13 +14,13 @@ type AdvancedQueryOptionsMenuProps = {
 }
 
 const AdvancedQueryOptionsMenu: React.FC<AdvancedQueryOptionsMenuProps> = ({ isMenuOpen, setIsMenuOpen, setRequest, submitRequest }) => {
-    const [totalSourcesToCollect, setTotalSourcesToCollect] = useState<number>(10);
+    const [totalSourcesToCollect, setTotalSourcesToCollect] = useState<number>(5);
     const [newsRatio, setNewsRatio] = useState<number>(60);
     const [xRatio, setXRatio] = useState<number>(20);
     const [facebookRatio, setFacebookRatio] = useState<number>(20);
     const [fromDate, setFromDate] = useState<Date>();
     const [toDate, setToDate] = useState<Date>();
-    const [totalSourcesToDisplay, setTotalSourcesToDisplay] = useState<number>(5);
+    const [totalSourcesToDisplay, setTotalSourcesToDisplay] = useState<number>(2);
     const [displayTotalRatioUnder100Menu, setDisplayTotalRatioUnder100Menu] = useState<boolean>(false);
 
     const menuRef = useRef<HTMLDivElement | null>(null);

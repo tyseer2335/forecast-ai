@@ -28,6 +28,19 @@ Rating: {{ insert your rating }}"""
 
 
 def get_relevance_score(articles: dict[str, list[Article]], forecasting_question: str, client: any):
+    """
+    Assigns a relevance score to each article based on its alignment with a forecasting question.
+
+    Args:
+        articles (dict[str, list[Article]]): A dictionary where keys are source names, and values are lists of 
+            `Article` objects to be evaluated.
+        forecasting_question (str): The forecasting question to which the articles' relevance is measured.
+        client (any): The client object used for making API requests to an LLM or similar service.
+
+    Modifies:
+        Each `Article` object's `score` attribute is set to a relevance score (1 to 6) based on the LLM's assessment, 
+        with a default score of 1 for invalid ratings.
+    """
     # get relevance score for each article wrt original forecasting question using LLM
     for key in articles.keys():
         for article in articles[key]:
@@ -48,6 +61,23 @@ def get_relevance_score(articles: dict[str, list[Article]], forecasting_question
 
 def sort_and_filter(articles: dict[str, list[Article]], n: int, percentage_per_source: dict[str, float]) -> \
         dict[str, list[Article]]:
+    """
+    Filters and sorts articles to return the top N most relevant articles per source.
+
+    Args:
+        articles (dict[str, list[Article]]): A dictionary where keys are source names, and values are lists of 
+            `Article` objects that have been scored for relevance.
+        n (int): The total number of top articles to retain across all sources.
+        percentage_per_source (dict[str, float]): A dictionary where keys are source names, and values are the 
+            percentage of the top N articles to keep for each source.
+
+    Returns:
+        dict[str, list[Article]]: A dictionary containing the top relevant articles for each source, sorted by score.
+            The number of articles per source is determined by `percentage_per_source`.
+
+    Raises:
+        Exception: Raises an exception if an error occurs during sorting or filtering.
+    """
     # return N most relevant articles
     filtered_articles = {}
     for source in articles.keys():
