@@ -105,4 +105,3 @@ export const isBiasColorToBiasNameMap = (content: any): content is BiasColorToBi
     typeof content.red === 'string'
   );
 }
-
