@@ -20,7 +20,7 @@ Project Team Leads:
 
 A software platform that gathers global data to enhance an AI agent's ability to forecast significant future events and visualize AI rational and cognitive bias.
 
-We’re building a website that enables users to prompt forecasting questions like ‘will Kamala Harris win the 2024 election?’, then gather relevant global data to validate, get statistics, then feed to the AI forecasting model. Output of AI rational will be then visualized to make it easy for users to identify the cognitive bias.
+We’re building a website that enables users to prompt forecasting questions like ‘who will win the 2025 Canadian Election?’, then gather relevant global data to validate, get statistics, then feed to the AI forecasting model. Output of AI rational will be then visualized to make it easy for users to identify the cognitive bias.
 
 The Problems we’re solving make it easy for researchers to make judgement in order to improve AI forecasting models, and understand bias.
 
@@ -41,7 +41,7 @@ The Problems we’re solving make it easy for researchers to make judgement in o
 3. **User-Friendly Query System**
    - **Purpose**: To allow users to ask complex questions simply.
    - **Details**: 
-     - Users can pose questions such as “Will Kamala Harris win the 2024 election?” and receive comprehensive AI-generated forecasts.
+     - Users can pose questions such as “Who will win the 2025 Canadian Election?” and receive comprehensive AI-generated forecasts.
      - The system automatically gathers relevant data, validates it, and provides a clear output that users can easily interpret.
 
 ---
@@ -63,21 +63,21 @@ Our application is accessible online. Follow these steps to get started and expl
 
 #### 2. Ask a Forecasting Question
    - **Purpose**: Enter questions (e.g., “Who will win the 2025 Canadian election?”) to receive AI-generated forecasts.
-   - **Steps**: Go to **Ask a Question**, type your query, and click **Submit**.
+   - **Steps**: Go to **Ask a Question**.
+     - Select the **date range** for relevant data sources and choose the **percentage of sources** you want the AI to consider.
+     - Type your query and click **Submit**.
 
 #### 3. Cognitive Bias Detection
    - **Purpose**: Analyze biases in AI forecasts with a color-coded heatmap.
    - **Steps**: Each forecast will be color-coded to indicate reliability (darker colors indicate higher bias).
 
-#### 5. Account Management
+#### 4. Account Management
    - **Purpose**: Update settings, reset passwords, and log out.
-   - **Steps**: Go to **Settings** to manage your account or **Log Out** to end your session.
-
+   - **Steps**: Go to **Settings** to manage your account or **Log Out** to end your session. 
+  
 ---
 
-
-### Instructions to Set Up and Run the Project
-
+### Development Requirements 
 0. Ensure you have Node.js, npm, git, and an IDE such as VS Code installed.
 
    - **Node.js and npm install guide**: [Node.js & npm](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm)
