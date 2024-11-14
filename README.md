@@ -77,7 +77,7 @@ Our application is accessible online. Follow these steps to get started and expl
   
 ---
 
-### Development Requirements 
+## Development Requirements 
 0. Ensure you have Node.js, npm, git, and an IDE such as VS Code installed.
 
    - **Node.js and npm install guide**: [Node.js & npm](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm)
