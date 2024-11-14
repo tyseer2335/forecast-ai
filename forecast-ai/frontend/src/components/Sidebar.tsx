@@ -5,6 +5,40 @@ import OwlLogo from '../assets/owl.svg';
 import SettingsLogo from '../assets/settings.svg';
 import DeleteIcon from '../assets/close-menu-button.svg';
 
+/**
+ * Sidebar component that displays a list of chat sessions, categorized by time period, with options to start a new chat session, delete existing chats, and access settings.
+ * 
+ * Props:
+ * - `newChatId`: (optional) If provided, triggers the selection of a new chat session by its ID.
+ * 
+ * State:
+ * - `isSettingsOpen`: Boolean indicating whether the settings panel is open.
+ * - `chats`: Array of chat objects fetched from Firestore, organized by time periods (today, last 7 days, etc.).
+ * - `selectedChatId`: Currently selected chat session ID.
+ * - `hoveredChatId`: ID of the chat currently hovered over, used to display delete options.
+ * - `deletingChatId`: ID of the chat being deleted, if any.
+ * - `deletingChatTitle`: Title of the chat being deleted, if any.
+ * 
+ * Functionality:
+ * - `categorizeChats`: Helper function to group chat sessions by time period for better organization.
+ * - `NewChatSessionButton`: Renders a button to start a new chat session.
+ * - `ChatSession`: Renders individual chat sessions in the sidebar.
+ * - `DeleteChatButton`: Provides an option to delete chat sessions with a confirmation dialog.
+ * - `toggleSettings`: Opens/closes the settings panel.
+ * - `handleChatClick`: Updates the selected chat session, refreshing the UI.
+ * 
+ * Firebase:
+ * - Fetches chat data for the logged-in user, organized by last update timestamp.
+ * - Enables real-time updates on chat data via Firestore onSnapshot listener.
+ * 
+ * UI:
+ * - The component is styled to fit within a sidebar, supporting responsive design.
+ * - Conditional rendering is used to display dialogs for settings and chat deletion.
+ * - Uses images and icons for a visually enhanced layout (e.g., settings and delete icons).
+ * 
+ * Note: Redirects to the login page if `userId` is not found in local storage.
+ */
+
 
 type SidebarProps = {
   newChatId: string | null;

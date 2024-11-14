@@ -1,3 +1,24 @@
+/**
+ * Tailwind CSS Base and Custom Body Styles
+ *
+ * This CSS file integrates Tailwind CSS's `base`, `components`, and `utilities` layers
+ * while providing additional custom styles for `body` and `code` elements.
+ *
+ * Tailwind CSS:
+ * - `@tailwind base;` loads foundational styles such as resets.
+ * - `@tailwind components;` imports reusable component classes.
+ * - `@tailwind utilities;` loads utility classes for quick styling.
+ *
+ * Custom Styles:
+ * - `body`: Sets default font family, removes margin, and applies antialiasing for smooth rendering.
+ * - `code`: Sets a monospaced font family for code blocks for readability.
+ *
+ * Font Families:
+ * - `body`: Uses system fonts for a clean and consistent look across different operating systems.
+ * - `code`: Uses monospaced fonts to differentiate code blocks visually.
+ */
+
+
 .loader {
 	border-top-color: #3498db;
 	-webkit-animation: spinner 1.2s linear infinite;

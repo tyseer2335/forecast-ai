@@ -4,6 +4,31 @@ import axios from "axios";
 import BookmarkButton from "../assets/bookmark-button.svg";
 import ShareButton from "../assets/share-button.svg";
 
+/**
+ * HeaderBar Component
+ *
+ * This component displays a header bar containing:
+ * - An optional title centered in the header.
+ * - Buttons for bookmarking, sharing, and accessing the user's profile.
+ * - A server status indicator to show whether the server is up, down, or in a loading state.
+ *
+ * @component
+ *
+ * Props:
+ * - `title` (optional): A string representing the title to be displayed in the header.
+ *
+ * State:
+ * - `serverStatus`: Indicates the server status, which can be "up", "down", or "loading".
+ *
+ * Behavior:
+ * - Fetches the server status on component mount.
+ * - Updates the server status indicator based on the API response.
+ * - Shows a loading indicator, a green indicator if the server is up, or a red indicator if the server is down.
+ *
+ * @returns {JSX.Element} The HeaderBar component with title, buttons, and server status.
+ */
+
+
 type HeaderBarProps = {
     title?: string;
 }

@@ -1,6 +1,24 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 
+/**
+ * LearnMore Component
+ *
+ * This component provides information about the forecastAI application and includes a back button to navigate back to the login page.
+ *
+ * @component
+ * 
+ * Props:
+ * - None
+ *
+ * Behavior:
+ * - Displays a message about the development of forecastAI by the University of Toronto, Department of Computer Science.
+ * - Includes a "Back to Login" button, which navigates the user back to the login page upon click.
+ *
+ * @returns {JSX.Element} The LearnMore component containing informational text and a navigation button.
+ */
+
+
 const LearnMore: React.FC = () => {
   const navigate = useNavigate(); 
 

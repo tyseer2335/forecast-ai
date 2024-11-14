@@ -11,6 +11,27 @@ import LearnMore from './components/LearnMore';
 import { auth } from './components/firebase';
 import { onAuthStateChanged } from 'firebase/auth';
 
+/**
+ * App Component
+ *
+ * The main entry point for the application, setting up routing and handling authentication state.
+ *
+ * Key Features:
+ * - **Auth Check**: Redirects users to the login page if they are not authenticated and try to access the main app route (`/`).
+ * - **Router Setup**: Defines the main routes within the application, using `react-router-dom` for client-side routing.
+ * - **Routes**:
+ *   - `/login`: Renders the `Login` component for user sign-in.
+ *   - `/signup`: Renders the `Signup` component for user account creation.
+ *   - `/logout`: Renders the `Logout` component, which logs the user out and redirects to the login page.
+ *   - `/`: Renders the `MainContainer` component, the main app content, accessible only after authentication.
+ *   - `/recover-password`: Renders the `RequestPasswordReset` component to initiate password reset.
+ *   - `/handle-action`: Renders the `HandleAction` component to handle Firebase actions such as email verification.
+ *   - `/reset-password`: Renders the `ResetPassword` component for users to set a new password after a reset.
+ *   - `/learn-more`: Renders the `LearnMore` component with information about the application.
+ *
+ * The component listens for authentication state changes to update the UI or trigger navigation based on user authentication status.
+ */
+
 
 const App: React.FC = () => {
   // Auth Check: Set up a listener to check the authentication state

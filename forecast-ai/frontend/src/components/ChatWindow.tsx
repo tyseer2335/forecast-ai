@@ -7,6 +7,42 @@ import { v4 as uuidv4 } from "uuid";
 import { Chat, BiasColor } from "../hooks/types";
 
 
+/**
+ * ChatWindow Component
+ *
+ * This component displays a scrollable chat window with chat messages, answer displays,
+ * and a container for sources related to each chat message.
+ *
+ * Props:
+ * - `chats`: An array of `Chat` objects representing individual chat entries. Each chat includes:
+ *   - `query`: The user's query string.
+ *   - `sources`: An array of sources linked to the chat response.
+ *   - `answer`: The response to the user's query, if available.
+ *   - `error`: Any error message related to the chat response.
+ *   - `loading`: A boolean indicating whether the response is currently loading.
+ *   - `status`: A status message associated with the chat processing state.
+ *
+ * Internal State:
+ * - `biasVisibility`: A map defining visibility of bias color categories, used for filtering chat display elements by bias types.
+ * - `biasColorToBiasNameMap`: A map to store bias names corresponding to specific colors, updating dynamically as components render.
+ * - `renderStage`: Tracks stages in the rendering process, allowing components to use updated `biasColorToBiasNameMap` values at the appropriate time.
+ *
+ * Rendering Logic:
+ * - Each `Chat` renders a `ChatMessage`, a `SourcesContainer`, and optionally an `AnswerDisplay` if an answer is available.
+ * - Uses a scroll ref (`bottomRef`) to auto-scroll to the latest chat message.
+ *
+ * Usage:
+ * Place `ChatWindow` within a parent container to display a live chat interface, passing an array of `Chat` objects as `chats`.
+ *
+ * Example:
+ * ```jsx
+ * <ChatWindow chats={chatData} />
+ * ```
+ *
+ * @module ChatWindow
+ */
+
+
 type ChatWindowProps = {
   chats: Chat[];
 };

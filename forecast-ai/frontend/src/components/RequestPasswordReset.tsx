@@ -4,6 +4,33 @@ import { auth } from './firebase';
 import { NavLink } from 'react-router-dom'; 
 import "../css/responsive-custom-css.css";
 
+/**
+ * RequestPasswordReset Component
+ * 
+ * This component provides a form for users to request a password reset email.
+ * 
+ * State:
+ * - `email`: User's email address, entered into the form.
+ * - `message`: Success message displayed if the password reset email is sent.
+ * - `error`: Error message displayed if there is an issue sending the password reset email.
+ * 
+ * Functions:
+ * - `handlePasswordReset`: Handles the password reset request when the form is submitted.
+ *   - Sends a password reset email using Firebase Authentication's `sendPasswordResetEmail` function.
+ *   - Displays a success message if the email is successfully sent.
+ *   - Displays an error message if there is an issue.
+ * 
+ * UI:
+ * - A form with an email input field and a submit button to initiate the password reset request.
+ * - Conditionally renders success or error messages based on the outcome of the password reset request.
+ * - Provides a "Back to Login" link for easy navigation back to the login page.
+ * 
+ * Styling:
+ * - Uses responsive design classes for mobile-friendliness.
+ * - Includes custom classes and CSS transitions for button effects.
+ */
+
+
 const RequestPasswordReset: React.FC = () => {
   const [email, setEmail] = useState('');
   const [message, setMessage] = useState(''); 

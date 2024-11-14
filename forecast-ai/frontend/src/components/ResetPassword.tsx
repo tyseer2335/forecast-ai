@@ -5,6 +5,35 @@ import { auth } from './firebase';
 import zxcvbn from 'zxcvbn'; // Password strength checking 
 import { EyeIcon, EyeSlashIcon } from '@heroicons/react/24/solid'; // Import the icons
 
+/**
+ * @file ResetPassword.tsx
+ * 
+ * @description
+ * The `ResetPassword` component is a React functional component that allows users to reset their passwords.
+ * It uses Firebase for password reset functionality, and displays UI feedback for password strength,
+ * as well as success or error messages based on the reset attempt.
+ * 
+ * @component
+ * 
+ * Features:
+ * - Retrieves a password reset code (`oobCode`) from the URL.
+ * - Allows the user to input a new password and confirm it.
+ * - Validates password strength using the `zxcvbn` library and checks that passwords match.
+ * - Displays password strength feedback and toggle visibility icons.
+ * - Provides success or error messages for user guidance.
+ * - Redirects to the login page if the reset is successful, or if `oobCode` is missing or invalid.
+ * 
+ * @returns {React.FC} 
+ * Renders the password reset form with input fields for the new password, a password strength indicator,
+ * and error/success messages. The component is responsive and styled for an enhanced user experience.
+ * 
+ * @dependencies
+ * - Firebase Auth (for password reset functionality)
+ * - zxcvbn (for password strength checking)
+ * - React Router DOM (for navigation and handling URL parameters)
+ */
+
+
 const ResetPassword: React.FC = () => {
   const [searchParams] = useSearchParams();
   const oobCode = searchParams.get('oobCode'); // Get the password reset code from URL

@@ -16,6 +16,33 @@ import RegionImage from "../assets/region-image.svg";
 import { BiasColor, BiasColorToBooleanMap, BiasColorToBiasNameMap, SourceObject, isBiasColorToBiasNameMap } from "../hooks/types";
 import { biasColorToBiasNameMap } from "../hooks/constants";
 
+/**
+ * @file SourceSection.tsx
+ * 
+ * @description
+ * The `SourceSection` component displays source-specific data, including detected cognitive biases
+ * and various metrics like views, trending rate, and region. It enables users to toggle visibility
+ * for each detected bias type (color-coded) and integrates `SourceCard` to display the primary source content.
+ * 
+ * @component
+ *
+ * Features:
+ * - **Bias Toggle Buttons**: Allows toggling of different bias categories (e.g., green, yellow, purple, red) with distinct icons for each.
+ * - **Bias Name Mapping**: Dynamically maps color-coded biases to descriptive names based on `BiasColorToBiasNameMap`.
+ * - **Bias Visibility Control**: Controls the visibility of each bias type based on user toggles, and adjusts the detected bias list dynamically.
+ * - **Metric Display**: Shows key metrics (Views Count, Trending Rate, Region) associated with the source.
+ * - **Responsive Design**: Adjusts layout and style based on screen size, using Tailwind CSS for flexibility.
+ *
+ * @param {SourceSectionProps} props - Props include `source` (source data), `biasVisibility` (map to control bias visibility),
+ *                                      `setBiasVisibility` (state updater for bias visibility), `biasColorToBiasNameMap`
+ *                                      (maps bias colors to names), `renderStage` (render stage indicator for bias names),
+ *                                      and `setRenderStage` (state updater for render stage).
+ *
+ * @returns {React.FC}
+ * Renders the source information and detected biases with toggle controls and displays metrics related to each source.
+ * It utilizes `SourceCard` for displaying the main source data and renders the detected biases as a list of toggleable items.
+ */
+
 
 type SourceSectionProps = {
     source: SourceObject;

@@ -1,3 +1,30 @@
+/**
+ * Custom Range Slider and Date Picker Styles
+ *
+ * This CSS file customizes the appearance of HTML range sliders and date picker components, 
+ * including styles for both WebKit and Mozilla browsers, as well as specific adjustments 
+ * for the date picker structure, colors, and sizing.
+ *
+ * Range Slider Styles:
+ * - Customizes the track appearance, thumb styles, and hover opacity effect.
+ *
+ * Date Picker Styles (using `rdp-root` class as base):
+ * - Defines primary accent colors and background styles, border, and sizing for day buttons.
+ * - Customizes the month navigation buttons, month caption, weekday labels, and day buttons.
+ *
+ * Classes and Custom Properties:
+ * - `.rdp-root`: Base styling for the date picker container.
+ * - `--rdp-accent-color`: Primary color used for selected dates and chevrons.
+ * - `.rdp-day_button`: Styling for individual day buttons, including size and color.
+ * - `.rdp-button_next` and `.rdp-button_previous`: Dimensions for navigation buttons.
+ * - `.rdp-month_caption`: Adjusts spacing and color for month caption.
+ * - `.rdp-chevron`: Controls color of navigation chevron icons.
+ *
+ * Compatibility:
+ * - Custom styling for range slider thumb in WebKit (`::-webkit-slider-thumb`) and Mozilla (`::-moz-range-thumb`).
+ * - Supports hover states and transition effects for a smooth user experience.
+ */
+
 input[type="range"] {
     -webkit-appearance: none;
     height: 5px;

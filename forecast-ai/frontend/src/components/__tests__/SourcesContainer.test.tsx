@@ -2,6 +2,34 @@
 import { fireEvent, render } from "@testing-library/react";
 import SourcesContainer from "../SourcesContainer";
 
+/**
+ * 
+ * Unit tests for the SourcesContainer component, which displays a list of sources with their
+ * respective information such as title, text, image, logo, and metrics. Users can navigate 
+ * through the sources using increment and decrement buttons.
+ * 
+ * The tests in this suite verify:
+ * - The initial display of the first source's content.
+ * - Proper display of the next source when the increment button is clicked.
+ * - Proper display of the previous source when the decrement button is clicked.
+ * - Boundary conditions to ensure the display does not go beyond the first or last source 
+ *   in the list when trying to increment or decrement past the available sources.
+ * 
+ * Mock Data:
+ * - A list of two sample sources, each containing attributes such as title, text, image URL, 
+ *   logo URL, and metrics for testing purposes.
+ * 
+ * Tests:
+ * - **Initial Source Display:** Ensures the first source is displayed initially.
+ * - **Next Source Display:** Verifies that clicking the increment button displays the next source.
+ * - **Previous Source Display:** Verifies that clicking the decrement button after incrementing 
+ *   displays the previous source.
+ * - **Boundary Check on Increment:** Ensures that clicking the increment button on the last source 
+ *   keeps displaying the last source.
+ * - **Boundary Check on Decrement:** Ensures that clicking the decrement button on the first source 
+ *   keeps displaying the first source.
+ */
+
 const sources = [
     { 
         title: "Who Is Favored To Win The 2024 US Election?",

@@ -6,6 +6,33 @@ import PromptBar from "../PromptBar";
 import { auth } from "../firebase";
 import { v4 as uuidv4 } from "uuid";
 
+
+/**
+ * 
+ * Unit tests for the PromptBar component, which allows users to set query options
+ * and submit queries to retrieve responses from a backend server. The component
+ * interacts with multiple functionalities, including API calls, input fields, and 
+ * conditional rendering based on the server's response. This test suite aims to 
+ * verify the functionality, accuracy, and resilience of the PromptBar component.
+ * 
+ * This suite of tests includes:
+ * - Mocking dependencies, such as axios, firebase, uuid, and react-router-dom.
+ * - Testing successful API requests with expected payloads and data.
+ * - Testing error handling for failed API requests.
+ * - Testing server status checks and handling of server-down scenarios.
+ * 
+ * Dependencies:
+ * - jest: Testing framework.
+ * - axios: Mocked to simulate API calls.
+ * - react-router-dom: Mocked navigation to check redirection and route handling.
+ * 
+ * Mocks:
+ * - `axios.post`: Mocked to simulate API requests.
+ * - `auth.currentUser`: Mocked to represent the logged-in user.
+ * - `uuidv4`: Mocked to return a static UUID for consistency in testing.
+ */
+
+
 jest.mock("axios");
 jest.mock("../firebase");
 jest.mock("uuid");
