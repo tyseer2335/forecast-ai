@@ -50,18 +50,7 @@ type ChatWindowProps = {
 const ChatWindow: React.FC<ChatWindowProps> = ({ chats }) => {
     
   const bottomRef = useRef<HTMLDivElement>(null);
-  const [visibleBiasColor, setVisibleBiasColor] = useState<BiasColor>("green");
-
-  const [renderStage, setRenderStage] = useState(0);
-  // Time Line of renderStage
-  // 0: initial stage
-  // 0 --> 1(exclusive): AnswerDisplay can be rendered with dummy biasColorVisiility
-  // 1: AnswerDisplay rendered and biasColorToBiasNameMap updated
-  // 1 --> 2(exclusive): SourceSection can use biasColorToBiasNameMap now(update local NamesDict )
-  // 2: SourceSection is rendered with Visibility map ready to use.
-  // 2 --> ...: AnswerDisplay listen to changes in biasVisibility continuously,
-  //            SourceSection can stop listening to changes in biasVisibility
-
+  const [visibleBiasColor, setVisibleBiasColor] = useState<BiasColor | "">("green");
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [chats]);
