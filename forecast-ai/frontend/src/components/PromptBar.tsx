@@ -238,7 +238,7 @@ const PromptBar: React.FC<PromptBarProps> = ({
         toggleLoading(false);
         let errorMessage =
           (error as any).response?.data?.detail ||
-          "Error generating answer to queryy";
+          "Error generating answer to query";
         if (serverDown) {
           errorMessage =
             "Server is down. Please wait for the server to load up in 1 minute.";
