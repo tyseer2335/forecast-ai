@@ -89,11 +89,11 @@ const SourceSection: React.FC<SourceSectionProps> = ({ source, biasVisibility, s
         // biasName is in form of "feature2_overconfidence_bias" initially
         biasName = biasName.split("_").slice(1).map((word) => word.charAt(0).toUpperCase() + word.slice(1)).join(" ");
         return (
-            <li className="text-mid-light-grey text-[8px] md:text-[10px] lg:text-[11px] xl:text-xs font-semibold flex justify-between items-center space-x-3">
+            <li className="text-mid-light-grey text-[8px] md:text-[10px] lg:text-[11px] xl:text-xs font-semibold flex space-x-3">
                 <button>
                     <img src={getButtonImg(color)} alt={`${color}-toggle-btn`} className="w-4 h-2 md:w-5 md:h-3 lg:w-6 lg:h-3 xl:w-7 xl:h-4" onClick={() => handleToggleVisibility(color)} />
                 </button>
-                <p style={{textAlign: "left"}}>{biasName}</p>
+                <p>{biasName}</p>
             </li>
         )
     }
