@@ -51,6 +51,7 @@ async def websocket_status(websocket: WebSocket, query_id: str):
             await websocket.receive_text()  # Keeps connection open
     except:
         del active_connections[query_id]
+    finally:
         await websocket.close()
 
 

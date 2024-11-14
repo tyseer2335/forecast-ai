@@ -39,7 +39,7 @@ const PromptBar: React.FC<PromptBarProps> = ({
   addAnswer,
   addError,
   toggleLoading,
-  addStatus
+  addStatus,
 }) => {
   const [input, setInput] = useState("");
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -110,7 +110,7 @@ const PromptBar: React.FC<PromptBarProps> = ({
       console.error("WebSocket error: ", error);
     };
 
-    socket.onclose = () => {
+    socket.onclose = (event) => {
       console.log("WebSocket connection closed");
       // if (!reconnectInterval.current) {
       //   reconnectInterval.current = setInterval(() => {
@@ -118,6 +118,10 @@ const PromptBar: React.FC<PromptBarProps> = ({
       //     connectWebSocket(queryId); // Attempt to reconnect
       //   }, 5000); // Reconnect every 5 seconds
       // }
+      if (event.code !== 1000) {
+        // Abnormal closure
+        setTimeout(() => connectWebSocket(queryId), 5000); // Try to reconnect after 5 seconds
+      }
     };
 
     socketRef.current = socket; // Save WebSocket instance to ref
@@ -166,7 +170,7 @@ const PromptBar: React.FC<PromptBarProps> = ({
           updatedRequest
         );
         const sources = convertResponseSourcesIntoSources(
-          response.data['Sources']
+          response.data["Sources"]
         );
         addSources(sources);
         const answer = convertResponseAnswerIntoAnswer(response.data);
@@ -175,7 +179,12 @@ const PromptBar: React.FC<PromptBarProps> = ({
         setRequest({});
         setSubmitRequest(false);
         try {
-          saveChatToDB({ query: input, sources: sources, answer: answer, loading: false });
+          saveChatToDB({
+            query: input,
+            sources: sources,
+            answer: answer,
+            loading: false,
+          });
           navigate("/");
         } catch (error) {
           console.error("Error handling submit:", error);
@@ -276,7 +285,11 @@ const PromptBar: React.FC<PromptBarProps> = ({
         className="bg-submit-btn-bg hover:bg-mid-light-grey w-8 h-8 lg:w-9 lg:h-9 xl:w-10 xl:h-10 rounded-full flex items-center justify-center"
         data-testid="query-submit-btn"
       >
-        <img src={SubmitButton} alt="submit-btn" className="w-5 h-5 lg:w-6 lg:h-6 xl:w-7 xl:h-7" />
+        <img
+          src={SubmitButton}
+          alt="submit-btn"
+          className="w-5 h-5 lg:w-6 lg:h-6 xl:w-7 xl:h-7"
+        />
       </button>
     </form>
   );
