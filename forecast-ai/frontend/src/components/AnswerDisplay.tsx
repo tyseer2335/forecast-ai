@@ -1,17 +1,9 @@
 import React, { useEffect, useRef } from "react";
-import { BiasColor, BiasColorToBiasNameMap, BiasColorToBooleanMap } from "../hooks/types";
-import { set } from "date-fns";
-import { render } from "@testing-library/react";
+import { Answer, BiasColor, BiasColorToBiasNameMap, BiasColorToBooleanMap } from "../hooks/types";
 
 type AnswerDisplayProps = {
   query: string;
-  answer: {
-    forecast: string;
-    forecaster_rationale: string;
-    llm_features: {
-      [key: string]: number[];
-    };
-  };
+  answer: Answer;
   biasVisibility: BiasColorToBooleanMap;
   setBiasColorToBiasNameMap: React.Dispatch<React.SetStateAction<BiasColorToBiasNameMap>>;
   renderStage: number;
@@ -32,7 +24,7 @@ const AnswerDisplay: React.FC<AnswerDisplayProps> = ({ query, answer, biasVisibi
   var localVisibility : BiasColorToBooleanMap = biasVisibility;
 
   const getTokenColor = (tokenIndex: number, feature: string) => {
-    const metric = llmFeatures[feature][tokenIndex];
+    const metric = llmFeatures[feature][`token_${tokenIndex}`];
 
     if (metric === 0) {
       return "";
@@ -64,7 +56,7 @@ const AnswerDisplay: React.FC<AnswerDisplayProps> = ({ query, answer, biasVisibi
   const renderRationale = () => {
     const tokens = rationale.split(" ");
     var coloredTokens = tokens.map((token, index) => {
-      const feature = Object.keys(llmFeatures).find((key) => llmFeatures[key][index] !== undefined);
+      const feature = Object.keys(llmFeatures).find((key) => llmFeatures[key][`token_${index}`] !== undefined);
       var colorClass = feature ? getTokenColor(index, feature) : "";
       if (colorClass) {
         const biasColor = colorClass.split("-")[2];
@@ -78,8 +70,9 @@ const AnswerDisplay: React.FC<AnswerDisplayProps> = ({ query, answer, biasVisibi
         </span>
       );
     });
-    if (renderStage === 0) { 
-      isBiasNamesReady = true;} 
+    if (renderStage === 0) {
+      isBiasNamesReady = true;
+    } 
     return coloredTokens;
   };
 

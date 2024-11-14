@@ -76,19 +76,8 @@ const PromptBar: React.FC<PromptBarProps> = ({
   const convertResponseAnswerIntoAnswer = (responseAnswer: any) => {
     return { 
       forecast: responseAnswer['Forecast'], 
-      forecaster_rationale: responseAnswer['Forecaster Rationale'], 
-      llm_features: {
-        feature1_status_quo_bias: [
-          0.95, 0.95, 0.95, 0.95, 0.95, 0.95, 0.95, 0.95, 0.95, 0.95, 0.95, 0.95,
-          0.95, 0.95, 0.95, 0.95, 0.95, 0.95, 0.95, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-          0, 0, 0, 0.3, 0.3, 0.3, 0.3, 0.3, 0.3, 0.3, 0.3, 0, 0, 0, 0.6, 0.6, 0.6, 0.6,
-        ],
-        feature2_overconfidence_bias: [
-          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-        ],
-      },
+      forecaster_rationale: responseAnswer['Forecaster Rationale'],
+      llm_features: responseAnswer['llm_features']
     }
   }
 

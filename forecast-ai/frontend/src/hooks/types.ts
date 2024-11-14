@@ -78,7 +78,9 @@ export type Answer = {
   forecast: string;
   forecaster_rationale: string;
   llm_features: {
-    [key: string]: number[];
+    [key: string]: { 
+      [token: string]: number 
+    };
   };
 }
 
