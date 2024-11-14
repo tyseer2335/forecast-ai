@@ -117,6 +117,8 @@ def advanced_selenium_scrape_content(driver: webdriver.Chrome, url: str) -> dict
         # print(f"Redirected to {driver.current_url}, waiting for page to load...")
         pass
 
+    time.sleep(3)
+
     # Get the final URL after all redirections
     final_url = driver.current_url
 
