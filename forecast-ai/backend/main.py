@@ -5,7 +5,8 @@ from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from openai import OpenAI
 
-from query_to_answer import break_down_query, collect_news, scrapping_content, filtering, generate_forecast
+from query_to_answer import break_down_query, collect_news, scrapping_content, filtering, generate_forecast, \
+    generate_bias
 from utils import convert_to_article
 from model.forecast_request import ForecastRequest
 
@@ -118,11 +119,39 @@ async def query_to_answer(request: ForecastRequest, query_id: str):
         await send_status_update(query_id, "Generating forecast answer...")
         forecast_agent = generate_forecast.ForecastGenerator(client=client, model="gpt-4")
         answer = forecast_agent.generate_forecast(request, ranked_news_with_content)["answer"]
+        # answer = {'Question': 'is LLM truely reach AGI?', 'Forecaster ID': 'AI-Forecaster', 'Forecaster Rationale': "Key Facts:\n1. As of my pretraining knowledge cutoff in October 2023, the AI technology referred to as LLM (likely referring to large language models) had not reached AGI (Artificial General Intelligence). AGI refers to highly autonomous systems that outperform humans at most economically valuable work, and as of then, no AI system had demonstrated this level of capability.\n", 'Forecast': '10.0%', 'Sources': {'x.com': [{'title': 'Alex Volkov (Thursd/AI) (@altryne) on X - X', 'content': {}, 'url': 'https://news.google.com/rss/articles/CBMioAFBVV95cUxPNHFZQW0zOUM3ZVhtZy1HVEZmbXBSdlFubi1OYWFjSktBMEdlaks0NU84UmJaSTlyMF9tZkU0dERkdURhTzN2VVd0RkFhem15Q21POEpacUllc3p2cnZpRjdMRzV4ell1WGx0enhHc29IaVdHNE9hWjFoRDczY1l6ckwzLUJ0WFp2aGx1SGJOTkpycVRReVN0YVA5c2ZDMGxT?oc=5&hl=en-CA&gl=CA&ceid=CA:en', 'published_date': 'Mon, 11 Nov 2024 21:57:00 GMT', 'platform': 'automatic'}]}}
+        print(answer)
 
         state = 8
         await asyncio.sleep(0)
+        await send_status_update(query_id, "Generating bias...")
+        answer_with_bias = generate_bias.generate_bias(answer, client)
+        # {'Question': 'is LLM enough to reach AGI?', 'Forecaster ID': 'AI-Forecaster', 'Forecaster Rationale': 'Key Facts:\n1. As of my pretraining knowledge cutoff in October 2023, the AI technology referred to as LLM (likely referring to
+        # large language models) had not reached AGI (Artificial General Intelligence). AGI refers to highly autonomous systems that outperform humans at most economically valuable work, and as of then, no AI system had demonstrated this
+        # level of capability.\n', 'Forecast': '10.0%', 'Sources': {'x.com': [{'title': 'Alex Volkov (Thursd/AI) (@altryne) on X - X', 'content': {}, 'url': 'https://news.google.com/rss/articles/CBMioAFBVV95cUxPNHFZQW0zOUM3ZVhtZy1HVEZmbXB
+        # SdlFubi1OYWFjSktBMEdlaks0NU84UmJaSTlyMF9tZkU0dERkdURhTzN2VVd0RkFhem15Q21POEpacUllc3p2cnZpRjdMRzV4ell1WGx0enhHc29IaVdHNE9hWjFoRDczY1l6ckwzLUJ0WFp2aGx1SGJOTkpycVRReVN0YVA5c2ZDMGxT?oc=5&hl=en-CA&gl=CA&ceid=CA:en', 'published_date':
+        #  'Mon, 11 Nov 2024 21:57:00 GMT', 'platform': 'automatic'}]}, 'llm_features': {'statistical_reasoning': {'token_0': 0, 'token_1': 0, 'token_2': 0, 'token_3': 0, 'token_4': 0, 'token_5': 0, 'token_6': 0, 'token_7': 0, 'token_8':
+        # 0, 'token_9': 0, 'token_10': 0, 'token_11': 0, 'token_12': 0, 'token_13': 0, 'token_14': 0, 'token_15': 0, 'token_16': 0, 'token_17': 0, 'token_18': 0, 'token_19': 0, 'token_20': 0, 'token_21': 0, 'token_22': 0, 'token_23': 0, '
+        # token_24': 0, 'token_25': 0, 'token_26': 0, 'token_27': 0, 'token_28': 0, 'token_29': 0, 'token_30': 0, 'token_31': 0, 'token_32': 0, 'token_33': 0, 'token_34': 0, 'token_35': 0.1, 'token_36': 0, 'token_37': 0.1, 'token_38': 0,
+        # 'token_39': 0, 'token_40': 0, 'token_41': 0, 'token_42': 0, 'token_43': 0, 'token_44': 0, 'token_45': 0, 'token_46': 0, 'token_47': 0, 'token_48': 0, 'token_49': 0, 'token_50': 0, 'token_51': 0, 'token_52': 0, 'token_53': 0, 'to
+        # ken_54': 0, 'token_55': 0, 'token_56': 0, 'token_57': 0, 'token_58': 0}, 'statistical_refinement': {'token_0': 0, 'token_1': 0, 'token_2': 0, 'token_3': 0, 'token_4': 0, 'token_5': 0, 'token_6': 0, 'token_7': 0, 'token_8': 0, 't
+        # oken_9': 0, 'token_10': 0, 'token_11': 0, 'token_12': 0, 'token_13': 0, 'token_14': 0, 'token_15': 0, 'token_16': 0, 'token_17': 0, 'token_18': 0, 'token_19': 0, 'token_20': 0, 'token_21': 0, 'token_22': 0, 'token_23': 0, 'token
+        # _24': 0, 'token_25': 0, 'token_26': 0, 'token_27': 0, 'token_28': 0, 'token_29': 0, 'token_30': 0, 'token_31': 0, 'token_32': 0, 'token_33': 0, 'token_34': 0, 'token_35': 0, 'token_36': 0, 'token_37': 0, 'token_38': 0, 'token_39
+        # ': 0, 'token_40': 0, 'token_41': 0, 'token_42': 0, 'token_43': 0, 'token_44': 0, 'token_45': 0, 'token_46': 0, 'token_47': 0, 'token_48': 0, 'token_49': 0, 'token_50': 0.1, 'token_51': 0, 'token_52': 0.1, 'token_53': 0, 'token_5
+        # 4': 0, 'token_55': 0, 'token_56': 0, 'token_57': 0, 'token_58': 0}, 'causal_reasoning': {'token_0': 0, 'token_1': 0, 'token_2': 0, 'token_3': 0, 'token_4': 0, 'token_5': 0.1, 'token_6': 0, 'token_7': 0, 'token_8': 0, 'token_9':
+        # 0, 'token_10': 0, 'token_11': 0, 'token_12': 0, 'token_13': 0, 'token_14': 0.1, 'token_15': 0, 'token_16': 0, 'token_17': 0, 'token_18': 0, 'token_19': 0, 'token_20': 0, 'token_21': 0, 'token_22': 0, 'token_23': 0, 'token_24': 0
+        # , 'token_25': 0, 'token_26': 0, 'token_27': 0.1, 'token_28': 0.1, 'token_29': 0, 'token_30': 0.1, 'token_31': 0, 'token_32': 0.1, 'token_33': 0, 'token_34': 0.1, 'token_35': 0, 'token_36': 0, 'token_37': 0.1, 'token_38': 0, 'tok
+        # en_39': 0, 'token_40': 0, 'token_41': 0, 'token_42': 0.1, 'token_43': 0, 'token_44': 0, 'token_45': 0, 'token_46': 0, 'token_47': 0, 'token_48': 0, 'token_49': 0, 'token_50': 0, 'token_51': 0, 'token_52': 0, 'token_53': 0, 'toke
+        # n_54': 0.1, 'token_55': 0, 'token_56': 0.1, 'token_57': 0, 'token_58': 0.1}, 'statistical_causal_blend': {'token_0': 0, 'token_1': 0, 'token_2': 0, 'token_3': 0, 'token_4': 0, 'token_5': 0.1, 'token_6': 0, 'token_7': 0, 'token_8
+        # ': 0, 'token_9': 0, 'token_10': 0, 'token_11': 0, 'token_12': 0, 'token_13': 0, 'token_14': 0.1, 'token_15': 0, 'token_16': 0, 'token_17': 0, 'token_18': 0, 'token_19': 0, 'token_20': 0, 'token_21': 0, 'token_22': 0, 'token_23':
+        #  0, 'token_24': 0, 'token_25': 0, 'token_26': 0, 'token_27': 0.1, 'token_28': 0.1, 'token_29': 0, 'token_30': 0.1, 'token_31': 0, 'token_32': 0.1, 'token_33': 0, 'token_34': 0.1, 'token_35': 0.1, 'token_36': 0, 'token_37': 0.1,
+        # 'token_38': 0, 'token_39': 0, 'token_40': 0, 'token_41': 0, 'token_42': 0.1, 'token_43': 0, 'token_44': 0, 'token_45': 0, 'token_46': 0, 'token_47': 0, 'token_48': 0, 'token_49': 0, 'token_50': 0.1, 'token_51': 0, 'token_52': 0.
+        # 1, 'token_53': 0, 'token_54': 0.1, 'token_55': 0, 'token_56': 0.1, 'token_57': 0, 'token_58': 0.1}}}
+
+        state = 9
+        await asyncio.sleep(0)
         await send_status_update(query_id, "Process complete.")
-        return answer
+        return answer_with_bias
     except Exception as e:
         await send_status_update(query_id, f"Error: {str(e)}. State: {state}")
         raise HTTPException(status_code=500, detail=f"Error generating answer to query: {str(e)}. State: {state}")
