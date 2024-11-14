@@ -76,6 +76,7 @@ const Login: React.FC = () => {
         try {
             const result = await signInWithGoogle(); // signInWithGoogle returns UserCredential
             const user = result.user; // Access user from result
+            localStorage.setItem('userId', user.uid);
             console.log("Google login successful:", user);
             // Check if a user document exists and create one if it doesn't
             await checkAndCreateUserDocument(user.uid, user.email || "");
