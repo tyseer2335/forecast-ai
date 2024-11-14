@@ -164,9 +164,9 @@ const Sidebar: React.FC<SidebarProps> = ({ newChatId }) => {
       {chatList.length > 0 && (
         <>
           <h3 className="p-1 text-[10px] md:text-xs xl:text-sm text-light-grey mt-4 font-bold">{period}</h3>
-          {chatList.map((chat, index) => (
-          <ChatSession key={chat.id || index} chat={chat} />
-        ))}
+          {chatList.map((chat) => (
+            <ChatSession chat={chat} />
+          ))}
         </>
       )}
     </>
