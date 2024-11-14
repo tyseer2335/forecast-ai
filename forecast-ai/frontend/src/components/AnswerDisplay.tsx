@@ -13,6 +13,7 @@ type AnswerDisplayProps = {
 
 const AnswerDisplay: React.FC<AnswerDisplayProps> = ({ query, answer, biasVisibility, setBiasColorToBiasNameMap, renderStage, setRenderStage }) => {
   const { forecaster_rationale: rationale, llm_features: llmFeatures } = answer;
+  console.log("LLM Features: ", llmFeatures);
   var isBiasNamesReady = false;
   var biasColorToBiasNameMap : BiasColorToBiasNameMap = {
     green: "",
@@ -24,7 +25,7 @@ const AnswerDisplay: React.FC<AnswerDisplayProps> = ({ query, answer, biasVisibi
   var localVisibility : BiasColorToBooleanMap = biasVisibility;
 
   const getTokenColorOpacity = (tokenIndex: number, feature: string) => {
-    const metric = llmFeatures[feature][tokenIndex];
+    const metric = llmFeatures[feature][`token_${tokenIndex}`];
 
     if (metric === 0) {
       return "";
@@ -56,7 +57,7 @@ const AnswerDisplay: React.FC<AnswerDisplayProps> = ({ query, answer, biasVisibi
   const renderRationale = () => {
     const tokens = rationale.split(" ");
     var coloredTokens = tokens.map((token, index) => {
-      const feature = Object.keys(llmFeatures).find((key) => llmFeatures[key][index] !== undefined);
+      const feature = Object.keys(llmFeatures).find((key) => llmFeatures[key][`token_${index}`] !== undefined);
       var colorClass = feature ? getTokenColorOpacity(index, feature) : "";
 
       if (colorClass) {
@@ -81,6 +82,7 @@ const AnswerDisplay: React.FC<AnswerDisplayProps> = ({ query, answer, biasVisibi
 
   useEffect(() => {
     if (renderStage === 0 && isBiasNamesReady) {
+      console.log("Setting BiasColorToBiasNameMap in AnswerDisplay: ", biasColorToBiasNameMap);
       setBiasColorToBiasNameMap(biasColorToBiasNameMap);
       setRenderStage(1);
     } else if (renderStage >= 2) {

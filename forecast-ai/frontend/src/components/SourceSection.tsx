@@ -68,6 +68,7 @@ const SourceSection: React.FC<SourceSectionProps> = ({ source, biasVisibility, s
             return null;
         } else if (renderStage >= 1 && !isToggleMenuReadyWithNames) {
             localNames = biasColorToBiasNameMap;
+            console.log("Local Names Received in Menu", localNames);
         }
         const listOfBiases = (
             <ul className="mt-2 space-y-3 w-full">
@@ -86,8 +87,8 @@ const SourceSection: React.FC<SourceSectionProps> = ({ source, biasVisibility, s
     // Reusable component for individual Detected Bias
     const DetectedBias: React.FC<{ color: BiasColor, name: string }> = ({ color, name }) => {
         var biasName : string = name; // const biasName = biasColorToBiasNameMap[color];
-        // biasName is in form of "feature2_overconfidence_bias" initially
-        biasName = biasName.split("_").slice(1).map((word) => word.charAt(0).toUpperCase() + word.slice(1)).join(" ");
+        // biasName is in form of snake_case, convert it to Title Case
+        biasName = biasName.split('_').map((word) => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
         return (
             <li className="text-mid-light-grey text-[8px] md:text-[10px] lg:text-[11px] xl:text-xs font-semibold flex space-x-3">
                 <button>
