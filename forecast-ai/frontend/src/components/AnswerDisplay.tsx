@@ -22,7 +22,7 @@ const AnswerDisplay: React.FC<AnswerDisplayProps> = ({ query, answer, visibleBia
       console.log(`Error: ${error}, feature: ${feature}, tokenIndex: ${tokenIndex}`);
     }
     // Assign the style based on the metric
-    return `$bg-heatmap-${visibleBiasColor}-bg/${metric * 100}`;
+    return `bg-heatmap-${visibleBiasColor}-bg/${metric * 100}`;
   };
 
   const renderRationale = () => {
