@@ -14,39 +14,30 @@ import ViewsCountImage from "../assets/views-count-image.svg";
 import TrendingRateImage from "../assets/trending-rate-image.svg";
 import RegionImage from "../assets/region-image.svg";
 import { BiasColor, BiasColorToBooleanMap, BiasColorToBiasNameMap, SourceObject, isBiasColorToBiasNameMap } from "../hooks/types";
+import { biasColorToBiasNameMap } from "../hooks/constants";
 
 
 type SourceSectionProps = {
     source: SourceObject;
-    biasVisibility: BiasColorToBooleanMap;
-    setBiasVisibility: React.Dispatch<React.SetStateAction<BiasColorToBooleanMap>>;
-    biasColorToBiasNameMap: BiasColorToBiasNameMap;
-    renderStage: number;
-    setRenderStage: React.Dispatch<React.SetStateAction<number>>;
+    visibleBiasColor: BiasColor;
+    setVisibleBiasColor: React.Dispatch<React.SetStateAction<BiasColor>>;
 }
 
-const SourceSection: React.FC<SourceSectionProps> = ({ source, biasVisibility, setBiasVisibility, biasColorToBiasNameMap, renderStage, setRenderStage }) => {
-    var isToggleMenuReadyWithNames = false;
-    var localNames : BiasColorToBiasNameMap = {
-        green: "feature1_bias_1",
-        yellow: "feature2_bias_2",
-        purple: "feature3_bias_3",
-        red: "feature4_bias_4"
-    }
+const SourceSection: React.FC<SourceSectionProps> = ({ source, visibleBiasColor, setVisibleBiasColor }) => {
 
     const getButtonImg = (color: BiasColor) => {
         switch (color) {
             case "green":
-                if (biasVisibility.green) return GreenToggleButtonOn;
+                if (visibleBiasColor === "green") return GreenToggleButtonOn;
                 else return GreenToggleButtonOff;
             case "yellow":
-                if (biasVisibility.yellow) return YellowToggleButtonOn;
+                if (visibleBiasColor === "yellow") return YellowToggleButtonOn;
                 else return YellowToggleButtonOff;
             case "purple":
-                if (biasVisibility.purple) return PurpleToggleButtonOn;
+                if (visibleBiasColor === "purple") return PurpleToggleButtonOn;
                 else return PurpleToggleButtonOff;
             case "red":
-                if (biasVisibility.red) return RedToggleButtonOn;
+                if (visibleBiasColor === "red") return RedToggleButtonOn;
                 else return RedToggleButtonOff;
             default:
                 return GreenToggleButtonOn;
@@ -55,40 +46,13 @@ const SourceSection: React.FC<SourceSectionProps> = ({ source, biasVisibility, s
 
 
     const handleToggleVisibility = (color: BiasColor) => {
-        setBiasVisibility((prev) => {
-            return {
-                ...prev,
-                [color]: !prev[color]
-            }
-        })
+        setVisibleBiasColor(color);
     }
 
-    const DetectedBiases: React.FC = () => {
-        if (renderStage === 0) {
-            return null;
-        } else if (renderStage >= 1 && !isToggleMenuReadyWithNames) {
-            localNames = biasColorToBiasNameMap;
-            console.log("Local Names Received in Menu", localNames);
-        }
-        const listOfBiases = (
-            <ul className="mt-2 space-y-3 w-full">
-                {Object.keys(localNames).map((color) => {
-                    if (!localNames[color as BiasColor]) return null;
-                    return <DetectedBias color={color as BiasColor} name={localNames[color as BiasColor]} />
-                })}
-            </ul>
-        )
-        if (renderStage === 1) {
-            isToggleMenuReadyWithNames = true;
-        }
-        return listOfBiases;
-    }
-        
     // Reusable component for individual Detected Bias
-    const DetectedBias: React.FC<{ color: BiasColor, name: string }> = ({ color, name }) => {
-        var biasName : string = name; // const biasName = biasColorToBiasNameMap[color];
-        // biasName is in form of snake_case, convert it to Title Case
-        biasName = biasName.split('_').map((word) => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
+    const DetectedBias: React.FC<{ color: BiasColor }> = ({ color }) => {
+        // Get the Bias Name of this color in Title Case
+        const biasName = biasColorToBiasNameMap[color as BiasColor].split('_').map((word) => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
         return (
             <li className="text-mid-light-grey text-[8px] md:text-[10px] lg:text-[11px] xl:text-xs font-semibold flex space-x-3">
                 <button>
@@ -99,13 +63,6 @@ const SourceSection: React.FC<SourceSectionProps> = ({ source, biasVisibility, s
         )
     }
 
-    useEffect(() => {
-        if (renderStage === 1 && isToggleMenuReadyWithNames) {
-            setRenderStage(2);
-        }
-    }, [isToggleMenuReadyWithNames]);
-
-
     return (
         <div className="w-full flex-grow flex flex-col lg:flex-row space-y-4 lg:space-y-0 lg:space-x-5 justify-center items-center rounded-md h-[90%]">
             <SourceCard source={source} />
@@ -113,7 +70,12 @@ const SourceSection: React.FC<SourceSectionProps> = ({ source, biasVisibility, s
                 <div className="flex flex-col bg-sidebar-bg p-4 pb-7 w-full space-y-3 h-full lg:h-auto rounded-md items-start max-w-[150px] md:max-w-[192px] lg:max-w-[216px]">
                     <h4 className="font-semibold text-metrics-text text-[10px] md:text-xs lg:text-sm xl:text-base">Detected Biases</h4>
                     {/* List of Detected Biases */}
-                    <DetectedBiases />
+                    <ul className="space-y-2 w-full">
+                        <DetectedBias color="green" />
+                        <DetectedBias color="yellow" />
+                        <DetectedBias color="purple" />
+                        <DetectedBias color="red" />
+                    </ul>
                 </div>
                 <div className="flex flex-col bg-sidebar-bg p-4 pb-7 w-full h-full lg:h-auto space-y-4 md:space-y-6 lg:space-y-3 rounded-md items-start max-w-[150px] md:max-w-[192px] lg:max-w-[216px]">
                     <h4 className="font-semibold text-metrics-text text-[10px] md:text-xs lg:text-sm xl:text-base">Metrics</h4>

@@ -3,9 +3,9 @@ import React, { useEffect, useRef, useState } from "react";
 import ChatMessage from "./ChatMessage";
 import SourcesContainer from "./SourcesContainer";
 import AnswerDisplay from "./AnswerDisplay";
-import { BiasColorToBiasNameMap, Chat } from "../hooks/types";
 import { v4 as uuidv4 } from "uuid";
-import { BiasColorToBooleanMap } from "../hooks/types";
+import { Chat, BiasColor } from "../hooks/types";
+
 
 type ChatWindowProps = {
   chats: Chat[];
@@ -14,19 +14,8 @@ type ChatWindowProps = {
 const ChatWindow: React.FC<ChatWindowProps> = ({ chats }) => {
     
   const bottomRef = useRef<HTMLDivElement>(null);
-  const [biasVisibility, setbiasVisibility] = useState<BiasColorToBooleanMap>({
-    green: true,
-    yellow: true,
-    purple: true,
-    red: true,
-  });
-  // make another state of type BiasColorToBiasNameMap
-  var [biasColorToBiasNameMap, setBiasColorToBiasNameMap] = useState<BiasColorToBiasNameMap>({
-    green: "",
-    yellow: "",
-    purple: "",
-    red: "",
-  });
+  const [visibleBiasColor, setVisibleBiasColor] = useState<BiasColor>("green");
+
   const [renderStage, setRenderStage] = useState(0);
   // Time Line of renderStage
   // 0: initial stage
@@ -56,13 +45,10 @@ const ChatWindow: React.FC<ChatWindowProps> = ({ chats }) => {
             loading={chat.loading}
             status={chat.status}
             data-testid="sources-container"
-            biasVisibility={biasVisibility}
-            setbiasVisibility={setbiasVisibility}
-            biasColorToBiasNameMap={biasColorToBiasNameMap}
-            renderStage={renderStage}
-            setRenderStage={setRenderStage}
+            visibleBiasColor={visibleBiasColor}
+            setVisibleBiasColor={setVisibleBiasColor}
           />
-          {chat.answer && <AnswerDisplay query={chat.query} answer={chat.answer} biasVisibility={biasVisibility} setBiasColorToBiasNameMap={setBiasColorToBiasNameMap} renderStage={renderStage} setRenderStage={setRenderStage} />}
+          {chat.answer && <AnswerDisplay query={chat.query} answer={chat.answer} visibleBiasColor={visibleBiasColor} />}
         </div>
       ))}
     </div>
