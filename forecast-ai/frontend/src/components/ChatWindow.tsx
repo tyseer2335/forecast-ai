@@ -19,23 +19,23 @@ const ChatWindow: React.FC<ChatWindowProps> = ({ chats }) => {
     yellow: true,
     purple: true,
     red: true,
-    blue: true,
-    orange: true,
-    pink: true,
-    brown: true,
-    white: true,
   });
   // make another state of type BiasColorToBiasNameMap
-  var [biasColorToBiasNameMap, setBiasColorToBiasNameMap] = useState<BiasColorToBiasNameMap|{}>({
+  var [biasColorToBiasNameMap, setBiasColorToBiasNameMap] = useState<BiasColorToBiasNameMap>({
+    green: "",
+    yellow: "",
+    purple: "",
+    red: "",
   });
   const [renderStage, setRenderStage] = useState(0);
   // 0: initial stage
+  //    AnswerDisplay can be rendered
   // 1: AnswerDisplay rendered and biasColorToBiasNameMap updated
   //    SourceSection can use biasColorToBiasNameMap now (1*)
   // 2: (1*) is done, 
   //    AnswerDisplay can use biasVisibility now
-  // 3: (2*) is done, 
-  //    AnswerDisplay should listen to changes in biasVisibility,
+  // > 3: From here,
+  //    AnswerDisplay should listen to changes in biasVisibility continuously
   //    but SourceSection can stop listening to changes in biasVisibility(even if there is a change, ignore.)
 
   useEffect(() => {

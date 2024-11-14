@@ -21,74 +21,14 @@ type SourceSectionProps = {
     source: SourceObject;
     biasVisibility: BiasColorToBooleanMap;
     setBiasVisibility: React.Dispatch<React.SetStateAction<BiasColorToBooleanMap>>;
-    biasColorToBiasNameMap: BiasColorToBiasNameMap | {};
+    biasColorToBiasNameMap: BiasColorToBiasNameMap;
     renderStage: number;
     setRenderStage: React.Dispatch<React.SetStateAction<number>>;
 }
 
 const SourceSection: React.FC<SourceSectionProps> = ({ source, biasVisibility, setBiasVisibility, biasColorToBiasNameMap, renderStage, setRenderStage }) => {
-    // var localBiasColorToBiasNameMap: BiasColorToBiasNameMap = biasColorToBiasNameMap;
-    // console.log("biasColorToBiasNameMap", biasColorToBiasNameMap);
-    // const biasColorToBiasNameMap:  BiasColorToBiasNameMap = localStorage.getItem('biasColorToBiasNameMap') ? JSON.parse(localStorage.getItem('biasColorToBiasNameMap') || '{}') : {};
+    var biasColorToBiasNameMapCopy : BiasColorToBiasNameMap = JSON.parse(JSON.stringify(biasColorToBiasNameMap));
 
-    // useEffect(() => {
-    //     localBiasColorToBiasNameMap = biasColorToBiasNameMap;
-    // }, [biasColorToBiasNameMap]);
-
-    // useEffect(() => {
-    //     if (biasColorToBiasNameMap) {  // Ensure dict-color-to-names is defined before setting visibility
-    //       setDictColorToVisibility(...); // Update dict-color-to-visibility based on dict-color-to-names
-    //     }
-    //   }, [biasColorToBiasNameMap]);  // Run this effect when dict-color-to-names changes
-
-    const handleToggleVisibility = (color: BiasColor) => {
-        setBiasVisibility((prev) => {
-            return {
-                ...prev,
-                [color]: !prev[color]
-            }
-        })
-    }
-
-    var handleToggleVisibilityWrapper = (color: BiasColor) => {
-        return;
-    }
-
-    var DetectedBiasWrapper : React.FC<{ color: BiasColor }> = ({ color }) => {
-        return <></>;
-    }
-
-    var biasColorToBiasNameMapRef = React.useRef(biasColorToBiasNameMap);
-
-    // the below useEffect thinks biasColorToBiasNameMap is changing everytime, but it is not
-    // found that they are all the same dictionaries. To prevent the change, how do we handle this?
-    useEffect(() => {
-        if (biasColorToBiasNameMapRef.current === biasColorToBiasNameMap) {
-            return;
-        }
-        console.log(`Before: ${biasColorToBiasNameMapRef.current} After: ${biasColorToBiasNameMap}`);
-        biasColorToBiasNameMapRef.current = biasColorToBiasNameMap;
-            
-        if (biasColorToBiasNameMap) {
-            handleToggleVisibilityWrapper = (color: BiasColor) => {
-                return handleToggleVisibility(color);
-            }
-            DetectedBiasWrapper = ({ color }) => {
-                return DetectedBias({ color });
-            }
-        } else {
-            console.log("biasColorToBiasNameMap is not defined");
-            handleToggleVisibilityWrapper = (color: BiasColor) => {
-                return;
-            }
-            DetectedBiasWrapper = ({ color }) => {
-                return <></>;
-            }
-        }
-    
-    }, [biasColorToBiasNameMap]);
-
-    
     const getButtonImg = (color: BiasColor) => {
         switch (color) {
             case "green":
@@ -108,32 +48,49 @@ const SourceSection: React.FC<SourceSectionProps> = ({ source, biasVisibility, s
         }
     }
 
+    useEffect(() => {
+        if (renderStage === 1) {
+            biasColorToBiasNameMapCopy = JSON.parse(JSON.stringify(biasColorToBiasNameMap));
+        }
+    }, [renderStage])
 
+
+            
+
+    const handleToggleVisibility = (color: BiasColor) => {
+        setBiasVisibility((prev) => {
+            return {
+                ...prev,
+                [color]: !prev[color]
+            }
+        })
+    }
+
+    const DetectedBiases: React.FC = () => {
+        const listOfBiases = (
+            <ul className="mt-2 space-y-3 w-full">
+                {Object.keys(biasColorToBiasNameMapCopy).map((color) => {
+                    if (!biasColorToBiasNameMapCopy[color as BiasColor]) return null;
+                    return <DetectedBias color={color as BiasColor} name={biasColorToBiasNameMapCopy[color as BiasColor]} />
+                })}
+            </ul>
+        )
+        if (renderStage === 1) {
+            console.log("Stage 1 --> 2");
+            setRenderStage(2);
+        }
+        return listOfBiases;
+    }
         
     // Reusable component for individual Detected Bias
-    const DetectedBias: React.FC<{ color: BiasColor }> = ({ color }) => {
-        var localBiasColorToBiasNameMap: BiasColorToBiasNameMap = {
-            green: "",
-            yellow: "",
-            purple: "",
-            red: "",
-            blue: "",
-            orange: "",
-            pink: "",
-            brown: "",
-            white: "",
-        }
-        if (isBiasColorToBiasNameMap(biasColorToBiasNameMap)) {
-            localBiasColorToBiasNameMap = biasColorToBiasNameMap;
-        }
-        if (!localBiasColorToBiasNameMap[color]) return null; // if (!biasIsDetectedMap[color]) return null;
-        var biasName : string = localBiasColorToBiasNameMap[color]; // const biasName = biasColorToBiasNameMap[color];
+    const DetectedBias: React.FC<{ color: BiasColor, name: string }> = ({ color, name }) => {
+        var biasName : string = name; // const biasName = biasColorToBiasNameMap[color];
         // biasName is in form of "feature2_overconfidence_bias" initially
         biasName = biasName.split("_").slice(1).map((word) => word.charAt(0).toUpperCase() + word.slice(1)).join(" ");
         return (
             <li className="text-mid-light-grey text-[8px] md:text-[10px] lg:text-[11px] xl:text-xs font-semibold flex justify-between items-center space-x-3">
                 <button>
-                    <img src={getButtonImg(color)} alt={`${color}-toggle-btn`} className="w-4 h-2 md:w-5 md:h-3 lg:w-6 lg:h-3 xl:w-7 xl:h-4" onClick={() => handleToggleVisibilityWrapper(color)} />
+                    <img src={getButtonImg(color)} alt={`${color}-toggle-btn`} className="w-4 h-2 md:w-5 md:h-3 lg:w-6 lg:h-3 xl:w-7 xl:h-4" onClick={() => handleToggleVisibility(color)} />
                 </button>
                 <p style={{textAlign: "left"}}>{biasName}</p>
             </li>
@@ -147,12 +104,7 @@ const SourceSection: React.FC<SourceSectionProps> = ({ source, biasVisibility, s
                 <div className="flex flex-col bg-sidebar-bg p-4 pb-7 w-full space-y-3 h-full lg:h-auto rounded-md items-start max-w-[150px] md:max-w-[192px] lg:max-w-[216px]">
                     <h4 className="font-semibold text-metrics-text text-[10px] md:text-xs lg:text-sm xl:text-base">Detected Biases</h4>
                     {/* List of Detected Biases */}
-                    <ul className="mt-2 space-y-3 w-full">
-                        <DetectedBiasWrapper color="green" />
-                        <DetectedBiasWrapper color="yellow" />
-                        <DetectedBiasWrapper color="purple" />
-                        <DetectedBiasWrapper color="red" />
-                    </ul>
+                    <DetectedBiases />
                 </div>
                 <div className="flex flex-col bg-sidebar-bg p-4 pb-7 w-full h-full lg:h-auto space-y-4 md:space-y-6 lg:space-y-3 rounded-md items-start max-w-[150px] md:max-w-[192px] lg:max-w-[216px]">
                     <h4 className="font-semibold text-metrics-text text-[10px] md:text-xs lg:text-sm xl:text-base">Metrics</h4>

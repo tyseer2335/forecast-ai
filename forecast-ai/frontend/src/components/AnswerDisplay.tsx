@@ -1,6 +1,7 @@
 import React, { useEffect, useRef } from "react";
 import { BiasColor, BiasColorToBiasNameMap, BiasColorToBooleanMap } from "../hooks/types";
 import { set } from "date-fns";
+import { render } from "@testing-library/react";
 
 type AnswerDisplayProps = {
   query: string;
@@ -12,35 +13,23 @@ type AnswerDisplayProps = {
     };
   };
   biasVisibility: BiasColorToBooleanMap;
-  setBiasColorToBiasNameMap: React.Dispatch<React.SetStateAction<BiasColorToBiasNameMap | {}>>;
+  setBiasColorToBiasNameMap: React.Dispatch<React.SetStateAction<BiasColorToBiasNameMap>>;
+  renderStage: number;
+  setRenderStage: React.Dispatch<React.SetStateAction<number>>;
 };
 
 
-const AnswerDisplay: React.FC<AnswerDisplayProps> = ({ query, answer, biasVisibility, setBiasColorToBiasNameMap }) => {
+const AnswerDisplay: React.FC<AnswerDisplayProps> = ({ query, answer, biasVisibility, setBiasColorToBiasNameMap, renderStage, setRenderStage }) => {
   const { forecaster_rationale: rationale, llm_features: llmFeatures } = answer;
   var biasColorToBiasNameMap : BiasColorToBiasNameMap = {
     // all colors are initially unassigned
     green: "",
     yellow: "",
     purple: "",
-    red: "",
-    blue: "",
-    orange: "",
-    pink: "",
-    brown: "",
-    white: "",
+    red: ""
   };
-  var copyBiasVisibility : BiasColorToBooleanMap = {
-    green: true,
-    yellow: true,
-    purple: true,
-    red: true,
-    blue: true,
-    orange: true,
-    pink: true,
-    brown: true,
-    white: true
-  }
+  // deep copy of biasVisibility
+  var biasVisibilityCopy : BiasColorToBooleanMap = JSON.parse(JSON.stringify(biasVisibility));
 
   const getTokenColor = (tokenIndex: number, feature: string) => {
     const metric = llmFeatures[feature][tokenIndex];
@@ -61,7 +50,6 @@ const AnswerDisplay: React.FC<AnswerDisplayProps> = ({ query, answer, biasVisibi
       }
     }
     if (notFound) {
-      // TODO: Check what is the maximum number of distinct bias types that can be outputted
       console.log("No assignable color found for feature: ", feature);
       return "";
     }
@@ -74,12 +62,10 @@ const AnswerDisplay: React.FC<AnswerDisplayProps> = ({ query, answer, biasVisibi
   };
 
   useEffect(() => {
-    if (JSON.stringify(copyBiasVisibility) === JSON.stringify(biasVisibility)) {
-      return;
-    } 
-    copyBiasVisibility = biasVisibility;
-    setBiasColorToBiasNameMap(biasColorToBiasNameMap);
-  }, [biasVisibility]);
+    if (renderStage >= 2) {
+      biasVisibilityCopy = biasVisibility;
+    }
+  }, [renderStage]);
   
 
   const renderRationale = () => {
@@ -87,14 +73,23 @@ const AnswerDisplay: React.FC<AnswerDisplayProps> = ({ query, answer, biasVisibi
     var coloredTokens = tokens.map((token, index) => {
       const feature = Object.keys(llmFeatures).find((key) => llmFeatures[key][index] !== undefined);
       var colorClass = feature ? getTokenColor(index, feature) : "";
-      if (colorClass) {
-        // extract biascolor to see if it should be visible
-        const biasColor = colorClass.split("-")[2];
-        if (!copyBiasVisibility[biasColor as BiasColor]) {
-          colorClass = "";
+      if (renderStage === 0) {
+        setRenderStage(1);
+      } else if (renderStage >= 2) {
+        if (colorClass) {
+          if (index === 0) console.log("Got into colorClass determination");
+          // extract biascolor to see if it should be visible
+          const biasColor = colorClass.split("-")[2];
+          if (!biasVisibility[biasColor as BiasColor]) {
+            colorClass = "";
+            if (index === 0) console.log("colorClass resetted");
+          } else {
+            if (index === 0) console.log("colorClass not resetted");
+          }
+
         }
       }
-      // setBiasColorToBiasNameMap(biasColorToBiasNameMap);
+      if (index === 0) console.log(`px-1 ${colorClass} token: ${token}`);
       return (
         <span key={index} className={`px-1 ${colorClass}`}>
           {token}
@@ -103,7 +98,13 @@ const AnswerDisplay: React.FC<AnswerDisplayProps> = ({ query, answer, biasVisibi
     });
     
     // localStorage.setItem("biasColorToBiasNameMap", JSON.stringify(biasColorToBiasNameMap));
-    // setBiasColorToBiasNameMap(biasColorToBiasNameMap);
+    
+    if (renderStage === 0) { 
+      console.log("Stage 0 --> 1");
+      setRenderStage(1);
+      setBiasColorToBiasNameMap(biasColorToBiasNameMap);
+     }
+
     return coloredTokens;
   };
 
