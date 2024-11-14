@@ -117,7 +117,7 @@ async def query_to_answer(request: ForecastRequest, query_id: str):
         state = 7
         await asyncio.sleep(0)
         await send_status_update(query_id, "Generating forecast answer...")
-        forecast_agent = generate_forecast.ForecastGenerator(client=client, model="gpt-4")
+        forecast_agent = generate_forecast.ForecastGenerator(client=client, model="gpt-4o-mini")
         answer = forecast_agent.generate_forecast(request, ranked_news_with_content)["answer"]
         # answer = {'Question': 'is LLM truely reach AGI?', 'Forecaster ID': 'AI-Forecaster', 'Forecaster Rationale': "Key Facts:\n1. As of my pretraining knowledge cutoff in October 2023, the AI technology referred to as LLM (likely referring to large language models) had not reached AGI (Artificial General Intelligence). AGI refers to highly autonomous systems that outperform humans at most economically valuable work, and as of then, no AI system had demonstrated this level of capability.\n", 'Forecast': '10.0%', 'Sources': {'x.com': [{'title': 'Alex Volkov (Thursd/AI) (@altryne) on X - X', 'content': {}, 'url': 'https://news.google.com/rss/articles/CBMioAFBVV95cUxPNHFZQW0zOUM3ZVhtZy1HVEZmbXBSdlFubi1OYWFjSktBMEdlaks0NU84UmJaSTlyMF9tZkU0dERkdURhTzN2VVd0RkFhem15Q21POEpacUllc3p2cnZpRjdMRzV4ell1WGx0enhHc29IaVdHNE9hWjFoRDczY1l6ckwzLUJ0WFp2aGx1SGJOTkpycVRReVN0YVA5c2ZDMGxT?oc=5&hl=en-CA&gl=CA&ceid=CA:en', 'published_date': 'Mon, 11 Nov 2024 21:57:00 GMT', 'platform': 'automatic'}]}}
         print(answer)
