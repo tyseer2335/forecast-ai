@@ -3,9 +3,9 @@ import React, { useEffect, useRef, useState } from "react";
 import ChatMessage from "./ChatMessage";
 import SourcesContainer from "./SourcesContainer";
 import AnswerDisplay from "./AnswerDisplay";
-import { Chat } from "../hooks/types";
+import { BiasColorToBiasNameMap, Chat } from "../hooks/types";
 import { v4 as uuidv4 } from "uuid";
-import { BiasToBooleanMap } from "../hooks/types";
+import { BiasColorToBooleanMap } from "../hooks/types";
 
 type ChatWindowProps = {
   chats: Chat[];
@@ -14,24 +14,29 @@ type ChatWindowProps = {
 const ChatWindow: React.FC<ChatWindowProps> = ({ chats }) => {
     
   const bottomRef = useRef<HTMLDivElement>(null);
-  const [biasVisibility, setbiasVisibility] = useState<BiasToBooleanMap>({
+  const [biasVisibility, setbiasVisibility] = useState<BiasColorToBooleanMap>({
     green: true,
     yellow: true,
     purple: true,
     red: true,
+    blue: true,
+    orange: true,
+    pink: true,
+    brown: true,
+    white: true,
   });
-
-  const [biasIsDetectedMap, setBiasIsDetectedMap] = useState<BiasToBooleanMap>({
-    // green: false,
-  //   yellow: false,
-  //   purple: false,
-  //   red: false,
-  // });
-    green: true,
-    yellow: true,
-    purple: true,
-    red: true,
+  // make another state of type BiasColorToBiasNameMap
+  var [biasColorToBiasNameMap, setBiasColorToBiasNameMap] = useState<BiasColorToBiasNameMap|{}>({
   });
+  const [renderStage, setRenderStage] = useState(0);
+  // 0: initial stage
+  // 1: AnswerDisplay rendered and biasColorToBiasNameMap updated
+  //    SourceSection can use biasColorToBiasNameMap now (1*)
+  // 2: (1*) is done, 
+  //    AnswerDisplay can use biasVisibility now
+  // 3: (2*) is done, 
+  //    AnswerDisplay should listen to changes in biasVisibility,
+  //    but SourceSection can stop listening to changes in biasVisibility(even if there is a change, ignore.)
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -54,9 +59,11 @@ const ChatWindow: React.FC<ChatWindowProps> = ({ chats }) => {
             data-testid="sources-container"
             biasVisibility={biasVisibility}
             setbiasVisibility={setbiasVisibility}
-            biasIsDetectedMap={biasIsDetectedMap}
+            biasColorToBiasNameMap={biasColorToBiasNameMap}
+            renderStage={renderStage}
+            setRenderStage={setRenderStage}
           />
-          {chat.answer && <AnswerDisplay query={chat.query} answer={chat.answer} biasVisibility={biasVisibility} setBiasIsDetectedMap={setBiasIsDetectedMap} />}
+          {chat.answer && <AnswerDisplay query={chat.query} answer={chat.answer} biasVisibility={biasVisibility} setBiasColorToBiasNameMap={setBiasColorToBiasNameMap} renderStage={renderStage} setRenderStage={setRenderStage} />}
         </div>
       ))}
     </div>
