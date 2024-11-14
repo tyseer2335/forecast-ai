@@ -15,8 +15,6 @@ const AnswerDisplay: React.FC<AnswerDisplayProps> = ({ query, answer, visibleBia
   var isBiasNamesReady = false;
 
   const getTokenColorOpacity = (tokenIndex: number, feature: string) => {
-    // Assign the color based on the feature
-    const color = biasColorToBiasNameMap[feature as BiasColor];
     var metric = 1;
     try {
       metric = llmFeatures[feature][`token_${tokenIndex}`];
@@ -24,7 +22,7 @@ const AnswerDisplay: React.FC<AnswerDisplayProps> = ({ query, answer, visibleBia
       console.log(`Error: ${error}, feature: ${feature}, tokenIndex: ${tokenIndex}`);
     }
     // Assign the style based on the metric
-    return `$bg-heatmap-${color}-bg/${metric * 100}`;
+    return `$bg-heatmap-${visibleBiasColor}-bg/${metric * 100}`;
   };
 
   const renderRationale = () => {
