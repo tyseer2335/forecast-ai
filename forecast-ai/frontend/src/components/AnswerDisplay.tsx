@@ -37,7 +37,7 @@ const AnswerDisplay: React.FC<AnswerDisplayProps> = ({ query, answer, biasVisibi
     var notFound = true;
     for (color in biasColorToBiasNameMap) {
       if (biasColorToBiasNameMap[color] === "" || biasColorToBiasNameMap[color] === feature) {
-        assignableColor = color as BiasColor;
+        assignableColor = color;
         notFound = false;
         break;
       }
@@ -57,7 +57,11 @@ const AnswerDisplay: React.FC<AnswerDisplayProps> = ({ query, answer, biasVisibi
   const renderRationale = () => {
     const tokens = rationale.split(" ");
     var coloredTokens = tokens.map((token, index) => {
-      const feature = Object.keys(llmFeatures).find((key) => llmFeatures[key][`token_${index}`] !== undefined);
+      // Find feature that is one of the llmFeatures key and have token_ index as its value
+      if (index === 187) {
+        const featureOfToken  = Object.keys(llmFeatures).find((feature) => llmFeatures[feature][`token_${index}`] !== undefined);
+      }
+      const feature = Object.keys(llmFeatures).find((feature) => llmFeatures[feature][`token_${index}`] !== undefined);
       var colorClass = feature ? getTokenColorOpacity(index, feature) : "";
 
       if (colorClass) {
@@ -74,9 +78,7 @@ const AnswerDisplay: React.FC<AnswerDisplayProps> = ({ query, answer, biasVisibi
         </span>
       );
     });
-    if (renderStage === 0) {
-      isBiasNamesReady = true;
-    } 
+    isBiasNamesReady = true;
     return coloredTokens;
   };
 
