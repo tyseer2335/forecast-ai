@@ -5,7 +5,15 @@ from query_to_answer.prompt import get_feature_prompt, FEATURE_DESCRIPTIONS
 
 def get_feature_schema(token_count: int, feature: str) -> dict:
     """
-    Creates a JSON schema for a single feature to enforce exact lengths.
+    Creates a JSON schema for scoring a specified feature at the token level.
+
+    Args:
+        token_count (int): The number of tokens in the rationale text.
+        feature (str): The name of the feature to be analyzed (e.g., bias, certainty).
+
+    Returns:
+        dict: A JSON schema that enforces the exact number of scores, from 0 to 1, for each token in the rationale text.
+            The schema is designed to ensure that each token is scored for the specified feature.
     """
     # Properties for each token score
     score_properties = {
@@ -34,7 +42,15 @@ def get_feature_schema(token_count: int, feature: str) -> dict:
 
 def analyze_features(rationale: str, client: OpenAI) -> Dict[str, List[float]]:
     """
-    Analyzes rationale text for different reasoning features and returns token-level scores.
+    Analyzes a rationale text to produce token-level scores for multiple reasoning features.
+
+    Args:
+        rationale (str): The rationale text to analyze, where each token will be scored on specific features.
+        client (OpenAI): The OpenAI client used to call a language model to evaluate the rationale text.
+
+    Returns:
+        Dict[str, List[float]]: A dictionary where keys are feature names, and values are lists of token-level scores
+            for each feature. Each token is assigned a score between 0 and 1 for each feature analyzed.
     """
     tokens = rationale.strip().split()
     token_count = len(tokens)
@@ -80,7 +96,15 @@ def analyze_features(rationale: str, client: OpenAI) -> Dict[str, List[float]]:
 
 def generate_bias(answer: Dict[str, Any], client: OpenAI) -> Dict[str, Any]:
     """
-    Generate bias analysis for forecast rationale.
+    Generates a bias analysis for a given forecast rationale and appends the results to the answer.
+
+    Args:
+        answer (Dict[str, Any]): A dictionary containing the forecast answer details, including "Forecaster Rationale."
+        client (OpenAI): The OpenAI client used to analyze the rationale text for feature-specific biases.
+
+    Returns:
+        Dict[str, Any]: The input answer dictionary updated with `llm_features`, which contains token-level
+            scores for various features (e.g., bias) in the rationale.
     """
     if not answer.get("Forecaster Rationale"):
         return answer
