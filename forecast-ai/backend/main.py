@@ -1,8 +1,6 @@
 import os
 
-# Load environment variables
 from dotenv import load_dotenv
-load_dotenv()
 from fastapi import FastAPI, HTTPException, Request, WebSocket, Depends
 from fastapi.middleware.cors import CORSMiddleware
 from openai import OpenAI
@@ -11,7 +9,6 @@ from query_to_answer import break_down_query, collect_news, scrapping_content, f
     generate_bias
 from utils import convert_to_article
 from model.forecast_request import ForecastRequest
-
 import asyncio
 
 import firebase_admin
@@ -23,7 +20,6 @@ import time
 # [Initialize FastAPI app]
 # pip install "uvicorn[standard]"
 # uvicorn main:app
-# Initialize Firebase Admin with a service account key
 app = FastAPI()
 load_dotenv()
 OPENAI_API_KEY = os.getenv('OPENAPI_API_KEY')
@@ -33,12 +29,13 @@ DOCKER_OR_LAMBDATEST = os.getenv('DOCKER_OR_LAMBDATEST')
 SINGLE_OR_PARALLEL = os.getenv('SINGLE_OR_PARALLEL')
 USERNAME = "glad7cu"
 ACCESS_KEY = os.getenv('ACCESS_KEY')
+# Initialize Firebase Admin with a service account key
 cred = credentials.Certificate(os.getenv("FIREBASE_SERVICE_ACCOUNT_KEY"))
 firebase_admin.initialize_app(cred)
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*", "http://localhost:3002"],
+    allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"]
