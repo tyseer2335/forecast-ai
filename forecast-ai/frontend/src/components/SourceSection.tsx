@@ -19,8 +19,8 @@ import { biasColorToBiasNameMap } from "../hooks/constants";
 
 type SourceSectionProps = {
     source: SourceObject;
-    visibleBiasColor: BiasColor;
-    setVisibleBiasColor: React.Dispatch<React.SetStateAction<BiasColor>>;
+    visibleBiasColor: BiasColor | "";
+    setVisibleBiasColor: React.Dispatch<React.SetStateAction<BiasColor | "">>;
 }
 
 const SourceSection: React.FC<SourceSectionProps> = ({ source, visibleBiasColor, setVisibleBiasColor }) => {
@@ -46,7 +46,11 @@ const SourceSection: React.FC<SourceSectionProps> = ({ source, visibleBiasColor,
 
 
     const handleToggleVisibility = (color: BiasColor) => {
-        setVisibleBiasColor(color);
+        if (visibleBiasColor === color) {
+            setVisibleBiasColor("");
+        } else {
+            setVisibleBiasColor(color);
+        }
     }
 
     // Reusable component for individual Detected Bias

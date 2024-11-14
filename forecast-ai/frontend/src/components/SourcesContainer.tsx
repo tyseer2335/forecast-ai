@@ -12,8 +12,8 @@ type SourcesContainerProps = {
     error: string | undefined;
     loading: boolean;
     status: string | undefined;
-    visibleBiasColor: BiasColor;
-    setVisibleBiasColor: React.Dispatch<React.SetStateAction<BiasColor>>;
+    visibleBiasColor: BiasColor | "";
+    setVisibleBiasColor: React.Dispatch<React.SetStateAction<BiasColor | "">>;
 }
 
 const SourcesContainer: React.FC<SourcesContainerProps> = ({ sources, error, loading, status, visibleBiasColor, setVisibleBiasColor }) => {
