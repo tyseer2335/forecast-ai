@@ -14,6 +14,15 @@ import time
 
 
 def _single_scrape_content(url: str) -> dict:
+    """
+    Scrapes the text and media content from a single web page using basic HTML parsing.
+
+    Args:
+        url (str): The URL of the web page to scrape.
+
+    Returns:
+        dict: A dictionary containing the text content and a list of media URLs (e.g., images) on the page.
+    """
     # response = requests.get(url)
     # soup = BeautifulSoup(response.content, 'html.parser')
     #
@@ -40,6 +49,18 @@ def _single_scrape_content(url: str) -> dict:
 
 
 def init_driver(LOCAL_OR_PROD: str, DOCKER_OR_LAMBDATEST: str, USERNAME: str, ACCESS_KEY: str) -> webdriver.Chrome:
+    """
+    Initializes a Selenium WebDriver instance based on environment specifications.
+
+    Args:
+        LOCAL_OR_PROD (str): Environment type, either 'local' for local testing or 'prod' for production.
+        DOCKER_OR_LAMBDATEST (str): Specifies if the environment uses 'docker' or 'lambdatest' for Selenium.
+        USERNAME (str): Username for LambdaTest if used.
+        ACCESS_KEY (str): Access key for LambdaTest if used.
+
+    Returns:
+        webdriver.Chrome: The initialized Selenium WebDriver instance.
+    """
     options = Options()
     if LOCAL_OR_PROD == 'prod':
         options.add_argument('--headless')
@@ -74,6 +95,19 @@ def init_driver(LOCAL_OR_PROD: str, DOCKER_OR_LAMBDATEST: str, USERNAME: str, AC
 
 
 def advanced_selenium_scrape_content(driver: webdriver.Chrome, url: str) -> dict:
+    """
+    Uses Selenium to scrape content from a web page, including handling JavaScript-rendered content.
+
+    Args:
+        driver (webdriver.Chrome): The Selenium WebDriver instance.
+        url (str): The URL of the web page to scrape.
+
+    Returns:
+        dict: A dictionary containing:
+            - 'text': The main text content of the page.
+            - 'media': A list of media URLs (e.g., images).
+            - 'final_url': The URL of the page after all redirects.
+    """
     driver.get(url)
     print(f"Scraping content for url: {url}")
     # once we get redirected to the page, we need to wait for the page to load
@@ -105,6 +139,19 @@ def advanced_selenium_scrape_content(driver: webdriver.Chrome, url: str) -> dict
 
 
 def scrape_content_process(url, env, DOCKER_OR_LAMBDATEST, USERNAME, ACCESS_KEY):
+    """
+    Scrapes content from a URL using Selenium in a separate process.
+
+    Args:
+        url (str): The URL to scrape.
+        env (str): The environment ('local' or 'prod') to determine WebDriver settings.
+        DOCKER_OR_LAMBDATEST (str): Specifies if Docker or LambdaTest is used for Selenium.
+        USERNAME (str): Username for LambdaTest authentication.
+        ACCESS_KEY (str): Access key for LambdaTest authentication.
+
+    Returns:
+        dict: A dictionary containing the scraped 'text', 'media' URLs, and 'final_url' after redirects.
+    """
     driver = init_driver(env, DOCKER_OR_LAMBDATEST, USERNAME, ACCESS_KEY)
     try:
         res = advanced_selenium_scrape_content(driver, url)
@@ -121,12 +168,17 @@ def scrape_content_process(url, env, DOCKER_OR_LAMBDATEST, USERNAME, ACCESS_KEY)
 
 def single(urls: dict, env: str, DOCKER_OR_LAMBDATEST: str, USERNAME: str, ACCESS_KEY: str) -> dict:
     """
-    Current Render hosting require docker for selenium.
-    However, our partner and the team is looking to migrate to 3rd party API instead of selenium.
-    For now, use env with local to test selenium, and remote for production where selenium is not supported.
-    :param urls:
-    :param env:
-    :return:
+    Scrapes content from multiple URLs in a single-threaded manner.
+
+    Args:
+        urls (dict): A dictionary of articles with URLs to scrape.
+        env (str): The environment ('local' or 'prod') to determine WebDriver settings.
+        DOCKER_OR_LAMBDATEST (str): Specifies if Docker or LambdaTest is used for Selenium.
+        USERNAME (str): Username for LambdaTest authentication.
+        ACCESS_KEY (str): Access key for LambdaTest authentication.
+
+    Returns:
+        dict: A dictionary with updated article data containing scraped text and media URLs.
     """
     urls = urls.copy()
     # if env == 'local':  # Init here for faster loading
@@ -152,6 +204,19 @@ def single(urls: dict, env: str, DOCKER_OR_LAMBDATEST: str, USERNAME: str, ACCES
 
 
 def parallel(urls: dict, env: str, DOCKER_OR_LAMBDATEST: str, USERNAME: str, ACCESS_KEY: str) -> dict:
+    """
+    Scrapes content from multiple URLs in parallel using concurrent processing.
+
+    Args:
+        urls (dict): A dictionary of articles with URLs to scrape.
+        env (str): The environment ('local' or 'prod') to determine WebDriver settings.
+        DOCKER_OR_LAMBDATEST (str): Specifies if Docker or LambdaTest is used for Selenium.
+        USERNAME (str): Username for LambdaTest authentication.
+        ACCESS_KEY (str): Access key for LambdaTest authentication.
+
+    Returns:
+        dict: A dictionary with updated article data containing scraped text and media URLs.
+    """
     urls = urls.copy()
     with concurrent.futures.ProcessPoolExecutor(max_workers=None) as executor:
         future_to_url = {executor.submit(scrape_content_process, article['url'],
@@ -178,6 +243,20 @@ def parallel(urls: dict, env: str, DOCKER_OR_LAMBDATEST: str, USERNAME: str, ACC
 
 def multiple_scrape_content(urls: dict, env: str, DOCKER_OR_LAMBDATEST: str, SINGLE_OR_PARALLEL: str,
                             USERNAME: str, ACCESS_KEY: str) -> dict:
+    """
+    Chooses between single-threaded or parallel scraping for content based on configuration.
+
+    Args:
+        urls (dict): A dictionary of articles with URLs to scrape.
+        env (str): The environment ('local' or 'prod') to determine WebDriver settings.
+        DOCKER_OR_LAMBDATEST (str): Specifies if Docker or LambdaTest is used for Selenium.
+        SINGLE_OR_PARALLEL (str): Specifies if the function should run in 'single' or 'parallel' mode.
+        USERNAME (str): Username for LambdaTest authentication.
+        ACCESS_KEY (str): Access key for LambdaTest authentication.
+
+    Returns:
+        dict: A dictionary with updated article data containing scraped text and media URLs.
+    """
     if SINGLE_OR_PARALLEL == 'single':
         return single(urls, env, DOCKER_OR_LAMBDATEST, USERNAME, ACCESS_KEY)
     return parallel(urls, env, DOCKER_OR_LAMBDATEST, USERNAME, ACCESS_KEY)
