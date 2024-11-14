@@ -8,6 +8,49 @@ import { Answer, Chat, SourceObject } from "../hooks/types";
 import axios from "axios";
 import { v4 as uuidv4 } from "uuid";
 
+/**
+ * PromptBar Component
+ * 
+ * This component provides an input bar for users to submit queries in a chat interface.
+ * Users can input a query, open advanced query options, and submit the query to receive
+ * responses from the server. The component also utilizes WebSockets for real-time status
+ * updates.
+ * 
+ * Props:
+ * - `chats`: Array of previous chat data.
+ * - `setChatTitle`: Function to set the chat title.
+ * - `saveChatToDB`: Function to save chat data to the database.
+ * - `addQuery`: Function to add the user's query to the chat.
+ * - `addSources`: Function to add source data retrieved from the server.
+ * - `addAnswer`: Function to add the server's answer to the chat.
+ * - `addError`: Function to handle and display error messages.
+ * - `toggleLoading`: Function to toggle loading state during API requests.
+ * - `addStatus`: Function to add real-time status updates from the server.
+ * 
+ * State:
+ * - `input`: Current user input for the query.
+ * - `isMenuOpen`: Controls the visibility of the Advanced Query Options Menu.
+ * - `request`: Stores advanced query options, such as date ranges and sources percentages.
+ * - `submitRequest`: Boolean to handle form submission state.
+ * - `socketRef`: Reference to the WebSocket instance for managing real-time status updates.
+ * 
+ * Functions:
+ * - `connectWebSocket`: Opens a WebSocket connection to the backend to receive real-time status updates.
+ * - `closeWebSocket`: Closes the WebSocket connection when the component unmounts.
+ * - `handleSubmit`: Submits the user's query to the server, manages loading and error states, and saves the chat.
+ * - `formattedDate`: Formats dates into a readable string for display in the date range.
+ * - `convertResponseSourcesIntoSources`: Transforms server response data into a format suitable for displaying sources.
+ * - `convertResponseAnswerIntoAnswer`: Transforms server response data into a suitable answer format.
+ * 
+ * UI:
+ * - Renders an input field for the user's query, an options button for advanced query settings, 
+ *   and a submit button.
+ * - Displays optional date range and source configurations above the input field.
+ * - Uses AdvancedQueryOptionsMenu to allow users to configure additional settings for their query.
+ * - Renders loading and error states based on API responses and WebSocket connectivity.
+ */
+
+
 type PromptBarProps = {
   chats: Chat[];
   setChatTitle: React.Dispatch<React.SetStateAction<string>>;

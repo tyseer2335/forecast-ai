@@ -9,6 +9,34 @@ import { getFirestore, doc, getDoc, setDoc, serverTimestamp } from "firebase/fir
 import { EyeIcon, EyeSlashIcon } from '@heroicons/react/24/solid';
 import "../css/responsive-custom-css.css";
 
+/**
+ * Login Component
+ *
+ * This component provides a login form for users to sign in with email and password or with Google.
+ * It handles form submission, user authentication, error handling, and displays different options such as password visibility toggle, Google login, and navigation to signup and learn more pages.
+ *
+ * @component
+ *
+ * Hooks:
+ * - `useNavigate`: Redirects the user to different routes on successful login or other actions.
+ * - `useState`: Manages states for email, password, login error, and password visibility.
+ * - `useEffect`: Redirects logged-in users to logout if `userId` exists in `localStorage`.
+ *
+ * Functions:
+ * - `togglePasswordVisibility`: Toggles password visibility.
+ * - `checkAndCreateUserDocument`: Checks if a user document exists in Firestore and creates one if it doesn't.
+ * - `onLogin`: Authenticates user with email and password; verifies email before proceeding.
+ * - `onGoogleLogin`: Authenticates user with Google and checks for existing Firestore document.
+ *
+ * Render:
+ * - Displays a login form with email and password fields, a Google login button, error messages, and links for signup and password recovery.
+ * - Renders a toggle button for password visibility.
+ * - Provides additional buttons for navigating to "Learn More" and "Sign Up" pages.
+ *
+ * @returns {JSX.Element} Login form with email/password input, Google sign-in option, error handling, and navigation links.
+ */
+
+
 const db = getFirestore(); // Initialize Firestore
 
 const Login: React.FC = () => {

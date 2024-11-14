@@ -2,6 +2,29 @@
 import React from "react";
 import { SourceObject } from "../hooks/types";
 
+/**
+ * `SourceCard` component displays detailed information about a news or data source,
+ * including its logo, title, main image, content text, and a link to view the full content.
+ *
+ * Props:
+ * - `source`: an object of type `SourceObject` representing the source data to display.
+ *
+ * Features:
+ * - **Dynamic Text Rendering**: Splits the provided text content by newline characters 
+ *   and renders each segment with line breaks for improved readability.
+ * - **Responsive Design**: Adapts to various screen sizes using Tailwind CSS, ensuring 
+ *   a consistent look on mobile, tablet, and desktop views.
+ * - **Interactive Link**: Provides a clickable link in the top-right corner of the card 
+ *   to open the full source content in a new tab.
+ * - **Accessible for Testing**: `data-testid` attributes are included for the source logo, 
+ *   title, main image, and text, making it straightforward to target specific elements 
+ *   during testing.
+ *
+ * @param {SourceCardProps} props - The props for the component, which includes a `source` object.
+ * @returns {JSX.Element} JSX element that renders the source card component.
+ */
+
+
 type SourceCardProps = {
     source: SourceObject;
 }

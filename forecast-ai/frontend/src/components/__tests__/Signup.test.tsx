@@ -45,7 +45,6 @@ import { BrowserRouter } from 'react-router-dom';
  * 
  */
 
-
 describe('Signup Component', () => {
   it('renders the signup form correctly', () => {
     act(() => {

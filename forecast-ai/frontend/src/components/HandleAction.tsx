@@ -3,6 +3,34 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { applyActionCode } from "firebase/auth";  
 import { auth } from "./firebase";
 
+/**
+ * HandleAction Component
+ *
+ * This component processes Firebase action codes and performs actions like resetting passwords
+ * or verifying email addresses based on the action `mode` parameter in the URL.
+ *
+ * @component
+ *
+ * Uses:
+ * - `useLocation`: Accesses URL parameters to extract `mode` and `oobCode`.
+ * - `useNavigate`: Redirects users after completing actions or if parameters are invalid.
+ * - `applyActionCode` from Firebase: Executes email verification actions.
+ *
+ * Props:
+ * - None
+ *
+ * State:
+ * - `message`: Displays status messages about the action being performed.
+ *
+ * Behavior:
+ * - Redirects to `reset-password` if the action is "resetPassword" and navigates with the action code.
+ * - Handles "verifyEmail" actions by verifying the email with Firebase and then redirects to login.
+ * - Shows an error message and redirects if the action code or mode is missing or invalid.
+ *
+ * @returns {JSX.Element} A processing message with a status update based on the action.
+ */
+
+
 const HandleAction: React.FC = () => {
   const location = useLocation();
   const navigate = useNavigate();

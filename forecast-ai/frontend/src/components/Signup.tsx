@@ -6,6 +6,37 @@ import { getFirestore, doc, setDoc } from "firebase/firestore"; // Firestore imp
 import zxcvbn from 'zxcvbn'; // Password strength checking
 import "../css/responsive-custom-css.css"; // Custom CSS File for responsiveness
 
+/**
+ * @file Signup.tsx
+ *
+ * @description
+ * The `Signup` component provides a user interface for new users to register an account
+ * with forecastAI. It integrates Firebase Authentication and Firestore for managing user
+ * accounts, and uses `zxcvbn` for password strength validation.
+ *
+ * @component
+ *
+ * Features:
+ * - **Email Validation**: Ensures users enter a valid email address.
+ * - **Password Strength Checker**: Uses the `zxcvbn` library to evaluate password strength and display feedback.
+ * - **Confirm Password**: Requires users to confirm their password and checks for a match.
+ * - **Password Visibility Toggle**: Allows users to toggle visibility of password fields.
+ * - **Responsive Design**: Adjusts the placeholder text based on screen size.
+ * - **Firebase Signup**: Registers a new user in Firebase, sends an email verification, and stores user data in Firestore.
+ * - **Error & Success Feedback**: Displays error messages for invalid inputs and success messages upon successful signup and email verification.
+ *
+ * @returns {React.FC}
+ * Renders the signup form with input fields for email, password, and confirm password,
+ * along with feedback for password strength, and displays error or success messages.
+ *
+ * @dependencies
+ * - Firebase Auth (for user signup and email verification)
+ * - Firestore (to store user metadata)
+ * - zxcvbn (for password strength checking)
+ * - React Router DOM (for navigation and handling links to login and recover password pages)
+ * - Custom CSS for responsive design
+ */
+
 // Icons
 import OwlLogo from '../assets/owl.svg';
 import { EyeIcon, EyeSlashIcon } from '@heroicons/react/24/solid';

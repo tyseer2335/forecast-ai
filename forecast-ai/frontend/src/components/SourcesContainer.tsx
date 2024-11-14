@@ -7,6 +7,40 @@ import { BiasColorToBiasNameMap, BiasColorToBooleanMap, SourceObject } from "../
 import ErrorMessage from "./ErrorMessage";
 import LoadingBar from "./LoadingBar";
 
+/**
+ * @file SourcesContainer.tsx
+ *
+ * @description
+ * The `SourcesContainer` component is responsible for displaying a list of sources with navigation functionality,
+ * enabling users to scroll between different source entries. Each source can include a set of biases,
+ * metrics, and other content, and is managed through a `SourceSection` component.
+ *
+ * @component
+ *
+ * Features:
+ * - **Error Handling**: Displays an error message if there is an issue loading the sources.
+ * - **Loading State**: Shows a loading bar with a customizable status while sources are being fetched.
+ * - **Source Navigation**: Provides left and right navigation buttons to scroll through the list of sources.
+ * - **Bias Management**: Manages bias visibility and displays biases for each source, utilizing the `SourceSection` component.
+ * - **Responsive Design**: Adapts layout to various screen sizes using Tailwind CSS utility classes.
+ *
+ * @param {SourcesContainerProps} props - Props include:
+ *   - `sources` (array of `SourceObject`): Array of source objects to display.
+ *   - `error` (string | undefined): Error message, if an error occurred while fetching sources.
+ *   - `loading` (boolean): Indicates if the sources are still loading.
+ *   - `status` (string | undefined): Current loading status message.
+ *   - `biasVisibility` (map of `BiasColorToBooleanMap`): Controls visibility for each bias type.
+ *   - `setBiasVisibility` (function): State updater function for bias visibility.
+ *   - `biasColorToBiasNameMap` (map of `BiasColorToBiasNameMap`): Maps each bias color to a bias name.
+ *   - `renderStage` (number): Indicates the current rendering stage for bias names.
+ *   - `setRenderStage` (function): State updater function for the render stage.
+ *
+ * @returns {React.FC}
+ * Renders the sources container with either the loading state, error message, or navigable source content.
+ * Navigation buttons are conditionally rendered to enable scrolling between sources.
+ */
+
+
 type SourcesContainerProps = {
     sources: SourceObject[];
     error: string | undefined;

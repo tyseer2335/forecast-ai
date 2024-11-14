@@ -1,3 +1,9 @@
+import React from 'react';
+import { render, screen, fireEvent } from '@testing-library/react';
+import '@testing-library/jest-dom';
+import { BrowserRouter, useNavigate } from 'react-router-dom';
+import LearnMore from '../LearnMore';
+
 /**
  * This test suite verifies the behavior of the LearnMore component.
  *
@@ -11,12 +17,6 @@
  *   with the correct path ('/login') when the button is clicked.
  *
  */
-
-import React from 'react';
-import { render, screen, fireEvent } from '@testing-library/react';
-import '@testing-library/jest-dom';
-import { BrowserRouter, useNavigate } from 'react-router-dom';
-import LearnMore from '../LearnMore';
 
 jest.mock('react-router-dom', () => ({
   ...jest.requireActual('react-router-dom'),

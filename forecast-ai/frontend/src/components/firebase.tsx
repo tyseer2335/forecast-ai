@@ -2,6 +2,28 @@
 import { initializeApp } from "firebase/app";
 import { getAuth, GoogleAuthProvider, signInWithPopup, UserCredential } from "firebase/auth";
 
+/**
+ * Firebase Initialization and Authentication
+ *
+ * This module initializes Firebase using environment-specific configuration and sets up
+ * Firebase Authentication, including Google Sign-In.
+ *
+ * Exports:
+ * - `auth`: The Firebase authentication instance, used for managing user sessions.
+ * - `signInWithGoogle`: A function that allows users to sign in using Google via a popup.
+ *
+ * Firebase Configuration:
+ * - Uses environment variables for Firebase project credentials, enhancing security
+ *   by not hardcoding sensitive data into the source code.
+ *
+ * Functions:
+ * - `signInWithGoogle`: Initiates Google Sign-In using Firebase's `signInWithPopup` and
+ *   returns a `UserCredential` object upon success.
+ *
+ * @module Firebase
+ */
+
+
 const firebaseConfig = {
   apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
   authDomain: process.env.REACT_APP_FIREBASE_AUTH_DOMAIN,

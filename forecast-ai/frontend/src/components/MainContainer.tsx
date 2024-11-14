@@ -10,6 +10,35 @@ import { getFirestore } from "firebase/firestore";
 import { DocumentReference, DocumentData } from "@firebase/firestore";
 import { useEffect } from "react";
 
+/**
+ * MainContainer Component
+ * 
+ * This component serves as the main controller for the application, managing chat sessions,
+ * interactions, and data flow between the Sidebar, HeaderBar, and MainContent components.
+ * 
+ * @component
+ * 
+ * State and Props:
+ * - `chats` (Chat[]): Manages chat history and messages.
+ * - `chatTitle` (string): Stores the title of the current chat.
+ * - `userId` (string): Retrieved from local storage; redirects to login if not found.
+ * - `chatId` (string | null): Retrieved from session storage to manage the selected chat.
+ * 
+ * Functions:
+ * - `fetchChatDoc`: Fetches the chat document from Firestore to display chat messages.
+ * - `saveChatToDB`: Saves the current chat to Firestore.
+ * - `addQuery`, `addSources`, `addAnswer`, `addError`, `toggleLoading`, `addStatus`:
+ *   Helper functions to update the state of the chat session, including queries, sources,
+ *   answers, errors, and status updates.
+ * 
+ * Render:
+ * - Integrates `Sidebar`, `HeaderBar`, and `MainContent` components to structure
+ *   the application layout and display chat interactions.
+ * 
+ * @returns {JSX.Element} The rendered MainContainer component layout.
+ */
+
+
 // Make the MainContainer to take userId(string) as a prop
 const MainContainer: React.FC = () => {
   const db = getFirestore();

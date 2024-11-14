@@ -2,6 +2,26 @@
 import React from "react";
 import "../css/loading-bar-custom-css.css";
 
+/**
+ * LoadingBar Component
+ *
+ * This component displays a loading indicator and a customizable status message.
+ * The loader is a circular spinner that provides a visual cue to indicate loading progress, and an optional status message displays below the loader to inform the user about the current operation's state.
+ *
+ * @component
+ * 
+ * Props:
+ * - `status` (string | undefined): Optional text to display as a status message; defaults to "Loading..." if not provided.
+ *
+ * Render:
+ * - A circular loading spinner that uses custom CSS for animation.
+ * - A status message displaying the `status` prop or "Loading..." by default.
+ * - An additional message advising the user to keep the page open during loading.
+ *
+ * @returns {JSX.Element} A loading spinner with a status message.
+ */
+
+
 type LoadingBarProps = {
     status: string | undefined;
 }

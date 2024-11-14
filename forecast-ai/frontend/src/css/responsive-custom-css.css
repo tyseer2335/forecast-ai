@@ -1,3 +1,26 @@
+/**
+ * Responsive and Mobile Styling
+ *
+ * The following CSS styles enhance responsiveness and mobile usability, ensuring the UI adapts gracefully on smaller screens.
+ * 
+ * `.send-reset-email-btn`: Sets default padding and font size for the email reset button.
+ * 
+ * Mobile Styling (`@media (max-width: 640px)`):
+ * - `.center-mobile`: Centers elements in a column, providing equal height and text alignment for a cleaner mobile layout.
+ * - `.input-mobile`: Full-width input styling, including padding and width limits to improve touch accessibility.
+ * - `.button-mobile`: Full-width button styling with a maximum width for a consistent mobile button appearance.
+ * - `.buttons-row`: Stacks buttons vertically with centered alignment and margin adjustments for cleaner spacing.
+ * - `.learn-more-button-mobile`: Sets a consistent width for the "Learn More" button.
+ * - `.text-input-mobile`: Increases padding for touch-friendly input fields.
+ * - `.signup-login-button-mobile`: Adjusts padding and font size for larger buttons on mobile screens.
+ * - `.input-fields-mobile`: Additional padding for input fields to improve user experience on smaller devices.
+ * - `.confirm-placeholder::placeholder`: Sets custom placeholder content for the confirm field.
+ * - `.send-reset-email-btn`: Adjusts padding and font size specifically for mobile devices.
+ *
+ * These responsive adjustments optimize the layout and interactivity for smaller screens.
+ */
+
+
 .send-reset-email-btn {
   padding: 0.5rem 1rem; 
   font-size: 1rem;
