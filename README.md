@@ -24,6 +24,9 @@ We’re building a website that enables users to prompt forecasting questions li
 
 The Problems we’re solving make it easy for researchers to make judgement in order to improve AI forecasting models, and understand bias.
 
+### Value of the Project
+This platform empowers researchers and analysts by simplifying complex forecasting tasks, allowing them to make better judgments and refine AI models with transparency. By visualizing AI reasoning and bias, it helps users understand and mitigate cognitive biases in AI predictions, ultimately supporting more accurate and reliable forecasting in fields like politics, finance, and social sciences.
+
 ## Key Features
 
 1. **Data Aggregation and Visualization**
