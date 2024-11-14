@@ -36,7 +36,7 @@ firebase_admin.initialize_app(cred)
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=["*", "http://localhost:3002"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"]
@@ -49,15 +49,19 @@ active_connections = {}
 # dependency function to verify the token
 async def verify_token(request: Request):
     auth_header = request.headers.get("Authorization")
+    print("Received Authorization header:", auth_header)
     if not auth_header:
         raise HTTPException(status_code=401, detail="Authorization header missing")
 
     token = auth_header.split(" ")[1]
     try:
-        decoded_token = auth.verify_id_token(token)
+        decoded_token = firebase_auth.verify_id_token(token)
+        print("Decoded Token:", decoded_token)
         request.state.user = decoded_token  # Store user info in request state
     except:
+        print("Token verification failed:", str(e))
         raise HTTPException(status_code=401, detail="Invalid or expired token")
+
     
 # WebSocket endpoint to send real-time status updates
 @app.websocket("/status")
@@ -83,6 +87,11 @@ async def send_status_update(query_id: str, message: str):
 
 @app.post("/query_to_answer", dependencies=[Depends(verify_token)])
 async def query_to_answer(request: ForecastRequest, query_id: str):
+    if not request.state.user:
+        raise HTTPException(status_code=403, detail="User is not authenticated")
+
+    # Log to confirm user info is set before external API calls
+    print("Authenticated user info:", request.state.user)
     state = 0
     print("Start")
     try:

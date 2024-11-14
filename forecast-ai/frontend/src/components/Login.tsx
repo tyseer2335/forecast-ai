@@ -59,6 +59,7 @@ const Login: React.FC = () => {
                 const token = await getAuthToken();
                 if (token) {
                     localStorage.setItem('authToken', token);
+                    console.log("Sending token:", token);
                 }
                 navigate("/"); // Navigate to home page after login
             } else {
