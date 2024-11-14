@@ -1,17 +1,9 @@
 import React, { useEffect, useRef } from "react";
-import { BiasColor, BiasColorToBiasNameMap, BiasColorToBooleanMap } from "../hooks/types";
-import { set } from "date-fns";
-import { render } from "@testing-library/react";
+import { Answer, BiasColor, BiasColorToBiasNameMap, BiasColorToBooleanMap } from "../hooks/types";
 
 type AnswerDisplayProps = {
   query: string;
-  answer: {
-    forecast: string;
-    forecaster_rationale: string;
-    llm_features: {
-      [key: string]: number[];
-    };
-  };
+  answer: Answer;
   biasVisibility: BiasColorToBooleanMap;
   setBiasColorToBiasNameMap: React.Dispatch<React.SetStateAction<BiasColorToBiasNameMap>>;
   renderStage: number;
@@ -81,8 +73,9 @@ const AnswerDisplay: React.FC<AnswerDisplayProps> = ({ query, answer, biasVisibi
         </span>
       );
     });
-    if (renderStage === 0) { 
-      isBiasNamesReady = true;} 
+    if (renderStage === 0) {
+      isBiasNamesReady = true;
+    } 
     return coloredTokens;
   };
 
