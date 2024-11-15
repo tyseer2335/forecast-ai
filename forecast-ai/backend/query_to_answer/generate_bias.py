@@ -103,7 +103,6 @@ def analyze_features(rationale: str, client: OpenAI) -> Dict[str, List[float]]:
         feature_scores = result.get(feature, {})
         if len(feature_scores) != token_count:
             print(f"Expected {token_count} scores for {feature}, got {len(feature_scores)} instead.")
-            feature_scores = feature_scores[:token_count]
 
         results[feature] = feature_scores
 

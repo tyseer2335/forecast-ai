@@ -16,11 +16,10 @@ const AnswerDisplay: React.FC<AnswerDisplayProps> = ({ query, answer, visibleBia
 
   const getTokenColorOpacity = (tokenIndex: number, feature: string) => {
     // Note we can assume that visibleBiasColor is not ""
-    const metric = llmFeatures[feature][`token_${tokenIndex}`];
-    return visibleBiasColor ? 
+    return visibleBiasColor && `token_${tokenIndex}` in llmFeatures[feature] ? 
     {
       backgroundColor: biasColorToHexCodeMap[visibleBiasColor],
-      opacity: metric
+      opacity: llmFeatures[feature][`token_${tokenIndex}`]
     } : {}
   };
 
