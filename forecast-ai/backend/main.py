@@ -58,7 +58,7 @@ async def verify_token(request: Request):
         decoded_token = firebase_auth.verify_id_token(token)
         print("Decoded Token:", decoded_token)
         request.state.user = decoded_token  # Store user info in request state
-    except:
+    except Exception as e:
         print("Token verification failed:", str(e))
         raise HTTPException(status_code=401, detail="Invalid or expired token")
 
