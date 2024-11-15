@@ -27,7 +27,7 @@ client = OpenAI(api_key=OPENAI_API_KEY)
 LOCAL_OR_PROD = os.getenv('LOCAL_OR_PROD')
 DOCKER_OR_LAMBDATEST = os.getenv('DOCKER_OR_LAMBDATEST')
 SINGLE_OR_PARALLEL = os.getenv('SINGLE_OR_PARALLEL')
-USERNAME = "glad7cu"
+USERNAME = os.getenv('USERNAME')
 ACCESS_KEY = os.getenv('ACCESS_KEY')
 # Initialize Firebase Admin with a service account key
 cred = credentials.Certificate(os.getenv("FIREBASE_SERVICE_ACCOUNT_KEY"))
