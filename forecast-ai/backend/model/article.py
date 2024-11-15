@@ -19,7 +19,7 @@ class Article:
     """
 
     def __init__(self, query: str, platform: str, title: str, description: str, published_date: str, url: str,
-                 publisher: dict[str, str], content: dict[str, str] = None):
+                 publisher: dict[str, str], content: dict[str, str]):
         query: str
         platform: str
         title: str
@@ -37,5 +37,5 @@ class Article:
         self.published_date = published_date
         self.url = url
         self.publisher = publisher
-        self.content = content if content is not None else {'text': '', 'media': []}
+        self.content = content
         self.score = None
