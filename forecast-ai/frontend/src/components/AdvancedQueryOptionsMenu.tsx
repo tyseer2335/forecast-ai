@@ -55,13 +55,13 @@ const AdvancedQueryOptionsMenu: React.FC<AdvancedQueryOptionsMenuProps> = ({ isM
 
     useEffect(() => {
         if (submitRequest) {
-            setTotalSourcesToCollect(10);
+            setTotalSourcesToCollect(5);
             setNewsRatio(60);
             setXRatio(20);
             setFacebookRatio(20);
             setFromDate(undefined);
             setToDate(undefined);
-            setTotalSourcesToDisplay(5);
+            setTotalSourcesToDisplay(2);
             setIsMenuOpen(false);
         }
     }, [submitRequest])
