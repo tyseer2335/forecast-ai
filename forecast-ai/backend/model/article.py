@@ -17,9 +17,9 @@ class Article:
             - 'media': A list of media items (e.g., images, videos) associated with the article.
         score (Optional[float]): A score assigned to the article for ranking or relevance purposes. Defaults to None.
     """
-    
+
     def __init__(self, query: str, platform: str, title: str, description: str, published_date: str, url: str,
-                 publisher: dict[str, str], content: dict[str, str]):
+                 publisher: dict[str, str], content: dict[str, str] = None):
         query: str
         platform: str
         title: str
@@ -37,5 +37,5 @@ class Article:
         self.published_date = published_date
         self.url = url
         self.publisher = publisher
-        self.content = content
+        self.content = content if content is not None else {'text': '', 'media': []}
         self.score = None
