@@ -287,24 +287,34 @@ const Sidebar: React.FC<SidebarProps> = ({ newChatId }) => {
 
       {/* Popup settings panel */}
       {isSettingsOpen && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-20"
+        <div
+          className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-20"
           data-testid="settings-panel"
         >
-          <div className="bg-[#282C2C] p-6 rounded-lg w-[400px]">
+          <div className="bg-[#282C2C] p-6 rounded-lg w-[400px] relative">
             <h2 className="text-xl font-bold mb-4">Settings</h2>
+
+            {/* Close Button */}
             <button
               onClick={toggleSettings}
-              className="absolute top-2 right-2">
-              {/* Settings content */}
-            </button>
-            <p className="text-right bottom-2 right-2 italic text-[#9A9A9A] text-sm"
-                onKeyDown={(e) => {
-                    if (e.key === "Enter") {
-                        toggleSettings();
-                    }
-                }}
+              className="absolute top-2 right-2 text-light-grey text-lg"
+              data-testid="close-settings-button"
             >
-                Press ENTER to apply
+              &times; {/* Close icon (×) */}
+            </button>
+
+            {/* Settings Content */}
+            {/* Add any settings content here */}
+
+            <p
+              className="text-right bottom-2 right-2 italic text-[#9A9A9A] text-sm"
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  toggleSettings();
+                }
+              }}
+            >
+              Press ENTER to apply
             </p>
           </div>
         </div>
