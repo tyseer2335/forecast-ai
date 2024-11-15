@@ -92,7 +92,7 @@ Our application is accessible online. Follow these steps to get started and expl
    git clone https://github.com/csc301-2024-f/project-14-ml-cs-uoft.git
    ```
 
-2. Navigate to the project directory:
+2. Navigate to the frontend project directory:
    ```bash
    cd forecast-ai/frontend
    ```
@@ -102,7 +102,7 @@ Our application is accessible online. Follow these steps to get started and expl
    npm install
    ```
 
-4. Set up Firebase:
+4. Set up frontend .env:
    - Create a Firebase project and obtain your API keys. Here is a guide: [Firebase Setup](https://firebase.google.com/docs/web/setup).
    - Create a `.env` file in the frontend folder and add the following:
      ```plaintext
@@ -114,36 +114,57 @@ Our application is accessible online. Follow these steps to get started and expl
      REACT_APP_FIREBASE_APP_ID=your-firebase-app-id
      ```
 
-5. Set up Backend API Keys:
+5.  Navigate to the backend project directory:
+      ```bash
+      cd forecast-ai/backend
+      ```
+
+6. Set up backend .env:
    - Open another terminal in the backend folder and create a `.env` file with the following:
      ```plaintext
      OPENAPI_API_KEY=your-openai-api-key
      LOCAL_OR_PROD=local
-     DOCKER_OR_LAMBDATEST=lambdatest
+     DOCKER_OR_LAMBDATEST=lambdatest/docker
+     SINGLE_OR_PARALLEL=single/parallel
      USERNAME=your-lambdatest-username
      ACCESS_KEY=your-lambdatest-access-key
+     FIREBASE_SERVICE_ACCOUNT_KEY=your-firebase-service-account-key
      ```
    - Here, `OPENAPI_API_KEY` is your OpenAI API key, and `USERNAME` and `ACCESS_KEY` are for LambdaTest credentials.
+   - Option 1:
+      ```plaintext
+      DOCKER_OR_LAMBDATEST=docker
+      SINGLE_OR_PARALLEL=single/parallel
+      ```
+      This will run selenium on local device, the value of `SINGLE_OR_PARALLEL` can be either single or parallel.
+   - Option 2:
+      ```plaintext
+      DOCKER_OR_LAMBDATEST=lambdatest
+      SINGLE_OR_PARALLEL=single/parallel
+      ```
+      This will use lambdatest on cloud, the value of `SINGLE_OR_PARALLEL` can be either single or parallel.
 
-6. Install and Run FastAPI for the Backend:
-   - **Install FastAPI**:
-     Open a terminal in the backend folder and install FastAPI and its server, `uvicorn`, by running:
+7. Set up backend secret files:
+   - Attached the provided `prompt.py` file into the `query_to_answer/` folder
+   - Attached the provided `heavylifters-72698-firebase-adminsdk-xwo0b-da4dabc257.json` file into the base folder
+
+8. Install the backend dependencies:
      ```bash
-     pip install fastapi uvicorn
+     pip install -r requirements.txt
      ```
-   - **Run the Backend Server**:
-     Start the FastAPI server by running:
+
+9. Run the Backend Server:
      ```bash
-     uvicorn main:app --reload
+     uvicorn main:app
      ```
-     - The backend will be available at `http://127.0.0.1:8000`.
+   The backend will be available at `http://127.0.0.1:8000`.
 
-7. Run the Development Server for the Frontend:
-   ```bash
-   npm start
-   ```
+10. Run the Development Server for the Frontend:
+      ```bash
+      npm start
+      ```
 
-8. The application should now be running! Open `http://localhost:3000` in your browser to access it.
+11. The application should now be running! Open `http://localhost:3000` in your browser to access it.
 
 ---
 
