@@ -81,7 +81,7 @@ def init_driver(LOCAL_OR_PROD: str, DOCKER_OR_LAMBDATEST: str, USERNAME: str, AC
             "platformName": "Windows 10",
             "username": USERNAME,
             "accessKey": ACCESS_KEY,
-            "project": "ForecastAI",
+            "project": "Untitled",
             "w3c": True,
             "plugin": "python-python"
         }
