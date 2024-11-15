@@ -35,7 +35,11 @@
 
 #### Q3(a). Planned changes
 
-None
+1. Improved Time Management and Prioritization: 
+A primary challenge our team faces is the allocation of time to various processes. We often see high-priority tasks being delayed by errors/issue or by additional requests that disrupt planned work. To address this, we will adopt task prioritization and implement daily check-ins with the team to ensure task progress and completion.
+
+2. Buffer Time Between Task Completion and Releases:
+An important lessons we've learned is the importance of buffer time between completing development tasks and deploying them for release. This time helps to ensure that any last-minute changes or unforeseen issues can be addressed without disrupting the release. We ensure to not deploy last minute changes and have realeses ready earlier for more reliable timelines, reduced stress during releases, and better quality assurance.
 
 #### Q3(b). Integration & Next steps
 We facilitated communication between the subteams to ensure smooth integration by having representatives from each subteam discuss their code and potential conflicts. This collaborative approach helped identify issues early, ensuring a seamless merging process across the three sub-repos.The assignment was helpful because it gave everyone valuable experience in how merging would work in the real world, promoting effective communication and coordination across subteams to ensure a smooth integration of components. 
