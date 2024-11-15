@@ -40,7 +40,13 @@ def dict_to_article(article_dict: dict) -> dict:
    We group by platform and have list of Article objects
     :return:
     """
+    # Make content if article_dict does not have it
     article_dict = article_dict.copy()
+    for query, articles in article_dict.items():
+        for article in articles:
+            if 'content' not in article:
+                article['content'] = {'text': '', 'media': []}
+
     # in article_dict, replace "published date" to "published_date"
     res = {}
     for query, articles in article_dict.items():
