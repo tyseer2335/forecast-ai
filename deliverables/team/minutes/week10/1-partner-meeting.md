@@ -4,7 +4,7 @@
 
 ## Meeting Date
 
-    Saturday November 16th, 2024 ⋅ 1:30 pm - 2:09 pm  (Eastern Time - Toronto)
+    Saturday November 9th, 2024 ⋅ 1:30pm - 1:53 pm (Eastern Time - Toronto)
 
 ## Location
 
@@ -20,105 +20,52 @@
 
     Yehyun Lee - team coordinator
 
-    Ho Kwan Edison Liem
+    Tyseer Toufiq
 
     Irene Kang
 
-    Muaj Ahmed
-
-    Jasjot Benipal
-
 
 ## Agenda / Meeting Overview
-1. Plans for D4
-2. Updates
-    - Major Updates
-        - Answer Generation
-        - Bias Generation
-        - Heatmap
-    - Minor Implementations
+1. Deliverable 3 (D3) Goals
+2. Progress Overview
+3. Discussion with Partner
 
 
 ## Meeting Notes
 
-### Plans for D4
+### Deliverable 3 (D3) Goals
+
 * **Objective**
-    - Focuses mainly on presenting to the TA
-    - We are willing to improve the platform based on the partner’s feedback
+    * Prepare the Minimum Viable Product (MVP)
+* **Cut-Off Scope**
+    * Answer generation is the final deliverable for D3
 
-### Updates
+### Progress Overview
 
-#### Features Implemented:  
-##### Favicon features  
-##### Summarizing source content to feed into LLM  
-    - Previously, when we are trying to feed the ranked articles with text content into LLM to generate a forecast answer, we often come up with an error of maximum token issue.   
-    - It seems like gpt4-0 have a maximum text limit of 9000\.   
-    - In order to solve this issue, we have to summarize each source content before feeding it into LLM.  
-    - Currently, the source display shows full content, but since summarization is ready, we can switch if the partner prefers this approach.  
-##### Answer Generation  
-  - Started from `539` code  
-  - An external file \`prompt.py\` is needed for this process  
-##### Authentication caching   
-##### Logout button   
-##### Bias Generation  
-  - Implemented using a dictionary, but design decision failure as we discussed  
-    - Keys:  
-      - Statistical Reasoning  
-      - Statistical Refinement  
-      - Causal Reasoning  
-      - Statistical Causal Blend  
-  - Planned improvements:  
-    - Use an array instead of a dictionary to improve structure.  
-    - Enhance design
-  - Feedback from partner on UI:  
-    - Make metrics and detected biases accessible without requiring users to scroll up and down  
-  - Metrics:  
-    - Skipped the implementations  
-      - Since we want to support any types of sources, it is hard to extract the view count dynamically due to all different structures  
-    - Feedback:   
-      - Understandable decision  
-      - Metrics are a lower priority.   
-      - Their main purpose is to display the quality of the source  
-      - Suggestion:   
-        - Add data from the source ranking  
-        - It would be nice for users to expand and see the rationale (default: hidden)  
-        - For metrics, include rationale for:  
-          - Summarize article  
-          - Ranking rationale
+1. **Performance Optimization**
+    * **Speed Improvements**
+        * Running Selenium on Render using Docker initially took longer than expected.
+        * Implemented multiprocessing, reducing runtime (from 10 minutes to 5 minutes).
+        * Shifted to using Lambda Test for running Selenium, achieving further reduction (from 5 minutes to 1 minute).
+        * **Current Total Runtime:** 2 minutes, a significant improvement from the initial 7 minutes.
+        * Yehyun took a long time to make this work. Thank you.
+2. **UI Enhancements**
+    * Implemented a favicon for visual improvement.
+    * Minor Features Added:
+        * Delete option, Authentication persistence, New chat button functionality
+    * Jasjot is also working on further enhancements on authentication.
+3. **AI Answer Generation**
+    * Next in progress: developing the AI answer generation feature.
+    * Yehyun has prepared a mockup code, and Tyseer, Aditya, and Muaj have taken it over for implementation.
 
-          with toggle feature
+### Discussion with Partner
 
-#### Prod Website  
-  - Initial plan was to provide access to partners and course staff.  
-  - Concern: Time limit of 100 minutes may affect performance if exceeded  
-  - Worst-case solution: Switch to Docker.  
-### Question 
-  - Currently using Lambdatest for scraping content, but it's expensive. Are there any comments or suggestion?  
-  - Feedback:  
-    - Partners are not familiar with Lambdatest but are happy with the current results.  
-    - Ensure it works on SSH.  
-### Next Steps Summary
-- Before D4, we will be improving the aspects based on the partner’s feedback:  
-  - Fix metrics to output actual data  
-  - Enhance the UI for the heatmap  
-    - Feedback on UI:   
-      - It's not easy to distinguish stats from highlights  
-      - I.e. which one has higher / lower value  
-      - Maybe use white background  
-    - We will try different options   
-  - Adjust UI for detected biases and metrics so users do not need to scroll up and down  
-  - Implement expandable rationale for metrics  
-  - Ensure SSH functionality using Lambdatest on their own server  
-  - Make the arrow for switching to the next / previous source more visible in the UI  
-### Overall Feedback  
-  - Partners are very satisfied and excited to use the project  
-  - They are open to pursuing publications as the next steps  
-  - Final Note  
-    - Rest well between deadlines, enjoy your time
-    
----
-
-**<u>References</u>**
-- [Google Doc for this Meeting](https://docs.google.com/document/d/18od27mKhtgeuQtoigxKNCAD35KUN9gDHEOPPNzAB3is/edit?usp=sharing)
-- [Google Drive Folder for All Meeting Notes](https://drive.google.com/drive/folders/19wbnvzlDZjcY7OdiYcD_zqL9pOgYK06t?usp=drive_link)
-- Note that all partner and team meeting notes for this project are written by Irene, and please feel free to add or modify the notes if needed.
+1. **Heatmap Specifications**
+    * Partner initially provided JSON files to illustrate what the heatmap should display.
+    * Partner clarified that the JSON files are more illustrative and not rigid requirements; Team has flexibility to define the heatmap functionality.
+2. **Language Model Output and Token-Level Probability**
+    * The language model generates probability data at the token level.
+    * Current implementation is at the word level, which meets partner requirements; however, adjustments for character-level granularity are possible.
+    * **Simplification Discussion**
+        * Team proposed simplifying to token-level probabilities without converting to character-level granularity.
+        * Partner confirmed this is acceptable as long as token-level output remains clear and accessible.
