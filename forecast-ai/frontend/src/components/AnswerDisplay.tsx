@@ -38,7 +38,7 @@ type AnswerDisplayProps = {
 
 const AnswerDisplay: React.FC<AnswerDisplayProps> = ({ query, answer, visibleBiasColor }) => {
   const { forecaster_rationale: rationale, llm_features: llmFeatures } = answer;
-
+  var [hoveredIndex, setHoveredIndex] = React.useState(-1);
   var isBiasNamesReady = false;
 
   const getTokenColorOpacity : (tokenIndex: number, feature: string) => [{}, string] = (tokenIndex: number, feature: string) => {
@@ -106,23 +106,41 @@ const AnswerDisplay: React.FC<AnswerDisplayProps> = ({ query, answer, visibleBia
       //   `}</style>
       // </div>
       //   );
-      const result = (
-        <div key={index} className="relative inline-block px-1 label-container">
-          <label
-            className="relative cursor-pointer"
-            style={highlightStyle} 
-            // example:
+      // example:
             // style = {{
             //   backgroundColor: biasColorToHexCodeMap[visibleBiasColor],
             //   opacity: degree,
             // }}
+
+      const classNames = `relative inline-block px-1 ${hoveredIndex===index ? 'label-container-hover' : 'label-container'}`;
+      const result = (
+        // `relative inline-block px-1 ${isHovered ? 'label-container-hover' : 'label-container'}`}
+        <div key={index} className="relative inline-block px-1
+                    hover:before:content-['TESTING FRONT'] 
+                    before:text-4xl before:text-red-300
+                    hover:after:content-['BACK'] 
+                    after:text-5xl after:text-yellow-300
+                    "
+        // onMouseEnter={() => setHoveredIndex(index)}
+        // onMouseLeave={() => setHoveredIndex(-1)}
+        >
+          <label
+            className="relative cursor-pointer"
+            style={highlightStyle} 
             data-tooltip={tooltip}
           >
             {token}
           </label>
         </div>
       );
-      console.log(result);
+      // const result = (
+      //   <div>
+      //     <span key={index} className="px-1 testing-label" style={highlightStyle} data-title={tooltip}>
+      //       {token}
+      //     </span>
+      //   </div>
+      // );
+      // console.log(result);
       return result;
     });
     isBiasNamesReady = true;
@@ -140,13 +158,16 @@ const AnswerDisplay: React.FC<AnswerDisplayProps> = ({ query, answer, visibleBia
         <p className="text-white text-[8px] sm:text-[10px] md:text-xs lg:text-sm break-all overflow-visible">
           {renderRationale()}
         </p>
-        <span 
-          key={1000} 
-          className="px-1" 
-          title="Static tooltip"
-        >
-          Test tooltip
-        </span>
+        {/* Test tooltip label */}
+        {/* <div className="relative inline-block px-1 test-label-container">
+        <label className="relative" data-tooltip="50%">Test why not cursor</label>
+        </div> */}
+        {/* To include attribute, use the following code */}
+
+        <label data-tooltip="messahe"
+        >test</label>
+
+
       </div>
     </div>
   );

@@ -1,11 +1,11 @@
 
-.label-container label::after {
+.label-container label:after {
     content: attr(data-tooltip);
     display: none;
     position: absolute;
     top: -20px;
     left: 50%;
-    transform: translateX(-50%);
+    transform: translateX(-50%); /* Center the tooltip */
     background-color: #d4b943;
     border: 1px solid #fef4c5;
     border-radius: 2px;
@@ -14,9 +14,79 @@
     white-space: nowrap;
     font-size: 0.8rem;
     z-index: 10;
+    /* display: block; */
   }
+
+.label-container-hover label:after {
+  content: attr(data-tooltip);
+  position: absolute;
+  top: -20px;
+  left: 50%;
+  transform: translateX(-50%);
+  /* background-color: #d4b943; */
+  background-color: black;
+  border: 1px solid #fef4c5;
+  border-radius: 2px;
+  padding: 2px 4px;
+  text-align: center;
+  white-space: nowrap;
+  font-size: 0.8rem;
+  z-index: 10;
+  /* display: none; */
+  /* display: block; */
+}
   
-  .label-container label:hover::after {
+  /* label-container when hover */
+  .label-container label:hover:after {
     display: block;
   }
+
+  .testing-label:after {
+    content: attr(data-title);
+    position: absolute;
+    top: -20px;
+    left: 50%;
+    transform: translateX(-50%); /* Center the tooltip */
+    background-color: #d4b943;
+    border: 1px solid #fef4c5;
+    border-radius: 2px;
+    padding: 2px 4px;
+    text-align: center;
+    white-space: nowrap;
+    font-size: 0.8rem;
+    z-index: 10;
+    display: block;
+  }
+
+  .test-label-container {
+    
+    position: relative; /* Ensure the container is positioned for the pseudo-element */
+  }
   
+  
+  .test-label-container {
+    position: relative; /* Ensure the container is positioned for the pseudo-element */
+    cursor: pointer; /* Change cursor to indicate interactivity */
+  }
+  .test-label-container label::after {
+    content: attr(data-tooltip); /* Ensure this is correctly applied */
+    display: none;
+    position: absolute; /* Use absolute positioning */
+    top: -1.5rem; /* Adjust to position above the label */
+    left: 50%; /* Center horizontally relative to the label */
+    transform: translateX(-50%); /* Offset for centering */
+    width: auto; /* Automatically size the tooltip */
+    max-width: 200px; /* Optional: limit tooltip width */
+    padding: 4px 8px; /* Add padding for readability */
+    background-color: #fef4c5; /* Tooltip background */
+    border: 1px solid #d4b943; /* Tooltip border */
+    border-radius: 4px; /* Rounded corners */
+    white-space: nowrap; /* Prevent line breaks */
+    font-size: 0.8rem; /* Adjust font size */
+    z-index: 100; /* Ensure it appears on top */
+  }
+  
+  .test-label-container label:hover::after {
+    display: block; /* Make tooltip visible on hover */
+  }
+
