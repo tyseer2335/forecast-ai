@@ -96,17 +96,7 @@ const SourceSection: React.FC<SourceSectionProps> = ({ source, visibleBiasColor,
     return (
         <div className="w-full flex-grow flex flex-col lg:flex-row space-y-4 lg:space-y-0 lg:space-x-5 justify-center items-center rounded-md h-[90%]">
             <SourceCard source={source} />
-            <div className="flex flex-row lg:flex-col justify-between h-[168px] lg:h-full items-start lg:items-end w-[88%] lg:w-[25%] lg:max-w-[216px]">
-                <div className="flex flex-col bg-sidebar-bg p-4 pb-7 w-full space-y-3 h-full lg:h-auto rounded-md items-start max-w-[150px] md:max-w-[192px] lg:max-w-[216px]">
-                    <h4 className="font-semibold text-metrics-text text-[10px] md:text-xs lg:text-sm xl:text-base">Detected Biases</h4>
-                    {/* List of Detected Biases */}
-                    <ul className="space-y-2 w-full">
-                        <DetectedBias color="green" />
-                        <DetectedBias color="yellow" />
-                        <DetectedBias color="purple" />
-                        <DetectedBias color="red" />
-                    </ul>
-                </div>
+            <div className="flex flex-row lg:flex-col justify-between h-[168px] lg:h-full items-start lg:items-end w-[88%] lg:w-[25%] lg:max-w-[216px]">  
                 <div className="flex flex-col bg-sidebar-bg p-4 pb-7 w-full h-full lg:h-auto space-y-4 md:space-y-6 lg:space-y-3 rounded-md items-start max-w-[150px] md:max-w-[192px] lg:max-w-[216px]">
                     <h4 className="font-semibold text-metrics-text text-[10px] md:text-xs lg:text-sm xl:text-base">Metrics</h4>
                     <div className="mt-2 space-y-3 w-full">
@@ -132,6 +122,16 @@ const SourceSection: React.FC<SourceSectionProps> = ({ source, visibleBiasColor,
                             <p className="text-metrics-text">{source.metrics.region}</p>
                         </div>
                     </div>
+                </div>
+                <div className="flex flex-col bg-sidebar-bg p-4 pb-7 w-full space-y-3 h-full lg:h-auto rounded-md items-start max-w-[150px] md:max-w-[192px] lg:max-w-[216px]">
+                    <h4 className="font-semibold text-metrics-text text-[10px] md:text-xs lg:text-sm xl:text-base">Detected Biases</h4>
+                    {/* List of Detected Biases */}
+                    <ul className="space-y-2 w-full">
+                        <DetectedBias color="green" />
+                        <DetectedBias color="yellow" />
+                        <DetectedBias color="purple" />
+                        <DetectedBias color="red" />
+                    </ul>
                 </div>
             </div>
         </div>
