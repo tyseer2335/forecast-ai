@@ -115,15 +115,19 @@ const AnswerDisplay: React.FC<AnswerDisplayProps> = ({ query, answer, visibleBia
       const classNames = `relative inline-block px-1 ${hoveredIndex===index ? 'label-container-hover' : 'label-container'}`;
       const result = (
         // `relative inline-block px-1 ${isHovered ? 'label-container-hover' : 'label-container'}`}
-        <div key={index} className="relative inline-block px-1
-                    hover:before:content-['TESTING FRONT'] 
-                    before:text-4xl before:text-red-300
-                    hover:after:content-['BACK'] 
-                    after:text-5xl after:text-yellow-300
-                    "
+        // <div key={index} className="relative inline-block px-1
+        //             hover:before:content-['TESTING FRONT'] 
+        //             before:text-4xl before:text-red-300
+        //             hover:after:content-['BACK'] 
+        //             after:text-5xl after:text-yellow-300
+        //             "
         // onMouseEnter={() => setHoveredIndex(index)}
         // onMouseLeave={() => setHoveredIndex(-1)}
-        >
+        // <div key={index} className='relative inline-block px-1 overflow-visible label-container'
+        //   onMouseEnter={() => setHoveredIndex(index)}
+        //   onMouseLeave={() => setHoveredIndex(-1)}
+        // >
+        <div key={index} className='relative inline-block px-1 label-container'>
           <label
             className="relative cursor-pointer"
             style={highlightStyle} 
@@ -155,8 +159,19 @@ const AnswerDisplay: React.FC<AnswerDisplayProps> = ({ query, answer, visibleBia
         <p className="text-white text-[8px] sm:text-[10px] md:text-xs lg:text-sm"><strong>Question:</strong> {query}</p>
         <p className="text-white text-[8px] sm:text-[10px] md:text-xs lg:text-sm"><strong>Forecast Probability:</strong> {answer.forecast}</p>
         <p className="text-white text-[8px] sm:text-[10px] md:text-xs lg:text-sm"><strong>Forecaster Rationale:</strong></p>
-        <p className="text-white text-[8px] sm:text-[10px] md:text-xs lg:text-sm break-all overflow-visible">
+        <p className="text-white text-[8px] sm:text-[10px] md:text-xs lg:text-sm break-all overflow-visible"> 
+          {/* The overflow-visible class is used to allow the tooltip to overflow the container */}
           {renderRationale()}
+          {/* Wrap each token with         <div key={index} className=`relative inline-block px-1 ${hoveredIndex===index ? 'label-container-hover' : 'label-container'}`>
+ */}
+          {/* For each token returned by {renderRationale()}, <div key={index} className=`relative inline-block px-1 ${hoveredIndex===index ? 'label-container-hover' : 'label-container'}`> {EACH TOKEN} </div>*/}
+          {/* To do that,  we need to map over the array returned by renderRationale() */}
+          {/* {renderRationale().map((token, index) => (
+            <div key={index} className={`relative inline-block px-1 overflow-visible ${hoveredIndex===index ? 'label-container-hover' : 'label-container'}`}>
+              {token}
+            </div>
+          ))} */}
+
         </p>
         {/* Test tooltip label */}
         {/* <div className="relative inline-block px-1 test-label-container">
