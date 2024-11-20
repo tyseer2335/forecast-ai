@@ -293,12 +293,15 @@ const PromptBar: React.FC<PromptBarProps> = ({
       onSubmit={handleSubmit}
       className="bg-mid-dark-grey px-6 py-3 flex justify-between items-center rounded-full relative h-[50px] lg:h-[57px] xl:h-[64px] w-[80%] max-w-[1300px]"
     >
-      <AdvancedQueryOptionsMenu
-        isMenuOpen={isMenuOpen}
-        setIsMenuOpen={setIsMenuOpen}
-        setRequest={setRequest}
-        submitRequest={submitRequest}
-      />
+      {isMenuOpen && (
+        <AdvancedQueryOptionsMenu
+          isMenuOpen={isMenuOpen}
+          setIsMenuOpen={setIsMenuOpen}
+          setRequest={setRequest}
+          submitRequest={submitRequest}
+        />
+      )
+      }
       <div className="flex justify-start items-center w-[95%] space-x-2">
         <button type="button">
           <img
