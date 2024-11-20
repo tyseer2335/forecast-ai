@@ -61,21 +61,11 @@ const AnswerDisplay: React.FC<AnswerDisplayProps> = ({ query, answer, visibleBia
       var [highlightStyle, degree] = [{}, ""];
       if (visibleBiasColor) [highlightStyle, degree] = getTokenColorDegree(index, feature);
       const result = (
-        // Ver 1
-        // <div key={index} className='relative inline-block px-1 label-container'>
-        //   <label
-        //     className="relative cursor-pointer"
-        //     style={highlightStyle} 
-        //     data-tooltip={degree}
-        //   >
-        //     {token}
-        //   </label>
-        // </div>
-      
-        // Ver 2
-        <div className="tooltip px-1" key={index} style={highlightStyle}>
+        <div key={index} className='relative inline-block px-1'>
+        <div className="tooltip" key={index} style={highlightStyle}>
           {token}
           <span className="tooltiptext">{degree}</span>
+        </div>
         </div>
       );
       return result;
