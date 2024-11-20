@@ -38,23 +38,17 @@ type AnswerDisplayProps = {
 
 const AnswerDisplay: React.FC<AnswerDisplayProps> = ({ query, answer, visibleBiasColor }) => {
   const { forecaster_rationale: rationale, llm_features: llmFeatures } = answer;
-  var [hoveredIndex, setHoveredIndex] = React.useState(-1);
-  var isBiasNamesReady = false;
 
-  const getTokenColorOpacity : (tokenIndex: number, feature: string) => [{}, string] = (tokenIndex: number, feature: string) => {
+  const getTokenColorDegree : (tokenIndex: number, feature: string) => [{}, string] = (tokenIndex: number, feature: string) => {
     // Note we can assume that visibleBiasColor is not ""
     if (!visibleBiasColor) return [{}, ""];
     if (!(`token_${tokenIndex}` in llmFeatures[feature])) return [{}, ""];
     const degree = llmFeatures[feature][`token_${tokenIndex}`];
     return [
       {
-        // backgroundColor: biasColorToHexCodeMap[visibleBiasColor],
         backgroundColor: biasColorToRGBAMap[visibleBiasColor].replace("A", degree.toString()),
-        // backgroundOpacity: degree,
-        // opacity: degree,
-
       },
-      `${(degree * 100).toFixed(2)}%`
+      `${(degree * 100).toFixed(1)}%`
     ];
   };
 
@@ -65,98 +59,28 @@ const AnswerDisplay: React.FC<AnswerDisplayProps> = ({ query, answer, visibleBia
       feature = biasColorToBiasNameMap[visibleBiasColor];
     }
     var coloredTokens = tokens.map((token, index) => {
-      var [highlightStyle, tooltip] = [{}, ""];
-      if (visibleBiasColor) [highlightStyle, tooltip] = getTokenColorOpacity(index, feature);
-      
-      // const result = (
-        // <span key={index} className="px-1" style={highlightStyle} title={tooltip}>
-        //   {token}
-        // </span>
-        // <div key={index} title={tooltip} className="inline-block px-1">
-        // <span style={highlightStyle}>{token}</span>
-        // </div>
-      //   <div key={index} className="relative inline-block px-1">
-      //   <label
-      //     className="relative cursor-pointer"
-      //     style={highlightStyle}
-      //   >
-      //     {token}
-      //   </label>
-      //   <style>{`
-      //     label::after {
-      //       content: "${tooltip}";
-      //       display: none;
-      //       position: absolute;
-      //       top: -20px;
-      //       left: 50%;
-      //       transform: translateX(-50%);
-      //       background-color: #fef4c5;
-      //       border: 1px solid #d4b943;
-      //       border-radius: 2px;
-      //       padding: 2px 4px;
-      //       text-align: center;
-      //       white-space: nowrap;
-      //       font-size: 0.8rem;
-      //       z-index: 10;
-      //     }
-
-      //     label:hover::after {
-      //       display: block;
-      //     }
-      //   `}</style>
-      // </div>
-      //   );
-      // example:
-            // style = {{
-            //   backgroundColor: biasColorToHexCodeMap[visibleBiasColor],
-            //   opacity: degree,
-            // }}
-
-      const classNames = `relative inline-block px-1 ${hoveredIndex===index ? 'label-container-hover' : 'label-container'}`;
+      var [highlightStyle, degree] = [{}, ""];
+      if (visibleBiasColor) [highlightStyle, degree] = getTokenColorDegree(index, feature);
       const result = (
-        // `relative inline-block px-1 ${isHovered ? 'label-container-hover' : 'label-container'}`}
-        // <div key={index} className="relative inline-block px-1
-        //             hover:before:content-['TESTING FRONT'] 
-        //             before:text-4xl before:text-red-300
-        //             hover:after:content-['BACK'] 
-        //             after:text-5xl after:text-yellow-300
-        //             "
-        // onMouseEnter={() => setHoveredIndex(index)}
-        // onMouseLeave={() => setHoveredIndex(-1)}
-        // <div key={index} className='relative inline-block px-1 overflow-visible label-container'
-        //   onMouseEnter={() => setHoveredIndex(index)}
-        //   onMouseLeave={() => setHoveredIndex(-1)}
-        // >
-        <div key={index} className='relative inline-block px-1 label-container'>
-          <label
-            className="relative cursor-pointer"
-            style={highlightStyle} 
-            data-tooltip={tooltip}
-          >
-            {token}
-          </label>
+        // Ver 1
+        // <div key={index} className='relative inline-block px-1 label-container'>
+        //   <label
+        //     className="relative cursor-pointer"
+        //     style={highlightStyle} 
+        //     data-tooltip={degree}
+        //   >
+        //     {token}
+        //   </label>
+        // </div>
+      
+        // Ver 2
+        <div className="tooltip px-1" key={index} style={highlightStyle}>
+          {token}
+          <span className="tooltiptext">{degree}</span>
         </div>
-      // );
-      // const result = (
-      //   <div>
-      //     <span key={index} className="px-1 testing-label" style={highlightStyle} data-title={tooltip}>
-      //       {token}
-      //     </span>
-      //   </div>
-      // );
-      // console.log(result);
-      // <div class="tooltip">Hover over me
-      //   <span class="tooltiptext">Tooltip text</span>
-      // </div>
-      // TOOLTIP VERSION
-      // <div className="tooltip px-1" key={index} style={highlightStyle}>
-      //   {token}
-      //   <span className="tooltiptext">{tooltip}</span>
-      // </div>
       );
       return result;
     });
-    isBiasNamesReady = true;
     return coloredTokens;
   };
 
@@ -169,29 +93,9 @@ const AnswerDisplay: React.FC<AnswerDisplayProps> = ({ query, answer, visibleBia
         <p className="text-white text-[8px] sm:text-[10px] md:text-xs lg:text-sm"><strong>Forecast Probability:</strong> {answer.forecast}</p>
         <p className="text-white text-[8px] sm:text-[10px] md:text-xs lg:text-sm"><strong>Forecaster Rationale:</strong></p>
         <p className="text-white text-[8px] sm:text-[10px] md:text-xs lg:text-sm break-all overflow-visible"> 
-          {/* The overflow-visible class is used to allow the tooltip to overflow the container */}
           {renderRationale()}
-          {/* Wrap each token with         <div key={index} className=`relative inline-block px-1 ${hoveredIndex===index ? 'label-container-hover' : 'label-container'}`>
- */}
-          {/* For each token returned by {renderRationale()}, <div key={index} className=`relative inline-block px-1 ${hoveredIndex===index ? 'label-container-hover' : 'label-container'}`> {EACH TOKEN} </div>*/}
-          {/* To do that,  we need to map over the array returned by renderRationale() */}
-          {/* {renderRationale().map((token, index) => (
-            <div key={index} className={`relative inline-block px-1 overflow-visible ${hoveredIndex===index ? 'label-container-hover' : 'label-container'}`}>
-              {token}
-            </div>
-          ))} */}
-
         </p>
-        {/* Test tooltip label */}
-        {/* <div className="relative inline-block px-1 test-label-container">
-        <label className="relative" data-tooltip="50%">Test why not cursor</label>
-        </div> */}
-        {/* To include attribute, use the following code */}
-
-        <label data-tooltip="messahe"
-        >test</label>
-
-
+        
       </div>
     </div>
   );
