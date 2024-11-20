@@ -1,7 +1,9 @@
 // src/components/AnswerDisplay.tsx
 import React from "react";
 import { Answer, BiasColor } from "../hooks/types";
-import { biasColorToBiasNameMap, biasColorToHexCodeMap } from "../hooks/constants";
+import { biasColorToBiasNameMap, biasColorToHexCodeMap, biasColorToRGBAMap } from "../hooks/constants";
+// import custom css from ../css/answer-display-custom-css.css
+import "../css/answer-display-custom-css.css";
 
 /**
  * @file AnswerDisplay.tsx
@@ -46,8 +48,11 @@ const AnswerDisplay: React.FC<AnswerDisplayProps> = ({ query, answer, visibleBia
     const degree = llmFeatures[feature][`token_${tokenIndex}`];
     return [
       {
-        backgroundColor: biasColorToHexCodeMap[visibleBiasColor],
-        opacity: degree,
+        // backgroundColor: biasColorToHexCodeMap[visibleBiasColor],
+        backgroundColor: biasColorToRGBAMap[visibleBiasColor].replace("A", degree.toString()),
+        // backgroundOpacity: degree,
+        // opacity: degree,
+
       },
       `${(degree * 100).toFixed(2)}%`
     ];
@@ -63,44 +68,61 @@ const AnswerDisplay: React.FC<AnswerDisplayProps> = ({ query, answer, visibleBia
       var [highlightStyle, tooltip] = [{}, ""];
       if (visibleBiasColor) [highlightStyle, tooltip] = getTokenColorOpacity(index, feature);
       
-      const result = (
+      // const result = (
         // <span key={index} className="px-1" style={highlightStyle} title={tooltip}>
         //   {token}
         // </span>
         // <div key={index} title={tooltip} className="inline-block px-1">
         // <span style={highlightStyle}>{token}</span>
         // </div>
-        <div key={index} className="relative inline-block px-1">
-        <label
-          className="relative cursor-pointer"
-          style={highlightStyle}
-        >
-          {token}
-        </label>
-        <style>{`
-          label::after {
-            content: "${tooltip}";
-            display: none;
-            position: absolute;
-            top: -20px;
-            left: 50%;
-            transform: translateX(-50%);
-            background-color: #fef4c5;
-            border: 1px solid #d4b943;
-            border-radius: 2px;
-            padding: 2px 4px;
-            text-align: center;
-            white-space: nowrap;
-            font-size: 0.8rem;
-            z-index: 10;
-          }
+      //   <div key={index} className="relative inline-block px-1">
+      //   <label
+      //     className="relative cursor-pointer"
+      //     style={highlightStyle}
+      //   >
+      //     {token}
+      //   </label>
+      //   <style>{`
+      //     label::after {
+      //       content: "${tooltip}";
+      //       display: none;
+      //       position: absolute;
+      //       top: -20px;
+      //       left: 50%;
+      //       transform: translateX(-50%);
+      //       background-color: #fef4c5;
+      //       border: 1px solid #d4b943;
+      //       border-radius: 2px;
+      //       padding: 2px 4px;
+      //       text-align: center;
+      //       white-space: nowrap;
+      //       font-size: 0.8rem;
+      //       z-index: 10;
+      //     }
 
-          label:hover::after {
-            display: block;
-          }
-        `}</style>
-      </div>
+      //     label:hover::after {
+      //       display: block;
+      //     }
+      //   `}</style>
+      // </div>
+      //   );
+      const result = (
+        <div key={index} className="relative inline-block px-1 label-container">
+          <label
+            className="relative cursor-pointer"
+            style={highlightStyle} 
+            // example:
+            // style = {{
+            //   backgroundColor: biasColorToHexCodeMap[visibleBiasColor],
+            //   opacity: degree,
+            // }}
+            data-tooltip={tooltip}
+          >
+            {token}
+          </label>
+        </div>
       );
+      console.log(result);
       return result;
     });
     isBiasNamesReady = true;
