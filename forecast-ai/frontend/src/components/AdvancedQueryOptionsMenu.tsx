@@ -112,7 +112,7 @@ const AdvancedQueryOptionsMenu: React.FC<AdvancedQueryOptionsMenuProps> = ({ isM
     }, [isMenuOpen]);
 
     return (
-        <div ref={menuRef} className={`w-[480px] h-[40vh] bg-query-options-menu-bg py-5 px-4 pb-10 flex flex-col space-y-4 justify-center items-center absolute top-[-41vh] overflow-y-auto ${!isMenuOpen && 'opacity-0'}`}>
+        <div ref={menuRef} className={`w-[480px] h-[40vh] bg-query-options-menu-bg py-5 px-4 pb-10 flex flex-col space-y-4 justify-center items-center absolute top-[-41vh] overflow-y-auto ${!isMenuOpen && '-z-50'}`}>
             <div className="w-full h-[10%] flex justify-between items-center">
                 <h1 className="text-sm text-metrics-text font-bold">Advanced Query Options</h1>
                 <button onClick={handleClose}>

@@ -77,7 +77,6 @@ const SourcesContainer: React.FC<SourcesContainerProps> = ({ sources, error, loa
                 ) : (
                     <div className="w-full space-y-4 bg-screen-black flex flex-col h-full relative">
                         <h1 className="font-bold text-chat-message-text text-sm md:text-base lg:text-lg xl:text-xl">Sources</h1>
-                        {/* <SourceSection source={sources[currentSource]} biasVisibility={sources[currentSource].biasVisibility} setBiasVisibility={setbiasVisibility} /> */}
                         <SourceSection source={sources[currentSource]} visibleBiasColor={visibleBiasColor} setVisibleBiasColor={setVisibleBiasColor} />
                         <button onClick={decrementCurrentSource} className="absolute left-0 top-[38%] lg:top-1/2 cursor-pointer" data-testid="decrement-btn">
                             <img src={ScrollLeftButton} alt="scroll-left-btn" className="w-5 h-5" />
