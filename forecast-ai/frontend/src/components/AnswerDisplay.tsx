@@ -64,12 +64,42 @@ const AnswerDisplay: React.FC<AnswerDisplayProps> = ({ query, answer, visibleBia
       if (visibleBiasColor) [highlightStyle, tooltip] = getTokenColorOpacity(index, feature);
       
       const result = (
-        <span key={index} className="px-1" style={highlightStyle} title={tooltip}>
-          {token}
-        </span>
+        // <span key={index} className="px-1" style={highlightStyle} title={tooltip}>
+        //   {token}
+        // </span>
         // <div key={index} title={tooltip} className="inline-block px-1">
         // <span style={highlightStyle}>{token}</span>
         // </div>
+        <div key={index} className="relative inline-block px-1">
+        <label
+          className="relative cursor-pointer"
+          style={highlightStyle}
+        >
+          {token}
+        </label>
+        <style>{`
+          label::after {
+            content: "${tooltip}";
+            display: none;
+            position: absolute;
+            top: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #fef4c5;
+            border: 1px solid #d4b943;
+            border-radius: 2px;
+            padding: 2px 4px;
+            text-align: center;
+            white-space: nowrap;
+            font-size: 0.8rem;
+            z-index: 10;
+          }
+
+          label:hover::after {
+            display: block;
+          }
+        `}</style>
+      </div>
       );
       return result;
     });
