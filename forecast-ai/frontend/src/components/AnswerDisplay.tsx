@@ -2,7 +2,6 @@
 import React from "react";
 import { Answer, BiasColor } from "../hooks/types";
 import { biasColorToBiasNameMap, biasColorToHexCodeMap, biasColorToRGBAMap } from "../hooks/constants";
-// import custom css from ../css/answer-display-custom-css.css
 import "../css/answer-display-custom-css.css";
 
 /**
