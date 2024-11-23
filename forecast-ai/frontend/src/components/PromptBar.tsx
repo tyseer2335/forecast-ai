@@ -300,6 +300,13 @@ const convertResponseSourcesIntoSources = (responseSources: any, articleSummarie
   };
   return (
     <form
+      onKeyDown={(e) => {
+        if (e.key === "Enter") {
+          e.preventDefault();
+          handleSubmit(e);
+        }
+      }
+      }
       onSubmit={handleSubmit}
       className="bg-mid-dark-grey px-6 py-3 flex justify-between items-center rounded-full relative h-[50px] lg:h-[57px] xl:h-[64px] w-[80%] max-w-[1300px]"
     >
