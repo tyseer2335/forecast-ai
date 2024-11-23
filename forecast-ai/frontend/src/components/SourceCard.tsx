@@ -1,5 +1,5 @@
 // src/components/SourceCard.tsx
-import React from "react";
+import React, { useState } from "react";
 import { SourceObject } from "../hooks/types";
 
 /**
@@ -30,6 +30,8 @@ type SourceCardProps = {
 }
 
 const SourceCard: React.FC<SourceCardProps> = ({ source }) => {
+    const [showFullContent, setShowFullContent] = useState(false);
+
     const renderText = (text: string) => {
         const sentences = text.split('\n');
         return sentences.map((sentence, index) => (
@@ -45,13 +47,27 @@ const SourceCard: React.FC<SourceCardProps> = ({ source }) => {
         <div className="bg-sidebar-bg px-4 py-10 rounded-md flex space-x-4 h-full pr-6 w-[88%] lg:w-[60%] max-w-[697px] relative overflow-y-auto">
             <img src={source.logo} alt="source-logo" className="w-5 h-5 sm:w-8 sm:h-8 md:w-10 md:h-10 lg:w-12 lg:h-12 rounded-full" data-testid="source-logo" />
             <div className="space-y-6 h-full flex flex-col justify-start w-[95%]">
-                <h3 className="font-semibold text-xs sm:text-sm lg:text-base xl:text-lg text-metrics-text" data-testid="source-title">{source.title}</h3>
+                <div className="flex justify-between items-center">
+                    <h3 className="font-semibold text-xs sm:text-sm lg:text-base xl:text-lg text-metrics-text" data-testid="source-title">
+                        {source.title}
+                    </h3>
+                    <button
+                        onClick={() => setShowFullContent(!showFullContent)}
+                        className="text-[8px] md:text-[10px] lg:text-xs text-mid-light-grey font-semibold"
+                    >
+                        {showFullContent ? "Show Summary" : "Show Full Content"}
+                    </button>
+                </div>
                 <img src={source.image} alt="source-img" className="w-[80%] max-w-[306px] h-[35%]" data-testid="source-image"/>
-                <p className="text-source-text text-[8px] sm:text-[10px] md:text-xs xl:text-sm" data-testid="source-text">{renderText(source.text)}</p>
+                <p className="text-source-text text-[8px] sm:text-[10px] md:text-xs xl:text-sm" data-testid="source-text">
+                    {renderText(showFullContent ? source.fullText : source.summary)}
+                </p>
             </div>
-            <a href={source.link} target="_blank" className="absolute top-[10px] right-[8px] text-[8px] md:text-[10px] lg:text-xs text-mid-light-grey font-semibold z-10">Click here for the actual content</a>
+            <a href={source.link} target="_blank" className="absolute top-[10px] right-[8px] text-[8px] md:text-[10px] lg:text-xs text-mid-light-grey font-semibold z-10">
+                Click here for the actual content
+            </a>
         </div>
-    )
-}
+    );
+};
 
 export default SourceCard;
