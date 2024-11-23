@@ -1,5 +1,6 @@
 // src/components/AnswerDisplay.tsx
 import React from "react";
+import { useState } from "react";
 import { Answer, BiasColor } from "../hooks/types";
 import { biasColorToBiasNameMap, biasColorToHexCodeMap, biasColorToRGBAMap } from "../hooks/constants";
 import "../css/answer-display-custom-css.css";
@@ -37,6 +38,7 @@ type AnswerDisplayProps = {
 
 const AnswerDisplay: React.FC<AnswerDisplayProps> = ({ query, answer, visibleBiasColor }) => {
   const { forecaster_rationale: rationale, llm_features: llmFeatures } = answer;
+  const [showRawRationale, setShowRawRationale] = useState(false);
 
   const getTokenColorDegree : (tokenIndex: number, feature: string) => [{}, string] = (tokenIndex: number, feature: string) => {
     // Note we can assume that visibleBiasColor is not ""
@@ -75,14 +77,30 @@ const AnswerDisplay: React.FC<AnswerDisplayProps> = ({ query, answer, visibleBia
 
   return (
     <div className="p-4 pb-7 bg-sidebar-bg rounded-md flex flex-col space-y-6 flex-grow max-w-[933px] overflow-y-auto" style={{ width: 'calc(85% + 20px)' }}>
-      <h3 className="text-[10px] sm:text-xs md:text-sm lg:text-base xl:text-lg 2xl:text-xl font-bold text-white"
-      title="hi">Forecast Result</h3>
+      <div className="flex justify-between items-center">
+        <h3 className="text-[10px] sm:text-xs md:text-sm lg:text-base xl:text-lg 2xl:text-xl font-bold text-white">
+          Forecast Result
+        </h3>
+        <button
+          onClick={() => setShowRawRationale(!showRawRationale)}
+          className="text-[8px] sm:text-[10px] md:text-xs lg:text-sm text-metrics-text underline"
+        >
+          {showRawRationale ? "Show Processed" : "Show Raw Response"}
+        </button>
+      </div>
+      
       <div className="flex flex-col space-y-3 sm:space-y-4 w-full overflow-visible">
-        <p className="text-white text-[8px] sm:text-[10px] md:text-xs lg:text-sm"><strong>Question:</strong> {query}</p>
-        <p className="text-white text-[8px] sm:text-[10px] md:text-xs lg:text-sm"><strong>Forecast Probability:</strong> {answer.forecast}</p>
-        <p className="text-white text-[8px] sm:text-[10px] md:text-xs lg:text-sm"><strong>Forecaster Rationale:</strong></p>
+        <p className="text-white text-[8px] sm:text-[10px] md:text-xs lg:text-sm">
+          <strong>Question:</strong> {query}
+        </p>
+        <p className="text-white text-[8px] sm:text-[10px] md:text-xs lg:text-sm">
+          <strong>Forecast Probability:</strong> {answer.forecast}
+        </p>
+        <p className="text-white text-[8px] sm:text-[10px] md:text-xs lg:text-sm">
+          <strong>Forecaster Rationale:</strong>
+        </p>
         <p className="text-white text-[8px] sm:text-[10px] md:text-xs lg:text-sm break-all overflow-visible"> 
-          {renderRationale()}
+          {showRawRationale ? answer.raw_rationale : renderRationale()}
         </p>
         
       </div>
