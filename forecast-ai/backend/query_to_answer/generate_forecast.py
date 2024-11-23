@@ -36,6 +36,7 @@ class ForecastGenerator:
         self.publisher_prompt = publisher_prompt
 
         self.GOOGLE_SEARCH_DATE_FORMAT = "%Y-%m-%d"
+        self.article_summaries = {}
 
     def format_articles_for_llm(self, articles: Dict[str, List[Article]]) -> str:
         """
@@ -49,10 +50,20 @@ class ForecastGenerator:
         """
         formatted_results = []
         id_counter = 1
+        self.article_summaries = {}  # Reset article summaries
 
         for source, article_list in articles.items():
             for article in article_list:
                 summarized_text = self.summarize_article(article.content.get('text', ''))
+                # Store summary with ID
+                self.article_summaries[str(id_counter)] = {
+                    "summary": summarized_text,
+                    "full_text": article.content.get('text', ''),
+                    "title": article.title,
+                    "source": source,
+                    "date": article.published_date
+                }
+
                 content = f"""ID: {id_counter}
 Query: {article.query}
 Title: {article.title}
@@ -151,6 +162,8 @@ Content:
         Returns:
             dict: A dictionary containing the forecast answer with rationale, prediction, and source information.
         """
+        response = ""
+
         # Format the articles for the LLM
         formatted_sources = self.format_articles_for_llm(news)
 
@@ -209,5 +222,6 @@ Content:
 
         return {
             "answer": answer,
-            "raw_response": response  # Including raw response for debugging/logging
+            "raw_response": response,  # Including raw response for debugging/logging
+            "article_summaries": self.article_summaries
         }
