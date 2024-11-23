@@ -147,9 +147,13 @@ async def query_to_answer(check_request: Request, request: ForecastRequest, quer
         await asyncio.sleep(0)
         await send_status_update(query_id, "Generating forecast answer...")
         forecast_agent = generate_forecast.ForecastGenerator(client=client, model="gpt-4o-mini")
-        answer = forecast_agent.generate_forecast(request, ranked_news_with_content)["answer"]
         # answer = {'Question': 'is LLM truely reach AGI?', 'Forecaster ID': 'AI-Forecaster', 'Forecaster Rationale': "Key Facts:\n1. As of my pretraining knowledge cutoff in October 2023, the AI technology referred to as LLM (likely referring to large language models) had not reached AGI (Artificial General Intelligence). AGI refers to highly autonomous systems that outperform humans at most economically valuable work, and as of then, no AI system had demonstrated this level of capability.\n", 'Forecast': '10.0%', 'Sources': {'x.com': [{'title': 'Alex Volkov (Thursd/AI) (@altryne) on X - X', 'content': {}, 'url': 'https://news.google.com/rss/articles/CBMioAFBVV95cUxPNHFZQW0zOUM3ZVhtZy1HVEZmbXBSdlFubi1OYWFjSktBMEdlaks0NU84UmJaSTlyMF9tZkU0dERkdURhTzN2VVd0RkFhem15Q21POEpacUllc3p2cnZpRjdMRzV4ell1WGx0enhHc29IaVdHNE9hWjFoRDczY1l6ckwzLUJ0WFp2aGx1SGJOTkpycVRReVN0YVA5c2ZDMGxT?oc=5&hl=en-CA&gl=CA&ceid=CA:en', 'published_date': 'Mon, 11 Nov 2024 21:57:00 GMT', 'platform': 'automatic'}]}}
-        print(answer)
+        forecast_result = forecast_agent.generate_forecast(request, ranked_news_with_content)
+        # Extract components from forecast result
+        answer = forecast_result["answer"]
+        raw_response = forecast_result["raw_response"]
+        article_summaries = forecast_result["article_summaries"]
+        print(forecast_result)
 
         state = 8
         await asyncio.sleep(0)
@@ -177,10 +181,17 @@ async def query_to_answer(check_request: Request, request: ForecastRequest, quer
         # 'token_38': 0, 'token_39': 0, 'token_40': 0, 'token_41': 0, 'token_42': 0.1, 'token_43': 0, 'token_44': 0, 'token_45': 0, 'token_46': 0, 'token_47': 0, 'token_48': 0, 'token_49': 0, 'token_50': 0.1, 'token_51': 0, 'token_52': 0.
         # 1, 'token_53': 0, 'token_54': 0.1, 'token_55': 0, 'token_56': 0.1, 'token_57': 0, 'token_58': 0.1}}}
 
+        # Add additional data to final response
+        final_response = {
+            **answer_with_bias,
+            "raw_rationale": raw_response,
+            "article_summaries": article_summaries
+        }
+
         state = 9
         await asyncio.sleep(0)
         await send_status_update(query_id, "Process complete.")
-        return answer_with_bias
+        return final_response
     except Exception as e:
         await send_status_update(query_id, f"Error: {str(e)}. State: {state}")
         raise HTTPException(status_code=500, detail=f"Error generating answer to query: {str(e)}. State: {state}")
