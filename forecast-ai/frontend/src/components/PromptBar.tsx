@@ -92,15 +92,18 @@ const PromptBar: React.FC<PromptBarProps> = ({
   const navigate = useNavigate();
   // const reconnectInterval = useRef<NodeJS.Timeout | null>(null); // Reconnection interval reference
 
-  const convertResponseSourcesIntoSources = (responseSources: any) => {
+const convertResponseSourcesIntoSources = (responseSources: any, articleSummaries: any) => {
     const result: SourceObject[] = [];
     Object.values(responseSources).forEach((sources: any) => {
-      sources.forEach((source: any) => {
+    sources.forEach((source: any, index: number) => {
+      // Find matching summary using article ID
+      const articleId = (index + 1).toString();
+      const summaryData = articleSummaries[articleId] || {};
+      
         result.push({
           title: source.title,
           text: source.content.text,
-          image:
-            source.content.media.length > 0
+        image: source.content.media?.length > 0
               ? source.content.media[0]
               : "https://placehold.co/306x150?text=No+Image+Available",
           link: source.url,
@@ -110,6 +113,10 @@ const PromptBar: React.FC<PromptBarProps> = ({
             trendingRate: 22,
             region: "Atlanta, USA",
           },
+        // Use the article summaries from backend
+        summary: summaryData.summary || "",
+        fullText: summaryData.full_text || "",
+        id: articleId
         });
       });
     });
@@ -120,7 +127,9 @@ const PromptBar: React.FC<PromptBarProps> = ({
     return { 
       forecast: responseAnswer['Forecast'], 
       forecaster_rationale: responseAnswer['Forecaster Rationale'],
-      llm_features: responseAnswer['llm_features']
+      llm_features: responseAnswer['llm_features'],
+      raw_rationale: responseAnswer['raw_rationale'],
+      article_summaries: responseAnswer['article_summaries']
     }
   }
 
@@ -224,12 +233,14 @@ const PromptBar: React.FC<PromptBarProps> = ({
             },
           }
         );
-        const sources = convertResponseSourcesIntoSources(
-          response.data["Sources"]
-        );
-        addSources(sources);
         const answer = convertResponseAnswerIntoAnswer(response.data);
         addAnswer(answer);
+          const sources = convertResponseSourcesIntoSources(
+          response.data["Sources"],
+          answer.article_summaries
+        );
+        addSources(sources);
+
         toggleLoading(false);
         setRequest({});
         setSubmitRequest(false);
