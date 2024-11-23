@@ -33,12 +33,15 @@ export type Chat = {
 // ];
 
 export type SourceObject = {
+  logo: string;
   title: string;
   text: string;
   image: string;
   link: string;
-  logo: string;
   metrics: Metric;
+  summary: string;
+  fullText: string;
+  id?: string;
 };
 
 const isSourceObject = (content: any): content is SourceObject => {
@@ -82,6 +85,7 @@ export type Answer = {
       [token: string]: number 
     };
   };
+  raw_rationale: string;
 }
 
 // BiasColor is a type that represents the different colors that can be used to represent bias in the forecaster rationale
