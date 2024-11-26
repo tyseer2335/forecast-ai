@@ -94,7 +94,7 @@ const SourceSection: React.FC<SourceSectionProps> = ({ source, visibleBiasColor,
     }
 
     // Reusable Component for Metric Display that takes img src, title, and value
-    const MetricDisplay: React.FC<{ imgSrc: string, title: string, value: string }> = ({ imgSrc, title, value }) => {
+    const MetricDisplay: React.FC<{ imgSrc: string, title: string, value: string | number }> = ({ imgSrc, title, value }) => {
         return (
             <div className="text-mid-light-grey text-[8px] md:text-[10px] lg:text-[11px] xl:text-xs font-semibold flex justify-between items-center">
                 <div className="flex items-center space-x-2">
@@ -105,7 +105,7 @@ const SourceSection: React.FC<SourceSectionProps> = ({ source, visibleBiasColor,
             </div>
         )
     }
-    console.log("souce.metrics: ", source.metrics);
+    console.log("souce", source);
 
     return (
         <div className="w-full flex-grow flex flex-col lg:flex-row space-y-4 lg:space-y-0 lg:space-x-5 justify-center items-center rounded-md h-[90%]">
@@ -114,45 +114,17 @@ const SourceSection: React.FC<SourceSectionProps> = ({ source, visibleBiasColor,
                 <div className="flex flex-col bg-sidebar-bg p-4 pb-7 w-full h-full lg:h-auto space-y-4 md:space-y-6 lg:space-y-3 rounded-md items-start max-w-[150px] md:max-w-[192px] lg:max-w-[216px]">
                     <h4 className="font-semibold text-metrics-text text-[10px] md:text-xs lg:text-sm xl:text-base">Metrics</h4>
                     <div className="mt-2 space-y-3 w-full">
-                        {/* viewsCount: 483,
-                            trendingRate: 22,
-                            region: "Atlanta, USA",
-                            platform: source.platform === "automatic" ? "News" : source.platform,
-                            publishedDate: source.published_date,
-                            relevanceScore: source.score,
-                            ranking: source.ranking,
-                            totalArticlesOfSource: source.total_articles_of_source,
-                            totalArticles: source.total_articles, */}
                         {/* <MetricDisplay imgSrc={ViewsCountImage} title="Views Count" value={source.metrics.viewsCount.toString()} />
                         <MetricDisplay imgSrc={TrendingRateImage} title="Trending Rate" value={`${source.metrics.trendingRate}%`} />
                         <MetricDisplay imgSrc={RegionImage} title="Region" value={source.metrics.region} /> */}
                         <MetricDisplay imgSrc={TrendingRateImage} title="Platform" value={source.metrics.platform} />
                         <MetricDisplay imgSrc={TrendingRateImage} title="Published Date" value={source.metrics.publishedDate} />
-                        {/* <MetricDisplay imgSrc={TrendingRateImage} title="Relevance Score" value={(source.metrics.relevanceScore).toString()} /> */}
-                        {/* <MetricDisplay imgSrc={TrendingRateImage} title="Ranking" value={source.metrics.ranking} /> */}
-                        {/* <MetricDisplay imgSrc={TrendingRateImage} title={`Total Articles of ${source.metrics.platform}`} value={source.metrics.totalArticlesOfSource} />
-                        <MetricDisplay imgSrc={TrendingRateImage} title="Total Articles" value={source.metrics.totalArticles} /> */}
-                        {/* <div className="text-mid-light-grey text-[8px] md:text-[10px] lg:text-[11px] xl:text-xs font-semibold flex justify-between items-center">
-                            <div className="flex items-center space-x-2">
-                                <img src={ViewsCountImage} alt="views-count-image" className="w-4 h-4 lg:w-5 lg:h-5 xl:w-6 xl:h-6" />
-                                <p>Views Count</p>
-                            </div>
-                            <p className="text-metrics-text">{source.metrics.viewsCount}</p>
-                        </div>
-                        <div className="text-mid-light-grey text-[8px] md:text-[10px] lg:text-[11px] xl:text-xs font-semibold flex justify-between items-center">
-                            <div className="flex items-center space-x-2">
-                                <img src={TrendingRateImage} alt="trending-rate-image" className="w-4 h-4 lg:w-5 lg:h-5 xl:w-6 xl:h-6" />
-                                <p>Trending Rate</p>
-                            </div>
-                            <p className="text-metrics-text">{source.metrics.trendingRate}%</p>
-                        </div>
-                        <div className="text-mid-light-grey text-[8px] md:text-[10px] lg:text-[11px] xl:text-xs font-semibold flex justify-between items-center">
-                            <div className="flex items-center space-x-2">
-                                <img src={RegionImage} alt="region-image" className="w-4 h-4 lg:w-5 lg:h-5 xl:w-6 xl:h-6" />
-                                <p>Region</p>
-                            </div>
-                            <p className="text-metrics-text">{source.metrics.region}</p>
-                        </div> */}
+                        
+                        <MetricDisplay imgSrc={TrendingRateImage} title="Relevance Score" value={(source.metrics.relevanceScore).toString()} />
+                        <MetricDisplay imgSrc={TrendingRateImage} title="Ranking" value={source.metrics.ranking} />
+                        <MetricDisplay imgSrc={TrendingRateImage} title={`Total Articles from ${source.metrics.platform}`} value={source.metrics.totalArticlesOfSource} />
+                        {/* <MetricDisplay imgSrc={TrendingRateImage} title="Total Articles" value={source.metrics.totalArticles} /> */}
+                        
                     </div>
                 </div>
                 <div className="flex flex-col bg-sidebar-bg p-4 pb-7 w-full space-y-3 h-full lg:h-auto rounded-md items-start max-w-[150px] md:max-w-[192px] lg:max-w-[216px]">

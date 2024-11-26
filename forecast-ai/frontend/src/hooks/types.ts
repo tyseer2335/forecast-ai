@@ -1,15 +1,14 @@
 // src/hooks/saveChat/types.ts
 
 export type Metrics = {
-  viewsCount: number,
-  trendingRate: number,
-  region: string,
   platform: string,
+  publisherTitle: string,
+  publisherHref: string,
   publishedDate: string,
   relevanceScore: number,
   ranking: number,
   totalArticlesOfSource: number,
-  totalArticles: number,
+  // totalArticles: number,
 }
 
 export type GlobalMetrics = {

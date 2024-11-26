@@ -214,6 +214,8 @@ Content:
                         # Some attributes for metrics (e.g., relevance score, ranking out of number of articles of this source type(platform)), etc.
                         "published_date": article.published_date,
                         "platform": article.platform,
+                        "publisher_title": article.publisher["title"],
+                        "publisher_href": article.publisher["href"],
                         "relevance_score": article.score,
                         "ranking": i + 1,
                         "total_articles_of_source": len(articles),

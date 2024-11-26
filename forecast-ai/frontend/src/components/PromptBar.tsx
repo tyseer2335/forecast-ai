@@ -4,7 +4,7 @@ import OptionsButton from "../assets/options-button.svg";
 import SubmitButton from "../assets/submit-button.svg";
 import { useNavigate } from "react-router-dom";
 import AdvancedQueryOptionsMenu from "./AdvancedQueryOptionsMenu";
-import { Answer, Chat, GlobalMetrics, SourceObject } from "../hooks/types";
+import { Answer, Chat, GlobalMetrics, Metrics, SourceObject } from "../hooks/types";
 import axios from "axios";
 import { v4 as uuidv4 } from "uuid";
 
@@ -62,7 +62,6 @@ type PromptBarProps = {
   addError: (error: string) => void;
   toggleLoading: (loading: boolean) => void;
   addStatus: (status: string) => void;
-  addGlobalMetrics: (globalMetrics: GlobalMetrics) => void;
 };
 
 export type Request = {
@@ -85,7 +84,6 @@ const PromptBar: React.FC<PromptBarProps> = ({
   addError,
   toggleLoading,
   addStatus,
-  addGlobalMetrics,
 }) => {
   const [input, setInput] = useState("");
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -96,15 +94,20 @@ const PromptBar: React.FC<PromptBarProps> = ({
   // const reconnectInterval = useRef<NodeJS.Timeout | null>(null); // Reconnection interval reference
 
 const convertResponseSourcesIntoSources = (responseSources: any, articleSummaries: any) => {
-  console.log("Response Sources:", responseSources);
+
     const result: SourceObject[] = [];
-    console.log("Response Sources:", responseSources);
+    
     Object.values(responseSources).forEach((sources: any) => {
     sources.forEach((source: any, index: number) => {
       // Find matching summary using article ID
       const articleId = (index + 1).toString();
       const summaryData = articleSummaries[articleId] || {};
-      
+
+      // Parse integer metrics to numbers
+      const parsedRelevanceScore = parseInt(source["relevance_score"]);
+      const parsedRanking = parseInt(source["ranking"]);
+      const parsedTotalArticlesOfSource = parseInt(source["total_articles_of_source"]);
+
         result.push({
           title: source.title,
           text: source.content.text,
@@ -114,16 +117,14 @@ const convertResponseSourcesIntoSources = (responseSources: any, articleSummarie
           link: source.url,
           logo: `http://www.google.com/s2/favicons?domain=${source.url}&sz=64`,
           metrics: {
-            viewsCount: 483,
-            trendingRate: 22,
-            region: "Atlanta, USA",
             platform: source.platform === "automatic" ? "News" : source.platform,
+            publisherTitle: source.publisher_title,
+            publisherHref: source.publisher_href,
             publishedDate: source.published_date,
-            relevanceScore: source.score,
-            ranking: source.ranking,
-            totalArticlesOfSource: source.total_articles_of_source,
-            totalArticles: source.total_articles,
-          },
+            relevanceScore: parsedRelevanceScore,
+            ranking: parsedRanking,
+            totalArticlesOfSource: parsedTotalArticlesOfSource,
+            },
         // Use the article summaries from backend
         summary: summaryData.summary || "",
         fullText: summaryData.full_text || "",
@@ -254,24 +255,27 @@ const convertResponseSourcesIntoSources = (responseSources: any, articleSummarie
         const answer = convertResponseAnswerIntoAnswer(data);
         addAnswer(answer);
         const sources = convertResponseSourcesIntoSources(
-          response.data["Sources"],
+          data["Sources"],
           answer.article_summaries
         );
         addSources(sources);
-
         toggleLoading(false);
         setRequest({});
         setSubmitRequest(false);
+        const chat = {
+          query: input,
+          sources: sources,
+          answer: answer,
+          loading: false,
+        }
         try {
-          saveChatToDB({
-            query: input,
-            sources: sources,
-            answer: answer,
-            loading: false,
-          });
+          saveChatToDB(chat);
           navigate("/");
+          
+          
         } catch (error) {
           console.error("Error handling submit:", error);
+          localStorage.setItem("chat", JSON.stringify(chat));
         }
       } catch (error) {
         console.error("Detailed Error:", error);
@@ -316,6 +320,7 @@ const convertResponseSourcesIntoSources = (responseSources: any, articleSummarie
       year: "numeric",
     });
   };
+
   return (
     <form
       onKeyDown={(e) => {

@@ -157,20 +157,12 @@ const MainContainer: React.FC = () => {
       })
   }
 
-  const addGlobalMetrics = (globalMetrics: GlobalMetrics) => {
-      setChats((prevChats): Chat[] => {
-        const newChats = [...prevChats];
-        newChats[newChats.length - 1] = { ...newChats[newChats.length - 1], globalMetrics: globalMetrics };
-        return newChats;
-      })
-  }
-
   return (
     <div className="min-h-screen h-screen w-screen flex bg-screen-black text-white font-inter">
     <Sidebar newChatId={chatId} />
     <div className="flex flex-col flex-grow">
       <HeaderBar title={chatTitle} />
-      <MainContent chats={chats} setChatTitle={setChatTitle} saveChatToDB={saveChatToDB} addQuery={addQuery} addSources={addSources} addAnswer={addAnswer} addError={addError} toggleLoading={toggleLoading} addStatus={addStatus} addGlobalMetrics={addGlobalMetrics} />
+      <MainContent chats={chats} setChatTitle={setChatTitle} saveChatToDB={saveChatToDB} addQuery={addQuery} addSources={addSources} addAnswer={addAnswer} addError={addError} toggleLoading={toggleLoading} addStatus={addStatus} />
         </div>
       </div>
     );
