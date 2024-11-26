@@ -9,11 +9,15 @@ import GreenToggleButtonOff from "../assets/green-toggle-button-off.svg";
 import YellowToggleButtonOff from "../assets/yellow-toggle-button-off.svg";
 import PurpleToggleButtonOff from "../assets/purple-toggle-button-off.svg";
 import RedToggleButtonOff from "../assets/red-toggle-button-off.svg";
-import ViewsCountImage from "../assets/views-count-image.svg";
-import TrendingRateImage from "../assets/trending-rate-image.svg";
-import RegionImage from "../assets/region-image.svg";
 import { BiasColor, SourceObject } from "../hooks/types";
 import { biasColorToBiasNameMap } from "../hooks/constants";
+import PlatformIcon from "../assets/metrics/platform.svg";
+import PublishedDateIcon from "../assets/metrics/calendar.svg";
+import RelevanceScoreIcon from "../assets/metrics/rating.svg";
+import RankingIcon from "../assets/metrics/stats.svg";
+import TotalArticlesIcon from "../assets/metrics/total-collected.svg";
+import CollapseIcon from "../assets/metrics/collapse.svg";
+import ExpandIcon from "../assets/metrics/expand.svg";
 
 /**
  * @file SourceSection.tsx
@@ -112,20 +116,25 @@ const SourceSection: React.FC<SourceSectionProps> = ({ source, visibleBiasColor,
             <SourceCard source={source} />
             <div className="flex flex-row lg:flex-col justify-between h-[168px] lg:h-full items-start lg:items-end w-[88%] lg:w-[25%] lg:max-w-[216px]">  
                 <div className="flex flex-col bg-sidebar-bg p-4 pb-7 w-full h-full lg:h-auto space-y-4 md:space-y-6 lg:space-y-3 rounded-md items-start max-w-[150px] md:max-w-[192px] lg:max-w-[216px]">
-                    <h4 className="font-semibold text-metrics-text text-[10px] md:text-xs lg:text-sm xl:text-base">Metrics</h4>
-                    <div className="mt-2 space-y-3 w-full">
-                        {/* <MetricDisplay imgSrc={ViewsCountImage} title="Views Count" value={source.metrics.viewsCount.toString()} />
-                        <MetricDisplay imgSrc={TrendingRateImage} title="Trending Rate" value={`${source.metrics.trendingRate}%`} />
-                        <MetricDisplay imgSrc={RegionImage} title="Region" value={source.metrics.region} /> */}
-                        <MetricDisplay imgSrc={TrendingRateImage} title="Platform" value={source.metrics.platform} />
-                        <MetricDisplay imgSrc={TrendingRateImage} title="Published Date" value={source.metrics.publishedDate} />
-                        
-                        <MetricDisplay imgSrc={TrendingRateImage} title="Relevance Score" value={(source.metrics.relevanceScore).toString()} />
-                        <MetricDisplay imgSrc={TrendingRateImage} title="Ranking" value={source.metrics.ranking} />
-                        <MetricDisplay imgSrc={TrendingRateImage} title={`Total Articles from ${source.metrics.platform}`} value={source.metrics.totalArticlesOfSource} />
-                        {/* <MetricDisplay imgSrc={TrendingRateImage} title="Total Articles" value={source.metrics.totalArticles} /> */}
-                        
+                    <div>
+                        <h4 className="font-semibold text-metrics-text text-[10px] md:text-xs lg:text-sm xl:text-base">Metrics</h4>
                     </div>
+                    {/* Collapsable Options */}
+                    <div className="mt-2 space-y-3 w-full overflow-x-scroll">
+                        <MetricDisplay imgSrc={PlatformIcon} title="Platform" value={source.metrics.platform} />
+                        <div className="text-mid-light-grey text-[8px] md:text-[10px] lg:text-[11px] xl:text-xs font-semibold flex-col md:flex-row md:justify-between md:items-center">
+                            <div className="flex items-center space-x-2 justify-start">
+                                <img src={PublishedDateIcon} alt="published-date-icon" className="w-4 h-4 lg:w-5 lg:h-5 xl:w-6 xl:h-6 " />
+                                <p>Published Date</p>
+                            </div>
+                            <p className="text-metrics-text justify-self-end text-right">
+                                {source.metrics.publishedDate}</p>
+                        </div>
+                        <MetricDisplay imgSrc={RelevanceScoreIcon} title="Relevance Score" value={(source.metrics.relevanceScore).toString()} />
+                        <MetricDisplay imgSrc={RankingIcon} title="Ranking" value={source.metrics.ranking} />
+                        <MetricDisplay imgSrc={TotalArticlesIcon} title={`Total Articles from ${source.metrics.platform}`} value={source.metrics.totalArticlesOfSource} />                        
+                    </div>
+                    {/* Collapsable options end */}
                 </div>
                 <div className="flex flex-col bg-sidebar-bg p-4 pb-7 w-full space-y-3 h-full lg:h-auto rounded-md items-start max-w-[150px] md:max-w-[192px] lg:max-w-[216px]">
                     <h4 className="font-semibold text-metrics-text text-[10px] md:text-xs lg:text-sm xl:text-base">Detected Biases</h4>
