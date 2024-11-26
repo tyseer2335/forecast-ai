@@ -83,7 +83,7 @@ const AnswerDisplay: React.FC<AnswerDisplayProps> = ({ query, answer, visibleBia
         </h3>
         <button
           onClick={() => setShowRawRationale(!showRawRationale)}
-          className="text-[8px] sm:text-[10px] md:text-xs lg:text-sm text-metrics-text underline"
+          className="text-[8px] sm:text-[10px] md:text-xs lg:text-sm text-metrics-text font-semibold border border-metrics-text px-2 py-1 rounded-xl hover:bg-metrics-text hover:text-sidebar-bg transition duration-200 hover:transform hover:scale-105"
         >
           {showRawRationale ? "Show Processed" : "Show Raw Response"}
         </button>
