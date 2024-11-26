@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import HeaderBar from "./HeaderBar";
 import MainContent from "./MainContent";
 import Sidebar from "./Sidebar";
-import { Answer, Chat, SourceObject } from "../hooks/types";
+import { Answer, Chat, SourceObject, GlobalMetrics } from "../hooks/types";
 import useSaveChat from "../hooks/saveChat/useSaveChat";
 import { doc, getDoc } from "firebase/firestore";
 import { getFirestore } from "firebase/firestore";
@@ -27,9 +27,9 @@ import { useEffect } from "react";
  * Functions:
  * - `fetchChatDoc`: Fetches the chat document from Firestore to display chat messages.
  * - `saveChatToDB`: Saves the current chat to Firestore.
- * - `addQuery`, `addSources`, `addAnswer`, `addError`, `toggleLoading`, `addStatus`:
+ * - `addQuery`, `addSources`, `addAnswer`, `addError`, `toggleLoading`, `addStatus`, `addGlobalMetrics`:
  *   Helper functions to update the state of the chat session, including queries, sources,
- *   answers, errors, and status updates.
+ *   answers, errors, status updates, and global metrics.
  * 
  * Render:
  * - Integrates `Sidebar`, `HeaderBar`, and `MainContent` components to structure
@@ -157,12 +157,20 @@ const MainContainer: React.FC = () => {
       })
   }
 
+  const addGlobalMetrics = (globalMetrics: GlobalMetrics) => {
+      setChats((prevChats): Chat[] => {
+        const newChats = [...prevChats];
+        newChats[newChats.length - 1] = { ...newChats[newChats.length - 1], globalMetrics: globalMetrics };
+        return newChats;
+      })
+  }
+
   return (
     <div className="min-h-screen h-screen w-screen flex bg-screen-black text-white font-inter">
     <Sidebar newChatId={chatId} />
     <div className="flex flex-col flex-grow">
       <HeaderBar title={chatTitle} />
-      <MainContent chats={chats} setChatTitle={setChatTitle} saveChatToDB={saveChatToDB} addQuery={addQuery} addSources={addSources} addAnswer={addAnswer} addError={addError} toggleLoading={toggleLoading} addStatus={addStatus} />
+      <MainContent chats={chats} setChatTitle={setChatTitle} saveChatToDB={saveChatToDB} addQuery={addQuery} addSources={addSources} addAnswer={addAnswer} addError={addError} toggleLoading={toggleLoading} addStatus={addStatus} addGlobalMetrics={addGlobalMetrics} />
         </div>
       </div>
     );

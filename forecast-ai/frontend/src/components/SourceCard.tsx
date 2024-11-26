@@ -44,7 +44,7 @@ const SourceCard: React.FC<SourceCardProps> = ({ source }) => {
     };
 
     return (
-        <div className="bg-sidebar-bg px-4 py-10 rounded-md flex space-x-4 h-full w-[88%] lg:w-[60%] max-w-[697px] relative overflow-y-auto pl-4 pr-0">
+        <div className="bg-sidebar-bg px-4 py-10 rounded-md flex space-x-4 h-full w-[88%] lg:w-[60%] max-w-[697px] relative overflow-y-auto pl-4 pr-1">
             <img src={source.logo} alt="source-logo" className="w-5 h-5 sm:w-8 sm:h-8 md:w-10 md:h-10 lg:w-12 lg:h-12 rounded-full" data-testid="source-logo" />
             <div className="space-y-6 h-full flex flex-col justify-start w-full">
                 <div className="flex justify-between items-center w-full pr-1">
@@ -62,7 +62,7 @@ const SourceCard: React.FC<SourceCardProps> = ({ source }) => {
                     </button>
                 </div>
                 <img src={source.image} alt="source-img" className="w-[80%] max-w-[306px] h-[35%]" data-testid="source-image"/>
-                <p className="text-source-text text-[8px] sm:text-[10px] md:text-xs xl:text-sm" data-testid="source-text">
+                <p className="text-source-text text-[8px] sm:text-[10px] md:text-xs xl:text-sm pr-6" data-testid="source-text">
                     {renderText(showFullContent, showFullContent ? source.fullText : source.summary)}
                 </p>
             </div>

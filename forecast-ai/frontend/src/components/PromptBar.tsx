@@ -4,7 +4,7 @@ import OptionsButton from "../assets/options-button.svg";
 import SubmitButton from "../assets/submit-button.svg";
 import { useNavigate } from "react-router-dom";
 import AdvancedQueryOptionsMenu from "./AdvancedQueryOptionsMenu";
-import { Answer, Chat, SourceObject } from "../hooks/types";
+import { Answer, Chat, GlobalMetrics, SourceObject } from "../hooks/types";
 import axios from "axios";
 import { v4 as uuidv4 } from "uuid";
 
@@ -26,6 +26,7 @@ import { v4 as uuidv4 } from "uuid";
  * - `addError`: Function to handle and display error messages.
  * - `toggleLoading`: Function to toggle loading state during API requests.
  * - `addStatus`: Function to add real-time status updates from the server.
+ * - `addGlobalMetrics`: Function to add global metrics data to the chat.
  * 
  * State:
  * - `input`: Current user input for the query.
@@ -61,6 +62,7 @@ type PromptBarProps = {
   addError: (error: string) => void;
   toggleLoading: (loading: boolean) => void;
   addStatus: (status: string) => void;
+  addGlobalMetrics: (globalMetrics: GlobalMetrics) => void;
 };
 
 export type Request = {
@@ -83,6 +85,7 @@ const PromptBar: React.FC<PromptBarProps> = ({
   addError,
   toggleLoading,
   addStatus,
+  addGlobalMetrics,
 }) => {
   const [input, setInput] = useState("");
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -93,7 +96,9 @@ const PromptBar: React.FC<PromptBarProps> = ({
   // const reconnectInterval = useRef<NodeJS.Timeout | null>(null); // Reconnection interval reference
 
 const convertResponseSourcesIntoSources = (responseSources: any, articleSummaries: any) => {
+  console.log("Response Sources:", responseSources);
     const result: SourceObject[] = [];
+    console.log("Response Sources:", responseSources);
     Object.values(responseSources).forEach((sources: any) => {
     sources.forEach((source: any, index: number) => {
       // Find matching summary using article ID
@@ -112,6 +117,12 @@ const convertResponseSourcesIntoSources = (responseSources: any, articleSummarie
             viewsCount: 483,
             trendingRate: 22,
             region: "Atlanta, USA",
+            platform: source.platform === "automatic" ? "News" : source.platform,
+            publishedDate: source.published_date,
+            relevanceScore: source.score,
+            ranking: source.ranking,
+            totalArticlesOfSource: source.total_articles_of_source,
+            totalArticles: source.total_articles,
           },
         // Use the article summaries from backend
         summary: summaryData.summary || "",
@@ -129,7 +140,7 @@ const convertResponseSourcesIntoSources = (responseSources: any, articleSummarie
       forecaster_rationale: responseAnswer['Forecaster Rationale'],
       llm_features: responseAnswer['llm_features'],
       raw_rationale: responseAnswer['raw_rationale'],
-      article_summaries: responseAnswer['article_summaries']
+      article_summaries: responseAnswer['article_summaries'],
     }
   }
 
@@ -233,9 +244,16 @@ const convertResponseSourcesIntoSources = (responseSources: any, articleSummarie
             },
           }
         );
-        const answer = convertResponseAnswerIntoAnswer(response.data);
+        const data = response.data;
+        console.log("Response Data:", data);
+        // const globalMetrics : GlobalMetrics = {
+        //   minRelevanceScore: data["global_metrics"]?.min_relevance_score || 100,
+        //   maxRelevanceScore: data["global_metrics"]?.max_relevance_score || 600,
+        // }
+        // addGlobalMetrics(globalMetrics);
+        const answer = convertResponseAnswerIntoAnswer(data);
         addAnswer(answer);
-          const sources = convertResponseSourcesIntoSources(
+        const sources = convertResponseSourcesIntoSources(
           response.data["Sources"],
           answer.article_summaries
         );
