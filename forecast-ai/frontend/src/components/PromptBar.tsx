@@ -4,7 +4,7 @@ import OptionsButton from "../assets/options-button.svg";
 import SubmitButton from "../assets/submit-button.svg";
 import { useNavigate } from "react-router-dom";
 import AdvancedQueryOptionsMenu from "./AdvancedQueryOptionsMenu";
-import { Answer, Chat, SourceObject } from "../hooks/types";
+import { Answer, Chat, GlobalMetrics, Metrics, SourceObject } from "../hooks/types";
 import axios from "axios";
 import { v4 as uuidv4 } from "uuid";
 
@@ -26,6 +26,7 @@ import { v4 as uuidv4 } from "uuid";
  * - `addError`: Function to handle and display error messages.
  * - `toggleLoading`: Function to toggle loading state during API requests.
  * - `addStatus`: Function to add real-time status updates from the server.
+ * - `addGlobalMetrics`: Function to add global metrics data to the chat.
  * 
  * State:
  * - `input`: Current user input for the query.
@@ -93,13 +94,20 @@ const PromptBar: React.FC<PromptBarProps> = ({
   // const reconnectInterval = useRef<NodeJS.Timeout | null>(null); // Reconnection interval reference
 
 const convertResponseSourcesIntoSources = (responseSources: any, articleSummaries: any) => {
+
     const result: SourceObject[] = [];
+    
     Object.values(responseSources).forEach((sources: any) => {
     sources.forEach((source: any, index: number) => {
       // Find matching summary using article ID
       const articleId = (index + 1).toString();
       const summaryData = articleSummaries[articleId] || {};
-      
+
+      // Parse integer metrics to numbers
+      const parsedRelevanceScore = parseInt(source["relevance_score"]);
+      const parsedRanking = parseInt(source["ranking"]);
+      const parsedTotalArticlesOfSource = parseInt(source["total_articles_of_source"]);
+
         result.push({
           title: source.title,
           text: source.content.text,
@@ -109,10 +117,14 @@ const convertResponseSourcesIntoSources = (responseSources: any, articleSummarie
           link: source.url,
           logo: `http://www.google.com/s2/favicons?domain=${source.url}&sz=64`,
           metrics: {
-            viewsCount: 483,
-            trendingRate: 22,
-            region: "Atlanta, USA",
-          },
+            platform: source.platform === "automatic" ? "News" : source.platform,
+            publisherTitle: source.publisher_title,
+            publisherHref: source.publisher_href,
+            publishedDate: source.published_date,
+            relevanceScore: parsedRelevanceScore,
+            ranking: parsedRanking,
+            totalArticlesOfSource: parsedTotalArticlesOfSource,
+            },
         // Use the article summaries from backend
         summary: summaryData.summary || "",
         fullText: summaryData.full_text || "",
@@ -129,7 +141,7 @@ const convertResponseSourcesIntoSources = (responseSources: any, articleSummarie
       forecaster_rationale: responseAnswer['Forecaster Rationale'],
       llm_features: responseAnswer['llm_features'],
       raw_rationale: responseAnswer['raw_rationale'],
-      article_summaries: responseAnswer['article_summaries']
+      article_summaries: responseAnswer['article_summaries'],
     }
   }
 
@@ -233,27 +245,37 @@ const convertResponseSourcesIntoSources = (responseSources: any, articleSummarie
             },
           }
         );
-        const answer = convertResponseAnswerIntoAnswer(response.data);
+        const data = response.data;
+        console.log("Response Data:", data);
+        // const globalMetrics : GlobalMetrics = {
+        //   minRelevanceScore: data["global_metrics"]?.min_relevance_score || 100,
+        //   maxRelevanceScore: data["global_metrics"]?.max_relevance_score || 600,
+        // }
+        // addGlobalMetrics(globalMetrics);
+        const answer = convertResponseAnswerIntoAnswer(data);
         addAnswer(answer);
-          const sources = convertResponseSourcesIntoSources(
-          response.data["Sources"],
+        const sources = convertResponseSourcesIntoSources(
+          data["Sources"],
           answer.article_summaries
         );
         addSources(sources);
-
         toggleLoading(false);
         setRequest({});
         setSubmitRequest(false);
+        const chat = {
+          query: input,
+          sources: sources,
+          answer: answer,
+          loading: false,
+        }
         try {
-          saveChatToDB({
-            query: input,
-            sources: sources,
-            answer: answer,
-            loading: false,
-          });
+          saveChatToDB(chat);
           navigate("/");
+          
+          
         } catch (error) {
           console.error("Error handling submit:", error);
+          localStorage.setItem("chat", JSON.stringify(chat));
         }
       } catch (error) {
         console.error("Detailed Error:", error);
@@ -298,6 +320,7 @@ const convertResponseSourcesIntoSources = (responseSources: any, articleSummarie
       year: "numeric",
     });
   };
+
   return (
     <form
       onKeyDown={(e) => {

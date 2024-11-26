@@ -211,10 +211,16 @@ Content:
                         "title": article.title,
                         "content": article.content,
                         "url": article.url,
+                        # Some attributes for metrics (e.g., relevance score, ranking out of number of articles of this source type(platform)), etc.
                         "published_date": article.published_date,
-                        "platform": article.platform
+                        "platform": article.platform,
+                        "publisher_title": article.publisher["title"],
+                        "publisher_href": article.publisher["href"],
+                        "relevance_score": article.score,
+                        "ranking": i + 1,
+                        "total_articles_of_source": len(articles),
                     }
-                    for article in articles
+                    for i, article in enumerate(articles)
                 ]
                 for source, articles in news.items()
             }
@@ -223,5 +229,5 @@ Content:
         return {
             "answer": answer,
             "raw_response": response,  # Including raw response for debugging/logging
-            "article_summaries": self.article_summaries
+            "article_summaries": self.article_summaries,
         }

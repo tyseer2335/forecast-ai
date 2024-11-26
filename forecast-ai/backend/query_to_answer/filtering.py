@@ -1,5 +1,8 @@
 from model.article import Article
 
+MIN_RELEVANCE_SCORE = 1
+MAX_RELEVANCE_SCORE = 6
+
 relevance_prompt = """Please consider the following forecasting question.
 After that, I will give you a news article and ask you to rate its relevance with respect to the forecasting question.
 

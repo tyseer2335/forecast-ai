@@ -126,7 +126,7 @@ async def query_to_answer(check_request: Request, request: ForecastRequest, quer
                                                                       USERNAME, ACCESS_KEY)
         # print(news_with_content)
         # await send_status_update(query_id, str(news_with_content))
-
+        
         state = 4
         await asyncio.sleep(0)
         await send_status_update(query_id, "Converting news objects to articles...")
@@ -185,7 +185,11 @@ async def query_to_answer(check_request: Request, request: ForecastRequest, quer
         final_response = {
             **answer_with_bias,
             "raw_rationale": raw_response,
-            "article_summaries": article_summaries
+            "article_summaries": article_summaries,
+            "global_metrics": {
+                "min_relevance_score": filtering.MIN_RELEVANCE_SCORE,
+                "max_relevance_score": filtering.MAX_RELEVANCE_SCORE
+            }
         }
 
         state = 9

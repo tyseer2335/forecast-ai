@@ -6,6 +6,7 @@ import SourceSection from "./SourceSection";
 import { BiasColor, SourceObject } from "../hooks/types";
 import ErrorMessage from "./ErrorMessage";
 import LoadingBar from "./LoadingBar";
+import { set } from "date-fns";
 
 /**
  * @file SourcesContainer.tsx
@@ -52,16 +53,23 @@ type SourcesContainerProps = {
 
 const SourcesContainer: React.FC<SourcesContainerProps> = ({ sources, error, loading, status, visibleBiasColor, setVisibleBiasColor }) => {
     const [currentSource, setCurrentSource] = useState(0);
+    const [isTheFirstSource, setIsTheFirstSource] = useState(currentSource === 0);
+    const [isTheLastSource, setIsTheLastSource] = useState(currentSource === sources.length - 1);
 
     const decrementCurrentSource = () => {
-        if (currentSource > 0) {
+        if (!isTheFirstSource) {
             setCurrentSource(currentSource - 1);
+            setIsTheFirstSource(currentSource === 1);
+            setIsTheLastSource(false);
         }
+        
     }
 
     const incrementCurrentSource = () => {
-        if (currentSource < sources.length - 1) {
+        if (!isTheLastSource) {
             setCurrentSource(currentSource + 1);
+            setIsTheLastSource(currentSource === sources.length - 2);
+            setIsTheFirstSource(false);
         }
     }
 
@@ -78,12 +86,22 @@ const SourcesContainer: React.FC<SourcesContainerProps> = ({ sources, error, loa
                     <div className="w-full space-y-4 bg-screen-black flex flex-col h-full relative">
                         <h1 className="font-bold text-chat-message-text text-sm md:text-base lg:text-lg xl:text-xl">Sources</h1>
                         <SourceSection source={sources[currentSource]} visibleBiasColor={visibleBiasColor} setVisibleBiasColor={setVisibleBiasColor} />
-                        <button onClick={decrementCurrentSource} className="absolute left-0 top-[38%] lg:top-1/2 cursor-pointer" data-testid="decrement-btn">
-                            <img src={ScrollLeftButton} alt="scroll-left-btn" className="w-5 h-5" />
-                        </button>
-                        <button onClick={incrementCurrentSource} className="absolute right-0 top-[38%] lg:top-1/2 cursor-pointer" data-testid="increment-btn">
-                            <img src={ScrollRightButton} alt="scroll-left-btn" className="w-6 h-6" />
-                        </button>
+                        {isTheFirstSource ?
+                            <button className="absolute left-0 top-[38%] lg:top-1/2 cursor-pointer" data-testid="decrement-btn">
+                                <img src={ScrollLeftButton} alt="scroll-left-btn" className="w-8 h-8 opacity-5" />
+                            </button> : 
+                            <button onClick={decrementCurrentSource} className="absolute left-0 top-[38%] lg:top-1/2 cursor-pointer"  data-testid="decrement-btn">
+                                <img src={ScrollLeftButton} alt="scroll-left-btn" className="w-8 h-8" />
+                            </button>
+                        }
+                        {isTheLastSource ?
+                            <button className="absolute right-0 top-[38%] lg:top-1/2 cursor-pointer" data-testid="increment-btn">
+                                <img src={ScrollRightButton} alt="scroll-left-btn" className="w-8 h-8 opacity-5" />
+                            </button> :
+                            <button onClick={incrementCurrentSource} className="absolute right-0 top-[38%] lg:top-1/2 cursor-pointer" data-testid="increment-btn">
+                                <img src={ScrollRightButton} alt="scroll-left-btn" className="w-8 h-8" />
+                            </button>
+                        }
                     </div>
                 )
             )}

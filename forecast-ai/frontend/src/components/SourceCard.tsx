@@ -44,22 +44,25 @@ const SourceCard: React.FC<SourceCardProps> = ({ source }) => {
     };
 
     return (
-        <div className="bg-sidebar-bg px-4 py-10 rounded-md flex space-x-4 h-full pr-6 w-[88%] lg:w-[60%] max-w-[697px] relative overflow-y-auto">
+        <div className="bg-sidebar-bg px-4 py-10 rounded-md flex space-x-4 h-full w-[88%] lg:w-[60%] max-w-[697px] relative overflow-y-auto pl-4 pr-1">
             <img src={source.logo} alt="source-logo" className="w-5 h-5 sm:w-8 sm:h-8 md:w-10 md:h-10 lg:w-12 lg:h-12 rounded-full" data-testid="source-logo" />
-            <div className="space-y-6 h-full flex flex-col justify-start w-[95%]">
-                <div className="flex justify-between items-center w-full">
+            <div className="space-y-6 h-full flex flex-col justify-start w-full">
+                <div className="flex justify-between items-center w-full pr-1">
                     <h3 className="font-semibold text-xs sm:text-sm lg:text-base xl:text-lg text-metrics-text w-[75%]" data-testid="source-title">
                         {source.title}
                     </h3>
                     <button
                         onClick={() => setShowFullContent(!showFullContent)}
-                        className="text-[8px] md:text-[10px] lg:text-xs text-mid-light-grey font-semibold"
+                        className="
+                        flex items-center justify-self-end
+                        text-[8px] md:text-[10px] lg:text-xs text-metrics-text font-semibold border border-metrics-text px-[0.5rem] py-1 rounded-xl hover:bg-metrics-text hover:text-sidebar-bg transition duration-200 hover:transform hover:scale-105 opacity-70 whitespace-normal md:whitespace-nowrap"
+
                     >
                         {showFullContent ? "Show Summary" : "Show Full Content"}
                     </button>
                 </div>
                 <img src={source.image} alt="source-img" className="w-[80%] max-w-[306px] h-[35%]" data-testid="source-image"/>
-                <p className="text-source-text text-[8px] sm:text-[10px] md:text-xs xl:text-sm" data-testid="source-text">
+                <p className="text-source-text text-[8px] sm:text-[10px] md:text-xs xl:text-sm pr-6" data-testid="source-text">
                     {renderText(showFullContent, showFullContent ? source.fullText : source.summary)}
                 </p>
             </div>

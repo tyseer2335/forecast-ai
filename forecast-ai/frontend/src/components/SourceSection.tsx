@@ -9,11 +9,15 @@ import GreenToggleButtonOff from "../assets/green-toggle-button-off.svg";
 import YellowToggleButtonOff from "../assets/yellow-toggle-button-off.svg";
 import PurpleToggleButtonOff from "../assets/purple-toggle-button-off.svg";
 import RedToggleButtonOff from "../assets/red-toggle-button-off.svg";
-import ViewsCountImage from "../assets/views-count-image.svg";
-import TrendingRateImage from "../assets/trending-rate-image.svg";
-import RegionImage from "../assets/region-image.svg";
 import { BiasColor, SourceObject } from "../hooks/types";
 import { biasColorToBiasNameMap } from "../hooks/constants";
+import PlatformIcon from "../assets/metrics/platform.svg";
+import PublishedDateIcon from "../assets/metrics/calendar.svg";
+import RelevanceScoreIcon from "../assets/metrics/rating.svg";
+import RankingIcon from "../assets/metrics/stats.svg";
+import TotalArticlesIcon from "../assets/metrics/total-collected.svg";
+import CollapseIcon from "../assets/metrics/collapse.svg";
+import ExpandIcon from "../assets/metrics/expand.svg";
 
 /**
  * @file SourceSection.tsx
@@ -50,7 +54,7 @@ type SourceSectionProps = {
 }
 
 const SourceSection: React.FC<SourceSectionProps> = ({ source, visibleBiasColor, setVisibleBiasColor }) => {
-
+    const [isMetricsExpanded, setIsMetricsExpanded] = React.useState(false);
     const getButtonImg = (color: BiasColor) => {
         switch (color) {
             case "green":
@@ -79,6 +83,10 @@ const SourceSection: React.FC<SourceSectionProps> = ({ source, visibleBiasColor,
         }
     }
 
+    const handleToggleMetrics = () => {
+        setIsMetricsExpanded(!isMetricsExpanded);
+    }
+
     // Reusable component for individual Detected Bias
     const DetectedBias: React.FC<{ color: BiasColor }> = ({ color }) => {
         // Get the Bias Name of this color in Title Case
@@ -93,33 +101,45 @@ const SourceSection: React.FC<SourceSectionProps> = ({ source, visibleBiasColor,
         )
     }
 
+    // Reusable Component for Metric Display that takes img src, title, and value
+    const MetricDisplay: React.FC<{ imgSrc: string, title: string, value: string | number }> = ({ imgSrc, title, value }) => {
+        return (
+            <div className="text-mid-light-grey text-[8px] md:text-[10px] lg:text-[11px] xl:text-xs font-semibold flex justify-between items-center">
+                <div className="flex items-center space-x-2 whitespace-pre">
+                    <img src={imgSrc} alt={`${title}-image`} className="w-3 h-3 lg:w-4 lg:h-4 xl:w-5 xl:h-5 opacity-60" />
+                    <p>{title}</p>
+                </div>
+                <p className="text-metrics-text">{value}</p>
+            </div>
+        )
+    }
+
     return (
         <div className="w-full flex-grow flex flex-col lg:flex-row space-y-4 lg:space-y-0 lg:space-x-5 justify-center items-center rounded-md h-[90%]">
             <SourceCard source={source} />
             <div className="flex flex-row lg:flex-col justify-between h-[168px] lg:h-full items-start lg:items-end w-[88%] lg:w-[25%] lg:max-w-[216px]">  
-                <div className="flex flex-col bg-sidebar-bg p-4 pb-7 w-full h-full lg:h-auto space-y-4 md:space-y-6 lg:space-y-3 rounded-md items-start max-w-[150px] md:max-w-[192px] lg:max-w-[216px]">
-                    <h4 className="font-semibold text-metrics-text text-[10px] md:text-xs lg:text-sm xl:text-base">Metrics</h4>
-                    <div className="mt-2 space-y-3 w-full">
-                        <div className="text-mid-light-grey text-[8px] md:text-[10px] lg:text-[11px] xl:text-xs font-semibold flex justify-between items-center">
-                            <div className="flex items-center space-x-2">
-                                <img src={ViewsCountImage} alt="views-count-image" className="w-4 h-4 lg:w-5 lg:h-5 xl:w-6 xl:h-6" />
-                                <p>Views Count</p>
+                {/* To make this block height to be fit the content but not auto otherwise" */}
+                <div className={`flex flex-col bg-sidebar-bg p-4 w-full space-y-4 md:space-y-6 lg:space-y-3 rounded-md items-start max-w-[150px] md:max-w-[192px] lg:max-w-[216px] ${isMetricsExpanded ? 'block h-full lg:h-auto' : 'h-fit'}`}>
+                    
+                    <div className="flex justify-between items-center cursor-pointer w-full"
+                        onClick={handleToggleMetrics}>
+                        <h4 className="flex font-semibold text-metrics-text text-[10px] md:text-xs lg:text-sm xl:text-base">Metrics</h4>
+                        <img src={isMetricsExpanded ? CollapseIcon : ExpandIcon} alt="expand-collapse-icon" className="w-4 h-4 lg:w-5 lg:h-5 xl:w-6 xl:h-6 cursor-pointer flex justify-end" />
+                    </div>
+                    <div className={`mt-1 space-y-3 w-full overflow-x-scroll ${isMetricsExpanded ? 'block' : 'hidden'} pb-3`}>
+                        <div className="space-y-4 w-full overflow-x-scroll">
+                            <MetricDisplay imgSrc={PlatformIcon} title="Platform" value={source.metrics.platform} />
+                            <div className="text-mid-light-grey text-[8px] md:text-[10px] lg:text-[11px] xl:text-xs font-semibold flex-col md:flex-row md:justify-between md:items-center space-y-[0.8rem]">
+                                <div className="flex items-center space-x-2 justify-start">
+                                    <img src={PublishedDateIcon} alt="published-date-icon" className="w-3 h-3 lg:w-4 lg:h-4 xl:w-5 xl:h-5 opacity-60" />
+                                    <p>Published Date</p>
+                                </div>
+                                <p className="text-metrics-text justify-self-end text-right">
+                                    {source.metrics.publishedDate}</p>
                             </div>
-                            <p className="text-metrics-text">{source.metrics.viewsCount}</p>
-                        </div>
-                        <div className="text-mid-light-grey text-[8px] md:text-[10px] lg:text-[11px] xl:text-xs font-semibold flex justify-between items-center">
-                            <div className="flex items-center space-x-2">
-                                <img src={TrendingRateImage} alt="trending-rate-image" className="w-4 h-4 lg:w-5 lg:h-5 xl:w-6 xl:h-6" />
-                                <p>Trending Rate</p>
-                            </div>
-                            <p className="text-metrics-text">{source.metrics.trendingRate}%</p>
-                        </div>
-                        <div className="text-mid-light-grey text-[8px] md:text-[10px] lg:text-[11px] xl:text-xs font-semibold flex justify-between items-center">
-                            <div className="flex items-center space-x-2">
-                                <img src={RegionImage} alt="region-image" className="w-4 h-4 lg:w-5 lg:h-5 xl:w-6 xl:h-6" />
-                                <p>Region</p>
-                            </div>
-                            <p className="text-metrics-text">{source.metrics.region}</p>
+                            <MetricDisplay imgSrc={RelevanceScoreIcon} title="Relevance Score" value={(source.metrics.relevanceScore).toString()} />
+                            <MetricDisplay imgSrc={RankingIcon} title="Ranking (1-6)" value={source.metrics.ranking} />
+                            <MetricDisplay imgSrc={TotalArticlesIcon} title={`Total Articles\nfrom ${source.metrics.platform}`} value={source.metrics.totalArticlesOfSource} />                        
                         </div>
                     </div>
                 </div>

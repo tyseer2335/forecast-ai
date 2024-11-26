@@ -1,10 +1,22 @@
 // src/hooks/saveChat/types.ts
 
-export type Metric = {
-  viewsCount: number,
-  trendingRate: number,
-  region: string
+export type Metrics = {
+  platform: string,
+  publisherTitle: string,
+  publisherHref: string,
+  publishedDate: string,
+  relevanceScore: number,
+  ranking: number,
+  totalArticlesOfSource: number,
+  // totalArticles: number,
 }
+
+export type GlobalMetrics = {
+  minRelevanceScore: number,
+  maxRelevanceScore: number,
+  // Some other fields will be added here
+}
+
 
 export type Chat = {
   query: string;
@@ -13,6 +25,7 @@ export type Chat = {
   error?: string;
   loading: boolean;
   status?: string;
+  globalMetrics?: GlobalMetrics;
 }
 
 // Example of a SourceObject:
@@ -38,7 +51,7 @@ export type SourceObject = {
   text: string;
   image: string;
   link: string;
-  metrics: Metric;
+  metrics: Metrics;
   summary: string;
   fullText: string;
   id?: string;
