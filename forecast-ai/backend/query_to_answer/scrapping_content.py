@@ -11,6 +11,7 @@ from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 import multiprocessing
 import concurrent.futures
 import time
+from selenium.webdriver.support.ui import WebDriverWait
 
 
 def _single_scrape_content(url: str) -> dict:
@@ -113,11 +114,13 @@ def advanced_selenium_scrape_content(driver: webdriver.Chrome, url: str) -> dict
     # once we get redirected to the page, we need to wait for the page to load
     # wait till news.google.com is not in the url
     while 'news.google.com' in driver.current_url:
-        time.sleep(3)
+        # time.sleep(3)
+        WebDriverWait(driver, 5)
         # print(f"Redirected to {driver.current_url}, waiting for page to load...")
-        pass
+        # pass
 
-    time.sleep(3)
+    # time.sleep(3)
+    WebDriverWait(driver, 5)
 
     # Get the final URL after all redirections
     final_url = driver.current_url
