@@ -95,20 +95,7 @@ def init_driver(LOCAL_OR_PROD: str, DOCKER_OR_LAMBDATEST: str, USERNAME: str, AC
     return driver
 
 
-def advanced_selenium_scrape_content(driver: webdriver.Chrome, url: str) -> dict:
-    """
-    Uses Selenium to scrape content from a web page, including handling JavaScript-rendered content.
-
-    Args:
-        driver (webdriver.Chrome): The Selenium WebDriver instance.
-        url (str): The URL of the web page to scrape.
-
-    Returns:
-        dict: A dictionary containing:
-            - 'text': The main text content of the page.
-            - 'media': A list of media URLs (e.g., images).
-            - 'final_url': The URL of the page after all redirects.
-    """
+def _ensure_content_loaded_with_new_url(driver: webdriver.Chrome, url: str) -> str:
     driver.get(url)
     print(f"Scraping content for url: {url}")
     # once we get redirected to the page, we need to wait for the page to load
@@ -124,6 +111,24 @@ def advanced_selenium_scrape_content(driver: webdriver.Chrome, url: str) -> dict
 
     # Get the final URL after all redirections
     final_url = driver.current_url
+    return final_url
+
+
+def advanced_selenium_scrape_content(driver: webdriver.Chrome, url: str) -> dict:
+    """
+    Uses Selenium to scrape content from a web page, including handling JavaScript-rendered content.
+
+    Args:
+        driver (webdriver.Chrome): The Selenium WebDriver instance.
+        url (str): The URL of the web page to scrape.
+
+    Returns:
+        dict: A dictionary containing:
+            - 'text': The main text content of the page.
+            - 'media': A list of media URLs (e.g., images).
+            - 'final_url': The URL of the page after all redirects.
+    """
+    final_url = _ensure_content_loaded_with_new_url(driver, url)
 
     # Extract text content
     print("Extracting text content...")
