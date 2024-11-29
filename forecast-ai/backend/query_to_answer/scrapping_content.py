@@ -265,6 +265,7 @@ def single(urls: dict, env: str, DOCKER_OR_LAMBDATEST: str, USERNAME: str, ACCES
             try:
                 res = advanced_selenium_scrape_content(driver, article['url'])
                 article['content']['text'] = res['text']
+                article['url'] = res['final_url']  # Update the URL to the final redirected URL
                 if not article['content']['media']:
                     article['content']['media'] = res['media']
             except Exception as e:
