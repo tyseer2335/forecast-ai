@@ -60,7 +60,7 @@ async def verify_token(request: Request):
         request.state.user = decoded_token  # Store user info in request state
     except Exception as e:
         print("Token verification failed:", str(e))
-        raise HTTPException(status_code=401, detail="Invalid or expired token")
+        raise HTTPException(status_code=401, detail="Invalid or expired token: Please login again")
 
 
 # WebSocket endpoint to send real-time status updates
@@ -126,7 +126,7 @@ async def query_to_answer(check_request: Request, request: ForecastRequest, quer
                                                                       USERNAME, ACCESS_KEY)
         # print(news_with_content)
         # await send_status_update(query_id, str(news_with_content))
-        
+
         state = 4
         await asyncio.sleep(0)
         await send_status_update(query_id, "Converting news objects to articles...")
