@@ -5,6 +5,7 @@ import { DayPicker } from "react-day-picker";
 import { Request } from "./PromptBar";
 import "react-day-picker/style.css";
 import "../css/advanced-query-options-menu-custom-css.css";
+import SourcePlatformRatioInput from "./SourcePlatformRatioInput";
 
 type AdvancedQueryOptionsMenuProps = {
     isMenuOpen: boolean;
@@ -13,15 +14,23 @@ type AdvancedQueryOptionsMenuProps = {
     submitRequest: boolean;
 }
 
+const initialPlatformRatios = [
+    { platformName: 'News', platformRatio: 60 },
+    { platformName: 'X', platformRatio: 20 },
+    { platformName: 'Facebook', platformRatio: 20 }
+];
+
 const AdvancedQueryOptionsMenu: React.FC<AdvancedQueryOptionsMenuProps> = ({ isMenuOpen, setIsMenuOpen, setRequest, submitRequest }) => {
     const [totalSourcesToCollect, setTotalSourcesToCollect] = useState<number>(5);
-    const [newsRatio, setNewsRatio] = useState<number>(60);
-    const [xRatio, setXRatio] = useState<number>(20);
-    const [facebookRatio, setFacebookRatio] = useState<number>(20);
+    const [platformRatios, setPlatformRatios] = useState(initialPlatformRatios);
+    const [newSourcePlatformName, setNewSourcePlatformName] = useState<string>('');
+    const [isNewSourcePlatformInputOpen, setIsNewSourcePlatformInputOpen] = useState<boolean>(false);
     const [fromDate, setFromDate] = useState<Date>();
     const [toDate, setToDate] = useState<Date>();
     const [totalSourcesToDisplay, setTotalSourcesToDisplay] = useState<number>(2);
-    const [displayTotalRatioUnder100Menu, setDisplayTotalRatioUnder100Menu] = useState<boolean>(false);
+    const [displayWarningMessage, setDisplayWarningMessage] = useState<boolean>(false);
+    const [warningMessage, setWarningMessage] = useState<string>('');
+    const [warningInstruction, setWarningInstruction] = useState<string>('');
 
     const menuRef = useRef<HTMLDivElement | null>(null);
 
@@ -33,8 +42,11 @@ const AdvancedQueryOptionsMenu: React.FC<AdvancedQueryOptionsMenuProps> = ({ isM
     const handleApply = (e: React.MouseEvent<HTMLButtonElement>) => {
         e.preventDefault();
 
-        if (newsRatio + xRatio + facebookRatio < 100) {
-            setDisplayTotalRatioUnder100Menu(true);
+        const totalRatio = platformRatios.reduce((sum, platform) => sum + platform.platformRatio, 0);
+        if (totalRatio < 100) {
+            setWarningMessage('The total platform ratio percentage is under 100.');
+            setWarningInstruction('Please adjust the platform ratio percentage to apply the new changes.');
+            setDisplayWarningMessage(true);
             return;
         }
 
@@ -42,9 +54,13 @@ const AdvancedQueryOptionsMenu: React.FC<AdvancedQueryOptionsMenuProps> = ({ isM
             ...prevRequest,
             before_ranking_num_articles: totalSourcesToCollect,
             perc_of_each_source: {
-                automatic: newsRatio / 100,
-                'x.com': xRatio / 100,
-                'facebook.com': facebookRatio / 100
+                automatic: platformRatios[0].platformRatio / 100,
+                'x.com': platformRatios[1].platformRatio / 100,
+                'facebook.com': platformRatios[2].platformRatio / 100,
+                ...platformRatios.slice(3).reduce<Record<string, number>>((acc, { platformName, platformRatio }) => {
+                    acc[platformName.toLowerCase()] = platformRatio / 100;
+                    return acc;
+                }, {})
             },
             start_date: fromDate? fromDate.toISOString() : fromDate,
             end_date: toDate ? toDate.toISOString() : toDate,
@@ -53,12 +69,68 @@ const AdvancedQueryOptionsMenu: React.FC<AdvancedQueryOptionsMenuProps> = ({ isM
         setIsMenuOpen(false);
     }
 
+    const handlePlatformRatioChange = (index: number, value: number) => {
+        const newPlaformRatios = [...platformRatios];
+        newPlaformRatios[index] = { ...newPlaformRatios[index], platformRatio: value };
+        const totalRatio = newPlaformRatios.reduce((sum, platform) => sum + platform.platformRatio, 0);
+        if (totalRatio <= 100) {
+            setPlatformRatios(newPlaformRatios);
+        } else {
+            newPlaformRatios[index] = { ...newPlaformRatios[index], platformRatio: 100 - (totalRatio - value)  }
+            setPlatformRatios(newPlaformRatios);
+        }
+    }
+
+    const handleAddNewSourcePlatformRatio = (e: any) => {
+        e.preventDefault();
+
+        if (!newSourcePlatformName) {
+            return;
+        }
+
+        if (!(/^[a-zA-Z0-9]+\.[a-zA-Z]+$/.test(newSourcePlatformName))) {
+            setWarningMessage('The new source platform is invalid.');
+            setWarningInstruction('Please type in domain.domain extension format...');
+            setDisplayWarningMessage(true);
+            return;
+        }
+
+        if (platformRatios.some(platform => platform.platformName == newSourcePlatformName)) {
+            setWarningMessage('The new source platform already exists.');
+            setWarningInstruction('Please add a different source platform...');
+            setDisplayWarningMessage(true);
+            return;
+        }
+        
+        const newPlaformRatios = [...platformRatios];
+        newPlaformRatios.push({ platformName: newSourcePlatformName, platformRatio: 0 });
+        setPlatformRatios(newPlaformRatios);
+        setNewSourcePlatformName('');
+        setIsNewSourcePlatformInputOpen(false);
+    }
+
+    const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
+        if (e.key === 'Enter') {
+          handleAddNewSourcePlatformRatio(e);
+        }
+    };
+
+    const handleOpenAddNewSourcePlatformInput = (e: React.MouseEvent<HTMLButtonElement>) => {
+        e.preventDefault();
+        if (!isNewSourcePlatformInputOpen) {
+            setIsNewSourcePlatformInputOpen(true);
+        }
+    }
+
+    const handleCloseAddNewSourcePlatformInput = (e: React.MouseEvent<HTMLButtonElement>) => {
+        e.preventDefault();
+        setIsNewSourcePlatformInputOpen(false);
+    }
+
     useEffect(() => {
         if (submitRequest) {
             setTotalSourcesToCollect(5);
-            setNewsRatio(60);
-            setXRatio(20);
-            setFacebookRatio(20);
+            setPlatformRatios(initialPlatformRatios);
             setFromDate(undefined);
             setToDate(undefined);
             setTotalSourcesToDisplay(2);
@@ -71,27 +143,6 @@ const AdvancedQueryOptionsMenu: React.FC<AdvancedQueryOptionsMenuProps> = ({ isM
             setTotalSourcesToDisplay(totalSourcesToCollect);
         }
     }, [totalSourcesToCollect]);
-
-    useEffect(() => {
-        const total = newsRatio + xRatio + facebookRatio;
-        if (total > 100) {
-            setNewsRatio(100 - xRatio - facebookRatio);
-        }
-    }, [newsRatio]);
-
-    useEffect(() => {
-        const total = newsRatio + xRatio + facebookRatio;
-        if (total > 100) {
-            setXRatio(100 - newsRatio - facebookRatio);
-        }
-    }, [xRatio]);
-
-    useEffect(() => {
-        const total = newsRatio + xRatio + facebookRatio;
-        if (total > 100) {
-            setFacebookRatio(100 - newsRatio - xRatio);
-        }
-    }, [facebookRatio]);
 
     useEffect(() => {
         if (fromDate && toDate && fromDate.getTime() > toDate.getTime()) {
@@ -130,72 +181,26 @@ const AdvancedQueryOptionsMenu: React.FC<AdvancedQueryOptionsMenuProps> = ({ isM
                         <div className="w-full space-y-2">
                             <h4 className="text-xs text-metrics-text">Sources Percentage Allocation</h4>
                             <div className="w-full space-y-2">
-                                <div className="flex flex-col">
-                                    <p className="text-[10px] text-header-bar-text mb-2">News Ratio</p>
-                                    <div className="w-full flex justify-start items-center space-x-2">
-                                        <input type="range" min='0' max='100' className="w-[50%] cursor-pointer range-slider" style={{background: `linear-gradient(to right, #AEB0FF ${newsRatio}%, #383838 ${newsRatio}%)`}} value={newsRatio} onChange={e => setNewsRatio(Number(e.target.value))} data-testid="news-ratio-input" />
-                                        <div className="bg-query-options-input-bg p-1 rounded-sm w-[35px]">
-                                            <p className="text-[10px]">{newsRatio}%</p>
+                                {platformRatios.map(({ platformName, platformRatio }, index) => (
+                                    <SourcePlatformRatioInput index={index} platformName={platformName} platformRatio={platformRatio} setPlatformRatio={handlePlatformRatioChange} />
+                                ))}
+                            </div>
+                            <div className="w-full flex flex-col items-start space-y-4" style={{ marginTop: '20px' }}>
+                                {isNewSourcePlatformInputOpen && (
+                                    <div className="w-full flex flex-col space-y-2">
+                                        <label className="text-xs text-metrics-text">New Source Platform</label>
+                                        <div className="flex space-x-7">
+                                            <div className="w-[58%] flex items-center space-x-3">
+                                                <input type="text" placeholder="domain.domain" className="bg-transparent border-b-2 text-header-bar-text border-header-bar-text text-xs focus:outline-none pr-1 py-1 flex-1" value={newSourcePlatformName} onChange={e => setNewSourcePlatformName(e.target.value)} onKeyDown={handleKeyPress} />
+                                                <button onClick={handleAddNewSourcePlatformRatio} className="text-xs text-source-text">Add</button>
+                                            </div>
+                                            <button onClick={handleCloseAddNewSourcePlatformInput}>
+                                                <img src={CloseMenuButton} alt="close-menu-btn" className="w-[8px] h-[8px]" />
+                                            </button>
                                         </div>
                                     </div>
-                                    <div className="w-[50%] grid grid-cols-11 gap-4">
-                                        <span className="text-[8px] text-header-bar-text col-start-1">0</span>
-                                        <span className="text-[8px] text-header-bar-text col-start-2">10</span>
-                                        <span className="text-[8px] text-header-bar-text col-start-3">20</span>
-                                        <span className="text-[8px] text-header-bar-text col-start-4">30</span>
-                                        <span className="text-[8px] text-header-bar-text col-start-5">40</span>
-                                        <span className="text-[8px] text-header-bar-text col-start-6">50</span>
-                                        <span className="text-[8px] text-header-bar-text col-start-7">60</span>
-                                        <span className="text-[8px] text-header-bar-text col-start-8">70</span>
-                                        <span className="text-[8px] text-header-bar-text col-start-9">80</span>
-                                        <span className="text-[8px] text-header-bar-text col-start-10">90</span>
-                                        <span className="text-[8px] text-header-bar-text col-start-11">100</span>
-                                    </div>
-                                </div>
-                                <div>
-                                    <p className="text-[10px] text-header-bar-text mb-2">X Ratio</p>
-                                    <div className="w-full flex justify-start items-center space-x-2">
-                                        <input type="range" min='0' max='100' className="w-[50%] cursor-pointer range-slider" style={{background: `linear-gradient(to right, #AEB0FF ${xRatio}%, #383838 ${xRatio}%)`}} value={xRatio} onChange={e => setXRatio(Number(e.target.value))} data-testid="x-ratio-input" />
-                                        <div className="bg-query-options-input-bg p-1 rounded-sm w-[35px]">
-                                            <p className="text-[10px]">{xRatio}%</p>
-                                        </div>
-                                    </div>
-                                    <div className="w-[50%] grid grid-cols-11 gap-4">
-                                        <span className="text-[8px] text-header-bar-text col-start-1">0</span>
-                                        <span className="text-[8px] text-header-bar-text col-start-2">10</span>
-                                        <span className="text-[8px] text-header-bar-text col-start-3">20</span>
-                                        <span className="text-[8px] text-header-bar-text col-start-4">30</span>
-                                        <span className="text-[8px] text-header-bar-text col-start-5">40</span>
-                                        <span className="text-[8px] text-header-bar-text col-start-6">50</span>
-                                        <span className="text-[8px] text-header-bar-text col-start-7">60</span>
-                                        <span className="text-[8px] text-header-bar-text col-start-8">70</span>
-                                        <span className="text-[8px] text-header-bar-text col-start-9">80</span>
-                                        <span className="text-[8px] text-header-bar-text col-start-10">90</span>
-                                        <span className="text-[8px] text-header-bar-text col-start-11">100</span>
-                                    </div>
-                                </div>
-                                <div>
-                                    <p className="text-[10px] text-header-bar-text mb-2">Facebook Ratio</p>
-                                    <div className="w-full flex justify-start items-center space-x-2">
-                                        <input type="range" min='0' max='100' className="w-[50%] cursor-pointer range-slider" style={{background: `linear-gradient(to right, #AEB0FF ${facebookRatio}%, #383838 ${facebookRatio}%)`}} value={facebookRatio} onChange={e => setFacebookRatio(Number(e.target.value))} data-testid="facebook-ratio-input" />
-                                        <div className="bg-query-options-input-bg p-1 rounded-sm w-[35px]">
-                                            <p className="text-[10px]">{facebookRatio}%</p>
-                                        </div>
-                                    </div>
-                                    <div className="w-[50%] grid grid-cols-11 gap-4">
-                                        <span className="text-[8px] text-header-bar-text col-start-1">0</span>
-                                        <span className="text-[8px] text-header-bar-text col-start-2">10</span>
-                                        <span className="text-[8px] text-header-bar-text col-start-3">20</span>
-                                        <span className="text-[8px] text-header-bar-text col-start-4">30</span>
-                                        <span className="text-[8px] text-header-bar-text col-start-5">40</span>
-                                        <span className="text-[8px] text-header-bar-text col-start-6">50</span>
-                                        <span className="text-[8px] text-header-bar-text col-start-7">60</span>
-                                        <span className="text-[8px] text-header-bar-text col-start-8">70</span>
-                                        <span className="text-[8px] text-header-bar-text col-start-9">80</span>
-                                        <span className="text-[8px] text-header-bar-text col-start-10">90</span>
-                                        <span className="text-[8px] text-header-bar-text col-start-11">100</span>
-                                    </div>
-                                </div>
+                                )}
+                                <button className="text-source-text text-xs" onClick={handleOpenAddNewSourcePlatformInput}>+ Add Source Platform</button>
                             </div>
                         </div>
                         <div className="w-full space-y-2">
@@ -228,15 +233,15 @@ const AdvancedQueryOptionsMenu: React.FC<AdvancedQueryOptionsMenuProps> = ({ isM
                     <button className="px-4 py-2 rounded-lg text-source-text border border-source-text text-sm" onClick={handleApply} data-testid="apply-btn">Apply</button>
                 </div>
             </div>
-            {displayTotalRatioUnder100Menu && (
+            {displayWarningMessage && (
                 <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-20">
                   <div className="bg-[#282C2C] p-6 rounded-lg w-[420px]">
                     <h2 className="text-xl font-bold mb-4">Warning</h2>
-                    <p className="text-light-grey">The total platform ratio percentage is under 100.</p>
-                    <p className="text-light-grey font-bold">Please adjust the platform ratio percentage to apply the new changes.</p>
+                    <p className="text-light-grey">{warningMessage}</p>
+                    <p className="text-light-grey font-bold">{warningInstruction}</p>
                     <div className="flex justify-end mt-4">
                       <button
-                        onClick={() => setDisplayTotalRatioUnder100Menu(false)}
+                        onClick={() => setDisplayWarningMessage(false)}
                         className="bg-button-hover p-2 rounded-md mr-2"
                       >
                         Close
