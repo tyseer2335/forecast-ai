@@ -275,15 +275,12 @@ const Sidebar: React.FC<SidebarProps> = ({ newChatId }) => {
 
   return (
     <div
-      className={`bg-sidebar-bg text-light-grey h-full flex flex-col justify-between transition-all duration-300 ease-in-out
-    ${
-      isCollapsed
-        ? "w-20 min-w-[60px]"
-        : "w-full sm:w-1/4 sm:max-w-[300px] sm:min-w-[170px]"
-    }`}
+      className={`bg-sidebar-bg text-light-grey h-full flex flex-col justify-between transition-all duration-300 ease-in-out ${
+        isCollapsed ? "w-20" : "w-64"
+      }`}
     >
       {/* Logo and program title */}
-      <div className="flex items-center p-4 fixed top-0 left-0 z-10 w-full">
+      <div className="flex items-center p-4">
         <button
           onClick={() => setIsCollapsed(!isCollapsed)}
           className="flex items-center hover:bg-button-hover rounded-md p-2 transition-all"
@@ -308,7 +305,7 @@ const Sidebar: React.FC<SidebarProps> = ({ newChatId }) => {
 
       {/* Chat Sessions - hide when collapsed */}
       <div
-        className={`overflow-y-auto mt-16 px-4 pb-20 pt-3 ${
+        className={`overflow-y-auto flex-1 px-4 pb-4 pt-3 ${
           isCollapsed ? "hidden" : ""
         }`}
         data-testid="chat-sessions"
@@ -322,7 +319,7 @@ const Sidebar: React.FC<SidebarProps> = ({ newChatId }) => {
 
       {/* Settings button - hide when collapsed */}
       {!isCollapsed && (
-        <div className="fixed bottom-0 left-0 p-4 flex justify-between items-center z-10 w-full">
+        <div className="p-4 flex justify-between items-center">
           <button
             onClick={toggleSettings}
             className="flex items-center hover:bg-button-hover p-2 rounded-md"
@@ -385,7 +382,7 @@ const Sidebar: React.FC<SidebarProps> = ({ newChatId }) => {
               &times;
             </button>
             <p
-              className="text-right bottom-2 right-2 italic text-[#9A9A9A] text-sm"
+              className="text-right italic text-[#9A9A9A] text-sm mt-4"
               onKeyDown={(e) => {
                 if (e.key === "Enter") {
                   toggleSettings();
