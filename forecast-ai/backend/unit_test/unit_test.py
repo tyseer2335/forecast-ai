@@ -21,7 +21,7 @@ logging.basicConfig(level=logging.INFO)
 def unit_test_all():
     try:
         logging.info("\033[92m[Unit Test] Starting unit tests...\033[0m")
-        client, LOCAL_OR_PROD = test_env_var()
+        client, LOCAL_OR_PROD, DOCKER_OR_LAMBDATEST, SINGLE_OR_PARALLEL, USERNAME, ACCESS_KEY = test_env_var()
         logging.info("\033[92m[Unit Test] Environment variables loaded successfully.\033[0m")
         request = test_create_request()
         logging.info("\033[92m[Unit Test] ForecastRequest object created successfully.\033[0m")
@@ -29,7 +29,7 @@ def unit_test_all():
         logging.info("\033[92m[Unit Test] Search queries generated successfully.\033[0m")
         news = test_collect_news(search_queries, request)
         logging.info("\033[92m[Unit Test] News collected successfully.\033[0m")
-        news_with_content = test_scrapping_content(news, LOCAL_OR_PROD)
+        news_with_content = test_scrapping_content(news, LOCAL_OR_PROD, DOCKER_OR_LAMBDATEST, SINGLE_OR_PARALLEL, USERNAME, ACCESS_KEY)
         logging.info("\033[92m[Unit Test] News with content scrapped successfully.\033[0m")
         news_objects = test_convert_to_article(news_with_content)
         logging.info("\033[92m[Unit Test] News converted to Article objects successfully.\033[0m")
@@ -37,7 +37,7 @@ def unit_test_all():
         logging.info("\033[92m[Unit Test] Relevance score calculated successfully.\033[0m")
         ranked_news_with_content = test_sort_and_filter(news_objects, request)
         logging.info("\033[92m[Unit Test] News sorted and filtered successfully.\033[0m")
-        test_generate_forecast(request, ranked_news_with_content)
+        test_generate_forecast(request, client, ranked_news_with_content)
         logging.info("\033[92m[Unit Test] Forecast generated successfully.\033[0m")
         logging.info("\033[92m[Unit Test Success]\033[0m All tests passed successfully.")
     except AssertionError as e:
@@ -54,11 +54,19 @@ def test_env_var() -> tuple[OpenAI, str]:
     OPENAI_API_KEY = os.getenv('OPENAPI_API_KEY')
     client = OpenAI(api_key=OPENAI_API_KEY)
     LOCAL_OR_PROD = os.getenv('LOCAL_OR_PROD')  # set to `local` or `prod`. use `local` for testing selenium
+    DOCKER_OR_LAMBDATEST = os.getenv('DOCKER_OR_LAMBDATEST')
+    SINGLE_OR_PARALLEL = os.getenv('SINGLE_OR_PARALLEL')
+    USERNAME = os.getenv('USERNAME')
+    ACCESS_KEY = os.getenv('ACCESS_KEY')
     assert isinstance(OPENAI_API_KEY, str)
     assert isinstance(client, OpenAI)
     assert isinstance(LOCAL_OR_PROD, str) and (LOCAL_OR_PROD == 'local' or LOCAL_OR_PROD == 'prod')
-    logging.info(f"\033[92m[test_env_var] client: {client}, LOCAL_OR_PROD: {LOCAL_OR_PROD}\033[0m")
-    return client, LOCAL_OR_PROD
+    assert isinstance(DOCKER_OR_LAMBDATEST, str) and (DOCKER_OR_LAMBDATEST == 'docker' or DOCKER_OR_LAMBDATEST == 'lambdatest')
+    assert isinstance(SINGLE_OR_PARALLEL, str) and (SINGLE_OR_PARALLEL == 'single' or SINGLE_OR_PARALLEL == 'parallel')
+    assert isinstance(USERNAME, str)
+    assert isinstance(ACCESS_KEY, str)
+    logging.info(f"\033[92m[test_env_var] client: {client}, LOCAL_OR_PROD: {LOCAL_OR_PROD}, DOCKER_OR_LAMBDATEST: {DOCKER_OR_LAMBDATEST}, SINGLE_OR_PARALLEL: {SINGLE_OR_PARALLEL}, USERNAME: {USERNAME}, ACCESS_KEY: {ACCESS_KEY}\033[0m")
+    return client, LOCAL_OR_PROD, DOCKER_OR_LAMBDATEST, SINGLE_OR_PARALLEL, USERNAME, ACCESS_KEY
 
 
 def test_create_request() -> ForecastRequest:
@@ -159,14 +167,14 @@ def test_collect_news(search_queries: dict, request: ForecastRequest) -> dict:
     return news
 
 
-def test_scrapping_content(news: dict, LOCAL_OR_PROD: str) -> dict:
+def test_scrapping_content(news: dict, LOCAL_OR_PROD: str, DOCKER_OR_LAMBDATEST: str, SINGLE_OR_PARALLEL: str, USERNAME: str, ACCESS_KEY: str) -> dict:
     """
     Test if content is scrapped correctly
     :param news:
     :param LOCAL_OR_PROD:
     :return:
     """
-    news_with_content = scrapping_content.multiple_scrape_content(news, LOCAL_OR_PROD)
+    news_with_content = scrapping_content.multiple_scrape_content(news, LOCAL_OR_PROD, DOCKER_OR_LAMBDATEST, SINGLE_OR_PARALLEL, USERNAME, ACCESS_KEY)
     # {'Who will win the US 2024 election site:x.com': [{'title': 'Collin Rugg (@CollinRugg) - X', 'description':
     # 'Collin Rugg (@CollinRugg)  X', 'published date': 'Wed, 05 Jun 2024 04:45:47 GMT',
     # 'url': 'https://news.google.com/rss/articles
@@ -258,14 +266,15 @@ def test_sort_and_filter(news_objects: dict, request: ForecastRequest) -> dict:
     return ranked_news_with_content
 
 
-def test_generate_forecast(request: ForecastRequest, ranked_news_with_content: dict):
+def test_generate_forecast(request: ForecastRequest, client: any, ranked_news_with_content: dict):
     """
     Test if forecast is generated correctly
     :param request:
     :param ranked_news_with_content:
     :return:
     """
-    answer = generate_forecast.generate_forecast(request, ranked_news_with_content)
+    forecast_agent = generate_forecast.ForecastGenerator(client=client, model="gpt-4o-mini")
+    answer = forecast_agent.generate_forecast(request, ranked_news_with_content)
     # {'answer': HARD_CODED_ANSWER,
     #  'sources': {'x.com': [<model.article.Article at 0x22948f6bc50>],
     #   'facebook.com': [<model.article.Article at 0x22948f6b510>],
@@ -274,12 +283,12 @@ def test_generate_forecast(request: ForecastRequest, ranked_news_with_content: d
     #    <model.article.Article at 0x22948eac790>]}
     assert isinstance(answer, dict)
     assert 'answer' in answer
-    assert 'sources' in answer
+    assert 'Sources' in answer['answer']
     assert isinstance(answer['answer'], dict)
-    assert isinstance(answer['sources'], dict)
-    assert all(isinstance(key, str) for key in answer['sources'].keys())
-    assert all(isinstance(value, list) for value in answer['sources'].values())
-    assert all(isinstance(article, Article) for value in answer['sources'].values() for article in value)
+    assert isinstance(answer['answer']['Sources'], dict)
+    assert all(isinstance(key, str) for key in answer['answer']['Sources'].keys())
+    assert all(isinstance(value, list) for value in answer['answer']['Sources'].values())
+    assert all(isinstance(article, dict) for value in answer['answer']['Sources'].values() for article in value)
     logging.info(f"\033[92m[test_generate_forecast] answer: {answer}\033[0m")
     return answer
 
