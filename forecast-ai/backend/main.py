@@ -15,15 +15,12 @@ from query_to_answer import (
 )
 from utils import convert_to_article
 from model.forecast_request import ForecastRequest
+from share_chat import share_chat
 import asyncio
 
 import firebase_admin
 from firebase_admin import credentials, auth as firebase_auth
 from firebase_admin.auth import verify_id_token
-
-from firebase_admin import firestore
-import hashlib
-from google.cloud.firestore_v1.base_query import FieldFilter
 
 import time
 
@@ -42,6 +39,11 @@ ACCESS_KEY = os.getenv("ACCESS_KEY")
 # Initialize Firebase Admin with a service account key
 cred = credentials.Certificate(os.getenv("FIREBASE_SERVICE_ACCOUNT_KEY"))
 firebase_app = firebase_admin.initialize_app(cred)
+
+from firebase_admin import firestore
+import hashlib
+from google.cloud.firestore_v1.base_query import FieldFilter
+
 db = firestore.client(firebase_app)
 
 
@@ -72,7 +74,9 @@ async def verify_token(request: Request):
         request.state.user = decoded_token  # Store user info in request state
     except Exception as e:
         print("Token verification failed:", str(e))
-        raise HTTPException(status_code=401, detail="Invalid or expired token: Please login again")
+        raise HTTPException(
+            status_code=401, detail="Invalid or expired token: Please login again"
+        )
 
 
 # WebSocket endpoint to send real-time status updates
@@ -245,146 +249,11 @@ async def read_root():
 # The below APIs are for the chat sharing feature
 # API to generate chat_ref_hash from user_id and chat_id
 @app.post("/share_chat/share", dependencies=[Depends(verify_token)])
-async def share_chat(request: Request, user_id: str, chat_id: str):
-    try:
-        if not request.state.user:
-            raise HTTPException(
-                status_code=500, detail="User info not set in request state"
-            )
-
-        # Log to confirm user info is set before external API calls
-        # print("Authenticated user info:", request.state.user)
-
-        # Encode the chatRef to chat_hash
-        user_id_hash = hashlib.sha256(user_id.encode()).hexdigest()
-        chat_id_hash = hashlib.sha256(chat_id.encode()).hexdigest()
-
-        # To concatenate the user_id_hash and chat_id_hash, we will use the delimiter "_"
-        chat_ref_hash = user_id_hash + "_" + chat_id_hash
-
-        # Store the hash in the db
-        user_doc = db.collection("Users").document(user_id)
-        chat_doc = user_doc.collection("Chats").document(chat_id)
-
-        user_doc.update({"userIdHash": user_id_hash})
-        print("user doc updated:", user_doc.get().to_dict())
-        chat_doc.update({"isShared": True, "chatIdHash": chat_id_hash})
-
-        # Update/Create in user doc with the map of chat_id_hash to chat_id
-        # Get sharedChatHashToChatId map if exists
-
-        # try:
-        #     shared_chat_hash_to_chat_id_map = user_doc.get().get(
-        #         "sharedChatHashToChatId"
-        #     )
-        # except Exception as e:
-        #     shared_chat_hash_to_chat_id_map = {}
-        #     user_doc.update({"sharedChatHashToChatId": shared_chat_hash_to_chat_id_map})
-
-        # try:
-        #     shared_chat_hash_to_chat_id_map["chat_ref_hash"] = chat_id
-        #     user_doc.update({"sharedChatHashToChatId": shared_chat_hash_to_chat_id_map})
-        #     firestore.DocumentReference.update(chat_doc, {"isShared": True})
-        # except Exception as e:
-        #     print("Error updating sharedChatHashToChatId map", str(e))
-        #     raise HTTPException(status_code=100, detail=f"Error sharing chat: {str(e)}")
-
-        return {"chat_ref_hash": chat_ref_hash}
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Error sharing chat: {str(e)}")
+async def share_chat_api(request: Request, user_id: str, chat_id: str):
+    return share_chat.store_and_get_chat_ref_hash(request, user_id, chat_id, db)
 
 
 # API to generate user_id and chat_id from chat_ref_hash
 @app.post("/share_chat/view")
-async def view_chat(chat_ref_hash: str):
-    try:
-        # Split the chat_ref_hash to get the user_id_hash and chat_id_hash
-        user_id_hash, chat_id_hash = chat_ref_hash.split("_")
-
-        # Find the user_id from the user_id_hash
-        user_id = None
-        try:
-            user_docs = db.collection("Users").get()
-            for user_doc in user_docs:
-                print("User doc:", user_doc.to_dict())
-                try:
-                    if user_doc.get("userIdHash") == user_id_hash:
-                        user_id = user_doc.id
-                        print("User found")
-                        break
-                except Exception as e:
-                    continue
-
-        except Exception as e:
-            raise HTTPException(
-                status_code=404, detail="Shared chat not found: User no longer exists"
-            )
-        if user_id is None:
-            raise HTTPException(
-                status_code=404, detail="Shared chat not found: User no longer exists"
-            )
-
-        # Find the chat_id by iterating through the chats of the user, and checking if the chat_id_hash matches
-        chat_id = None
-        try:
-            print("User id:", user_id)
-            chat_docs = (
-                db.collection("Users").document(user_id).collection("Chats").get()
-            )
-            print("Iterating through chat docs: ", chat_docs)
-            for chat_doc in chat_docs:
-                print("Chat doc:", chat_doc)
-                if chat_doc.get("chatIdHash") == chat_id_hash:
-                    print("Chat found")
-                    chat_id = chat_doc.id
-                    break
-        except Exception as e:
-            raise HTTPException(
-                status_code=404,
-                detail="Shared chat not found: User seems to have revoked access to the chat",
-            )
-
-        # user_docs = db.collection("Users").stream()
-
-        # print("Iterating through user docs")
-        # for user_doc in user_docs:
-
-        #     try:
-        #         uid = user_doc.get().id
-        #         print("User doc id:", uid)
-
-        #     if user_doc.uid == user_id_hash:
-        #         user_id = user_doc.uid
-        #         print("User found")
-        #         break
-        # if user_id is None:
-        #     raise HTTPException(
-        #         status_code=404, detail="Shared chat not found: User no longer exists"
-        #     )
-
-        # Find the chat_id from the chat_id_hash
-
-        # chat_id = None
-        # try:
-        #     shared_chat_hash_to_chat_id_map = user_doc.get().get(
-        #         "sharedChatHashToChatId"
-        #     )
-        #     print("Shared chat hash to chat id map:", shared_chat_hash_to_chat_id_map)
-        # except Exception as e:
-        #     raise HTTPException(
-        #         status_code=404,
-        #         detail="Shared chat not found: User seems to have revoked access to the chat",
-        #     )
-        # chat_id = shared_chat_hash_to_chat_id_map.get(chat_id_hash)
-        # if chat_id is None:
-        #     raise HTTPException(
-        #         status_code=404,
-        #         detail="Shared chat not found: User seems to have revoked access to the chat",
-        #     )
-
-        return {"user_id": user_id, "chat_id": chat_id}
-
-    except Exception as e:
-        raise HTTPException(
-            status_code=500, detail=f"Error viewing shared chat: {str(e)}"
-        )
+async def view_chat_api(chat_ref_hash: str):
+    return share_chat.get_user_id_and_chat_id_from_chat_ref_hash(chat_ref_hash, db)
