@@ -115,37 +115,38 @@ const SourceSection: React.FC<SourceSectionProps> = ({ source, visibleBiasColor,
     }
 
     return (
-        <div className="w-full flex-grow flex flex-col lg:flex-row space-y-4 lg:space-y-0 lg:space-x-5 justify-center items-center rounded-md h-[90%]">
+    <div className="w-full flex-grow flex flex-col lg:flex-row space-y-4 lg:space-y-0 lg:space-x-5 justify-center items-start rounded-md min-h-[90%]">
             <SourceCard source={source} />
-            <div className="flex flex-row lg:flex-col justify-between h-[168px] lg:h-full items-start lg:items-end w-[88%] lg:w-[25%] lg:max-w-[216px]">  
-                {/* To make this block height to be fit the content but not auto otherwise" */}
-                <div className={`flex flex-col bg-sidebar-bg p-4 w-full space-y-4 md:space-y-6 lg:space-y-3 rounded-md items-start max-w-[150px] md:max-w-[192px] lg:max-w-[216px] ${isMetricsExpanded ? 'block h-full lg:h-auto' : 'h-fit'}`}>
-                    
-                    <div className="flex justify-between items-center cursor-pointer w-full"
+        <div className="flex flex-row lg:flex-col justify-between lg:justify-start gap-4 w-[88%] lg:w-[25%] lg:max-w-[216px]">
+            {/* Metrics Panel */}
+            <div className={`flex flex-col bg-sidebar-bg p-4 w-full rounded-md items-start max-w-[150px] md:max-w-[192px] lg:max-w-[216px] transition-all duration-300 ${isMetricsExpanded ? 'flex-grow' : 'h-fit'}`}>
+                <div className="flex justify-between items-center cursor-pointer w-full mb-4"
                         onClick={handleToggleMetrics}>
                         <h4 className="flex font-semibold text-metrics-text text-[10px] md:text-xs lg:text-sm xl:text-base">Metrics</h4>
                         <img src={isMetricsExpanded ? CollapseIcon : ExpandIcon} alt="expand-collapse-icon" className="w-4 h-4 lg:w-5 lg:h-5 xl:w-6 xl:h-6 cursor-pointer flex justify-end" />
                     </div>
-                    <div className={`mt-1 space-y-3 w-full overflow-x-scroll ${isMetricsExpanded ? 'block' : 'hidden'} pb-3`}>
-                        <div className="space-y-4 w-full overflow-x-scroll">
+                <div className={`w-full transition-all duration-300 ${isMetricsExpanded ? 'opacity-100' : 'opacity-0 h-0 overflow-hidden'}`}>
+                    <div className="space-y-4 w-full">
                             <MetricDisplay imgSrc={PlatformIcon} title="Platform" value={source.metrics.platform} />
-                            <div className="text-mid-light-grey text-[8px] md:text-[10px] lg:text-[11px] xl:text-xs font-semibold flex-col md:flex-row md:justify-between md:items-center space-y-[0.8rem]">
+                        <div className="text-mid-light-grey text-[8px] md:text-[10px] lg:text-[11px] xl:text-xs font-semibold flex-col md:flex-row md:justify-between md:items-center space-y-2">
                                 <div className="flex items-center space-x-2 justify-start">
                                     <img src={PublishedDateIcon} alt="published-date-icon" className="w-3 h-3 lg:w-4 lg:h-4 xl:w-5 xl:h-5 opacity-60" />
                                     <p>Published Date</p>
                                 </div>
                                 <p className="text-metrics-text justify-self-end text-right">
-                                    {source.metrics.publishedDate}</p>
+                                {source.metrics.publishedDate}
+                            </p>
                             </div>
-                            <MetricDisplay imgSrc={RelevanceScoreIcon} title="Relevance Score" value={(source.metrics.relevanceScore).toString()} />
+                        <MetricDisplay imgSrc={RelevanceScoreIcon} title="Relevance Score" value={source.metrics.relevanceScore.toString()} />
                             <MetricDisplay imgSrc={RankingIcon} title="Ranking (1-6)" value={source.metrics.ranking} />
                             <MetricDisplay imgSrc={TotalArticlesIcon} title={`Total Articles\nfrom ${source.metrics.platform}`} value={source.metrics.totalArticlesOfSource} />                        
                         </div>
                     </div>
                 </div>
-                <div className="flex flex-col bg-sidebar-bg p-4 pb-7 w-full space-y-3 h-full lg:h-auto rounded-md items-start max-w-[150px] md:max-w-[192px] lg:max-w-[216px]">
-                    <h4 className="font-semibold text-metrics-text text-[10px] md:text-xs lg:text-sm xl:text-base">Detected Biases</h4>
-                    {/* List of Detected Biases */}
+
+            {/* Detected Biases Panel */}
+            <div className="flex flex-col bg-sidebar-bg p-4 w-full rounded-md items-start max-w-[150px] md:max-w-[192px] lg:max-w-[216px]">
+                <h4 className="font-semibold text-metrics-text text-[10px] md:text-xs lg:text-sm xl:text-base mb-3">Detected Biases</h4>
                     <ul className="space-y-2 w-full">
                         <DetectedBias color="green" />
                         <DetectedBias color="yellow" />
@@ -156,6 +157,6 @@ const SourceSection: React.FC<SourceSectionProps> = ({ source, visibleBiasColor,
             </div>
         </div>
     )
-}
+};
 
 export default SourceSection;
