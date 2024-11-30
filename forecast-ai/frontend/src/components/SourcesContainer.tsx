@@ -73,39 +73,46 @@ const SourcesContainer: React.FC<SourcesContainerProps> = ({ sources, error, loa
     }
 
     return (
-        <div className="w-full space-y-4 bg-screen-black flex flex-col h-[65%] min-h-[65%] max-h-[65%] sm:h-[62%] sm:min-h-[62%] sm:max-h-[62%] md:h-[65%] md:min-h-[65%] md:max-h-[65%] lg:h-[52%] lg:min-h-[52%] lg:max-h-[52%]">
+  <div className="w-full flex flex-col gap-4 bg-screen-black transition-all duration-300">
             {loading ? (
                 <div className="flex justify-center items-center h-full">
                     <LoadingBar status={status} />
                 </div>
-            ) : (
-                error ? (
+    ) : error ? (
                     <ErrorMessage error={error || 'Error generating answer to query'} />
                 ) : (
-                    <div className="w-full space-y-4 bg-screen-black flex flex-col h-full relative">
-                        <h1 className="font-bold text-chat-message-text text-sm md:text-base lg:text-lg xl:text-xl">Sources</h1>
-                        <SourceSection source={sources[currentSource]} visibleBiasColor={visibleBiasColor} setVisibleBiasColor={setVisibleBiasColor} />
-                        {isTheFirstSource ?
-                            <button className="absolute left-0 top-[38%] lg:top-1/2 cursor-pointer" data-testid="decrement-btn">
-                                <img src={ScrollLeftButton} alt="scroll-left-btn" className="w-8 h-8 opacity-5" />
-                            </button> : 
-                            <button onClick={decrementCurrentSource} className="absolute left-0 top-[38%] lg:top-1/2 cursor-pointer"  data-testid="decrement-btn">
+      <div className="w-full flex flex-col gap-4 bg-screen-black relative min-h-[400px]">
+        <h1 className="font-bold text-chat-message-text text-sm md:text-base lg:text-lg xl:text-xl">
+          Sources
+        </h1>
+        <div className="flex-grow relative">
+          <SourceSection 
+            source={sources[currentSource]} 
+            visibleBiasColor={visibleBiasColor} 
+            setVisibleBiasColor={setVisibleBiasColor} 
+          />
+          {/* Navigation buttons */}
+          <div className="absolute left-0 right-0 top-1/2 -translate-y-1/2 flex justify-between pointer-events-none">
+            <button 
+              className={`pointer-events-auto ${!isTheFirstSource ? 'opacity-100' : 'opacity-5'}`}
+              onClick={decrementCurrentSource}
+              data-testid="decrement-btn"
+            >
                                 <img src={ScrollLeftButton} alt="scroll-left-btn" className="w-8 h-8" />
                             </button>
-                        }
-                        {isTheLastSource ?
-                            <button className="absolute right-0 top-[38%] lg:top-1/2 cursor-pointer" data-testid="increment-btn">
-                                <img src={ScrollRightButton} alt="scroll-left-btn" className="w-8 h-8 opacity-5" />
-                            </button> :
-                            <button onClick={incrementCurrentSource} className="absolute right-0 top-[38%] lg:top-1/2 cursor-pointer" data-testid="increment-btn">
-                                <img src={ScrollRightButton} alt="scroll-left-btn" className="w-8 h-8" />
+            <button 
+              className={`pointer-events-auto ${!isTheLastSource ? 'opacity-100' : 'opacity-5'}`}
+              onClick={incrementCurrentSource}
+              data-testid="increment-btn"
+            >
+              <img src={ScrollRightButton} alt="scroll-right-btn" className="w-8 h-8" />
                             </button>
-                        }
                     </div>
-                )
-            )}
         </div>
-    )
+      </div>
+    )}
+  </div>
+    );
 }
 
 export default SourcesContainer;
