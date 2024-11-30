@@ -52,6 +52,7 @@ describe(PromptBar, () => {
   const addError = jest.fn();
   const toggleLoading = jest.fn();
   const addStatus = jest.fn();
+  const addAnswer = jest.fn();
 
   const setup = () => {
     const { getByTestId } = render(
@@ -64,6 +65,7 @@ describe(PromptBar, () => {
         addError={addError}
         toggleLoading={toggleLoading}
         addStatus={addStatus}
+        addAnswer={addAnswer}
       />
     );
     return getByTestId;
@@ -80,18 +82,50 @@ describe(PromptBar, () => {
     addStatus.mockClear();
     (auth.currentUser as unknown) = { uid: "testUserId" };
     (uuidv4 as jest.Mock).mockReturnValue("8bb49e94-3854-4f72-a32b-ab37577e1071");
+    const mockLocalStorage = (() => {
+      let store: { [key: string]: string } = {};
+      return {
+        getItem: (key: string) => store[key] || null,
+        setItem: (key: string, value: string) => {
+          store[key] = value;
+        },
+        clear: () => {
+          store = {};
+        },
+      };
+    })();
+    Object.defineProperty(window, "localStorage", {
+      value: mockLocalStorage,
+    });
+    localStorage.setItem("authToken", "test-token");
+  });
+
+  afterEach(() => {
+    localStorage.clear();
   });
 
   it("should send correct request when calling API", async () => {
     const getByTestId = setup();
 
     const mockResponseData = {
-      answer: "Forecast question answer",
-      sources: {
+      ["Forecast"]: "30.0%", 
+      ["Forecaster Rationale"]: "Sample Forecaster Rationale",
+      ["llm_features"]: {},
+      ['raw_rationale']: {},
+      ['article_summaries']: { 1: {summary: "Sample Article Summary", full_text: "Sample Full Text"} },
+      Sources: {
         automatic: [{
           title: "Example Title",
           content: { text: "Example text", media: ["https://placehold.co/306x150?text=No+Image+Available"] },
           url: "https://example.com",
+          platform: "Sample Platform",
+          publisher_title: "Sample Publisher Title",
+          publisher_href: "Sample Publisher Href",
+          published_date: "Sample Published Date",
+          ranking: 5,
+          total_articles_of_source: 2,
+          relevance_score: 2,
+          id: 1
         }]
       },
     };
@@ -131,18 +165,30 @@ describe(PromptBar, () => {
             automatic: 0.8,
             'x.com': 0.2,
             'facebook.com': 0.0
-          }
-        }
+          },
+        },
+        {"headers": {"Authorization": "Bearer test-token"}}
       );
 
       expect(addSources).toHaveBeenCalledWith([
         {
+          id: "1",
           title: "Example Title",
           text: "Example text",
           image: "https://placehold.co/306x150?text=No+Image+Available",
           link: "https://example.com",
           logo: "http://www.google.com/s2/favicons?domain=https://example.com&sz=64",
-          metrics: { viewsCount: 483, trendingRate: 22, region: "Atlanta, USA" },
+          fullText: "Sample Full Text",
+          summary: "Sample Article Summary",
+          metrics: { 
+            "platform": "Sample Platform",
+            "publishedDate": "Sample Published Date",
+            "publisherHref": "Sample Publisher Href",
+            "publisherTitle": "Sample Publisher Title",
+            "ranking": 5,
+            "relevanceScore": 2,
+            "totalArticlesOfSource": 2,
+          },
         },
       ]);
 

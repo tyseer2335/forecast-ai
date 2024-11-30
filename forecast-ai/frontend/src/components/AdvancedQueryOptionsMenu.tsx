@@ -3,9 +3,9 @@ import React, { useEffect, useState, useRef } from "react";
 import CloseMenuButton from "../assets/close-menu-button.svg";
 import { DayPicker } from "react-day-picker";
 import { Request } from "./PromptBar";
+import SourcePlatformRatioInput from "./SourcePlatformRatioInput";
 import "react-day-picker/style.css";
 import "../css/advanced-query-options-menu-custom-css.css";
-import SourcePlatformRatioInput from "./SourcePlatformRatioInput";
 
 type AdvancedQueryOptionsMenuProps = {
     isMenuOpen: boolean;
@@ -124,6 +124,7 @@ const AdvancedQueryOptionsMenu: React.FC<AdvancedQueryOptionsMenuProps> = ({ isM
 
     const handleCloseAddNewSourcePlatformInput = (e: React.MouseEvent<HTMLButtonElement>) => {
         e.preventDefault();
+        setNewSourcePlatformName('');
         setIsNewSourcePlatformInputOpen(false);
     }
 
@@ -182,7 +183,7 @@ const AdvancedQueryOptionsMenu: React.FC<AdvancedQueryOptionsMenuProps> = ({ isM
                             <h4 className="text-xs text-metrics-text">Sources Percentage Allocation</h4>
                             <div className="w-full space-y-2">
                                 {platformRatios.map(({ platformName, platformRatio }, index) => (
-                                    <SourcePlatformRatioInput index={index} platformName={platformName} platformRatio={platformRatio} setPlatformRatio={handlePlatformRatioChange} />
+                                    <SourcePlatformRatioInput key={index} index={index} platformName={platformName} platformRatio={platformRatio} setPlatformRatio={handlePlatformRatioChange} />
                                 ))}
                             </div>
                             <div className="w-full flex flex-col items-start space-y-4" style={{ marginTop: '20px' }}>

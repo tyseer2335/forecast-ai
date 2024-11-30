@@ -108,23 +108,23 @@ const convertResponseSourcesIntoSources = (responseSources: any, articleSummarie
       const parsedRanking = parseInt(source["ranking"]);
       const parsedTotalArticlesOfSource = parseInt(source["total_articles_of_source"]);
 
-        result.push({
-          title: source.title,
-          text: source.content.text,
+      result.push({
+        title: source.title,
+        text: source.content.text,
         image: source.content.media?.length > 0
-              ? source.content.media[0]
-              : "https://placehold.co/306x150?text=No+Image+Available",
-          link: source.url,
-          logo: `http://www.google.com/s2/favicons?domain=${source.url}&sz=64`,
-          metrics: {
-            platform: source.platform === "automatic" ? "News" : source.platform,
-            publisherTitle: source.publisher_title,
-            publisherHref: source.publisher_href,
-            publishedDate: source.published_date,
-            relevanceScore: parsedRelevanceScore,
-            ranking: parsedRanking,
-            totalArticlesOfSource: parsedTotalArticlesOfSource,
-            },
+          ? source.content.media[0]
+          : "https://placehold.co/306x150?text=No+Image+Available",
+        link: source.url,
+        logo: `http://www.google.com/s2/favicons?domain=${source.url}&sz=64`,
+        metrics: {
+          platform: source.platform === "automatic" ? "News" : source.platform,
+          publisherTitle: source.publisher_title,
+          publisherHref: source.publisher_href,
+          publishedDate: source.published_date,
+          relevanceScore: parsedRelevanceScore,
+          ranking: parsedRanking,
+          totalArticlesOfSource: parsedTotalArticlesOfSource,
+        },
         // Use the article summaries from backend
         summary: summaryData.summary || "",
         fullText: summaryData.full_text || "",
