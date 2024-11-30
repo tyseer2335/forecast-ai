@@ -6,7 +6,6 @@ import SourceSection from "./SourceSection";
 import { BiasColor, SourceObject } from "../hooks/types";
 import ErrorMessage from "./ErrorMessage";
 import LoadingBar from "./LoadingBar";
-import { set } from "date-fns";
 
 /**
  * @file SourcesContainer.tsx
