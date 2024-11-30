@@ -151,6 +151,72 @@ Content:
 
         return "\n\n".join(sections)
 
+
+    def format_response(self, response: str) -> str:
+        """
+        Example response: <facts> - NASA's Artemis program aims to return humans to the Moon, with Artemis III set for late 2026 as the first crewed mission. - NASA has selected SpaceX and Blue Origin to develop Human Landing Systems (HLS) for lunar missions. - Blue Origin is involved in delivering a lunar habitat by 2033, while SpaceX will support lunar rover and cargo missions. - NASA's Space Launch System (SLS) is crucial for Artemis missions despite criticism regarding costs and delays. - Lockheed Martin is developing a lunar solar array technology as part of the Artemis program to support sustainable human presence on the Moon. - There is ongoing debate regarding the cost-effectiveness of the SLS and the feasibility of utilizing alternative launch technologies for future missions. - NASA's Artemis program is seen as a precursor to more ambitious goals such as Mars missions. </facts> <no> 1. Significant budget constraints and political debates over funding the Artemis program could delay or even cancel the planned missions. (Strength: 8/10) 2. The development and testing of new launch systems (like SpaceX's Starship and Blue Origin's Blue Moon lander) may face unforeseen technical challenges that could impede timelines. (Strength: 7/10) 3. Previous delays in the Space Launch System (SLS) and uncertainties surrounding its operational efficiency may hinder mission execution. (Strength: 6/10) </no> <yes> 1. NASA's selection of SpaceX and Blue Origin demonstrates a commitment to leveraging commercial partnerships, which may enhance innovation and reduce risk. (Strength: 8/10) 2. The current timeline indicates positive advancements, with Artemis III scheduled for 2026, maintaining a structured approach to lunar exploration. (Strength: 9/10) 3. Technological innovations such as Lockheed Martin's lunar solar arrays may improve operational capabilities, making sustained human presence more feasible. (Strength: 7/10) </yes> <thinking1> The forecast for whether NASA will land humans on the Moon hinges on several factors, including technological advancements, budget constraints, and the viability of partnerships with commercial entities. The Strength of reasons leaning towards a positive outcome (like timelines and commercial partnerships) suggests optimism about achieving the goal. However, significant funding hurdles and technical complications present serious risks. Considering the recent announcements and the framework outlined by NASA, there is a strong indication that plans are moving forward despite some existing uncertainties. The strength of the arguments for success (particularly the advancements in technology and NASA's commitment to its Artemis program) balances against the potential for failure due to political and financial discussions. The optimism surrounding commercial involvement adds a layer of reliability that was previously less certain. Overall, my thinking reflects a conflict between cautious optimism and serious risks. While there are strong positive indicators, the overarching uncertainties warrant a measured approach to predicting the outcome. Given that significant progress is expected in the near future while retaining awareness of potential pitfalls, I will adjust my forecast to reflect a reasonably optimistic outlook. </thinking1> <t tentiative>0.75</tentative> <thinking2> Upon reflection, my earlier assessment of 0.75 captures a moderately confident likelihood of success based on the available evidence. However, weighing the potential dangers of funding shortfalls and technological setbacks should compel me to lower this assessment slightly. A 75% probability assumes ideal growth and smooth execution, but the reality often presents more challenges that might lower this figure. Given the projected mission timelines, consistent backing from NASA, and technological progress in the existing projects, a final adjustment considers both the difficulties and the momentum behind the Artemis program. A final probability may more appropriately reflect a solid expectation of success while acknowledging manageable risks, leading to a re-evaluation of my forecast. </thinking2> <answer>*0.7*</answer>
+        Return a formatted response
+
+        Some of the tags:
+        <facts>
+        <no>
+        <yes>
+        <thinking1>
+        <tentative>
+        <thinking2>
+        <answer>
+        Ex)
+        Facts.
+        ...
+
+        Reasons Against.
+        ...
+
+        Reasons For.
+        ...
+
+        Analysis 1.
+        ...
+
+        Tentative Prediction.
+        ...
+
+        Analysis 2.
+        ...
+
+        Final Prediction.
+        """
+        import re
+        # Combine facts, reasons, and thinking sections
+        sections = []
+
+        facts_match = re.search(r'<facts>(.*?)</facts>', response, re.DOTALL)
+        if facts_match:
+            sections.append("Facts:\n" + facts_match.group(1).strip())
+
+        no_match = re.search(r'<no>(.*?)</no>', response, re.DOTALL)
+        if no_match:
+            sections.append("Reasons Against:\n" + no_match.group(1).strip())
+
+        yes_match = re.search(r'<yes>(.*?)</yes>', response, re.DOTALL)
+        if yes_match:
+            sections.append("Reasons For:\n" + yes_match.group(1).strip())
+
+        thinking_matches = re.findall(r'<thinking(.*?)>(.*?)</thinking\1>', response, re.DOTALL)
+        if thinking_matches:
+            sections.append("Analysis:\n" + "\n".join([match[1] for match in thinking_matches]))
+
+        tentative_match = re.search(r'<tentative>(.*?)</tentative>', response)
+        if tentative_match:
+            sections.append("Tentative Prediction:\n" + tentative_match.group(1).strip())
+
+        final_match = re.search(r'<answer>\s*\*([0-9.]+)\*\s*</answer>', response)
+        if final_match:
+            sections.append("Final Prediction:\n" + final_match.group(1).strip())
+
+        return "\n\n".join(sections)
+
+
     def generate_forecast(self, request: ForecastRequest, news: Dict[str, List[Article]]) -> dict:
         """
         Generates a forecast based on the provided news articles and forecast request.
@@ -226,6 +292,7 @@ Content:
             }
         }
 
+        response = self.format_response(response)
         return {
             "answer": answer,
             "raw_response": response,  # Including raw response for debugging/logging

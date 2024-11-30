@@ -12,6 +12,10 @@ import multiprocessing
 import concurrent.futures
 import time
 from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.common.exceptions import TimeoutException, WebDriverException
+from typing import Optional
+
 
 
 def _single_scrape_content(url: str) -> dict:
@@ -95,6 +99,75 @@ def init_driver(LOCAL_OR_PROD: str, DOCKER_OR_LAMBDATEST: str, USERNAME: str, AC
     return driver
 
 
+# def _ensure_content_loaded_with_new_url(driver: webdriver.Chrome, url: str) -> str:
+#     driver.get(url)
+#     print(f"Scraping content for url: {url}")
+#     # once we get redirected to the page, we need to wait for the page to load
+#     # wait till news.google.com is not in the url
+#     while 'news.google.com' in driver.current_url:
+#         # time.sleep(3)
+#         WebDriverWait(driver, 5)
+#         # print(f"Redirected to {driver.current_url}, waiting for page to load...")
+#         # pass
+#
+#     # time.sleep(3)
+#     WebDriverWait(driver, 5)
+#
+#     # Get the final URL after all redirections
+#     final_url = driver.current_url
+#     return final_url
+
+def _ensure_content_loaded_with_new_url(
+        driver: webdriver.Chrome,
+        url: str,
+        timeout: int = 10,
+        max_retries: int = 3
+) -> Optional[str]:
+    """
+    Load URL and ensure content is fully loaded with proper redirect handling
+    Returns final URL or None if failed
+    """
+    retry_count = 0
+
+    while retry_count < max_retries:
+        try:
+            # Load the URL
+            driver.get(url)
+            print(f"Attempting to load URL (attempt {retry_count + 1}): {url}")
+
+            # Wait for URL to change from news.google.com
+            url_changed = WebDriverWait(driver, timeout).until(
+                lambda x: "news.google.com" not in x.current_url
+            )
+
+            # Wait for page load
+            WebDriverWait(driver, timeout).until(
+                EC.presence_of_element_located((By.TAG_NAME, "body"))
+            )
+
+            # Additional check for document ready state
+            is_ready = WebDriverWait(driver, timeout).until(
+                lambda x: x.execute_script("return document.readyState") == "complete"
+            )
+
+            final_url = driver.current_url
+
+            # Verify we have a valid final URL
+            if final_url and "news.google.com" not in final_url:
+                return final_url
+
+            print(f"Invalid final URL: {final_url}, retrying...")
+            retry_count += 1
+
+        except (TimeoutException, WebDriverException) as e:
+            print(f"Error loading page (attempt {retry_count + 1}): {str(e)}")
+            retry_count += 1
+            time.sleep(1)  # Brief pause before retry
+
+    print(f"Failed to load content after {max_retries} attempts")
+    return None
+
+
 def advanced_selenium_scrape_content(driver: webdriver.Chrome, url: str) -> dict:
     """
     Uses Selenium to scrape content from a web page, including handling JavaScript-rendered content.
@@ -109,21 +182,13 @@ def advanced_selenium_scrape_content(driver: webdriver.Chrome, url: str) -> dict
             - 'media': A list of media URLs (e.g., images).
             - 'final_url': The URL of the page after all redirects.
     """
-    driver.get(url)
-    print(f"Scraping content for url: {url}")
-    # once we get redirected to the page, we need to wait for the page to load
-    # wait till news.google.com is not in the url
-    while 'news.google.com' in driver.current_url:
-        # time.sleep(3)
-        WebDriverWait(driver, 5)
-        # print(f"Redirected to {driver.current_url}, waiting for page to load...")
-        # pass
-
-    # time.sleep(3)
-    WebDriverWait(driver, 5)
-
-    # Get the final URL after all redirections
-    final_url = driver.current_url
+    final_url = _ensure_content_loaded_with_new_url(driver, url)
+    if final_url is None:
+        return {
+            'text': '',
+            'media': [],
+            'final_url': url  # Keep original URL if scraping fails
+        }
 
     # Extract text content
     print("Extracting text content...")
@@ -200,6 +265,7 @@ def single(urls: dict, env: str, DOCKER_OR_LAMBDATEST: str, USERNAME: str, ACCES
             try:
                 res = advanced_selenium_scrape_content(driver, article['url'])
                 article['content']['text'] = res['text']
+                article['url'] = res['final_url']  # Update the URL to the final redirected URL
                 if not article['content']['media']:
                     article['content']['media'] = res['media']
             except Exception as e:

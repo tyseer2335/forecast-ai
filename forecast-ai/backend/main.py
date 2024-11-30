@@ -72,7 +72,7 @@ async def verify_token(request: Request):
         request.state.user = decoded_token  # Store user info in request state
     except Exception as e:
         print("Token verification failed:", str(e))
-        raise HTTPException(status_code=401, detail="Invalid or expired token")
+        raise HTTPException(status_code=401, detail="Invalid or expired token: Please login again")
 
 
 # WebSocket endpoint to send real-time status updates
