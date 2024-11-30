@@ -57,11 +57,14 @@ const ChatWindow: React.FC<ChatWindowProps> = ({ chats }) => {
 
   return (
     <div
-      className="w-[80%] max-w-[1300px] h-full px-4 pt-4 bg-screen-black text-white space-y-[100px] flex flex-col overflow-y-auto"
+    className="w-[80%] max-w-[1300px] h-full px-4 pt-4 bg-screen-black text-white flex flex-col overflow-y-auto gap-20"
       data-testid="chat-window"
     >
       {chats.map((chat) => (
-        <div className="flex flex-col items-center space-y-4 max-h-[110%] sm:max-h-[125%] md:max-h-[150%]" key={uuidv4()}>
+      <div 
+        className="flex flex-col items-center gap-6 min-h-fit transition-all duration-300" 
+        key={uuidv4()}
+      >
           <div ref={bottomRef} data-testid="bottom-ref" />
           <ChatMessage query={chat.query} data-testid="chat-message" />
           <SourcesContainer
@@ -73,7 +76,15 @@ const ChatWindow: React.FC<ChatWindowProps> = ({ chats }) => {
             visibleBiasColor={visibleBiasColor}
             setVisibleBiasColor={setVisibleBiasColor}
           />
-          {chat.answer && <AnswerDisplay query={chat.query} answer={chat.answer} visibleBiasColor={visibleBiasColor} />}
+        {chat.answer && (
+          <div className="w-full flex justify-center mt-4">
+            <AnswerDisplay 
+              query={chat.query} 
+              answer={chat.answer} 
+              visibleBiasColor={visibleBiasColor} 
+            />
+          </div>
+        )}
         </div>
       ))}
     </div>
