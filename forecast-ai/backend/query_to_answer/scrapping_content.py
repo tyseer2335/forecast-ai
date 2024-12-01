@@ -52,27 +52,35 @@ def decode_urls(articles):
 
 
 def return_new_links(encoded_urls: list[str]) -> list[str]:
-    articles_params = [get_decoding_params(urlparse(url).path.split("/")[-1]) for url in encoded_urls]
-    decoded_urls = decode_urls(articles_params)
+    # articles_params = [get_decoding_params(urlparse(url).path.split("/")[-1]) for url in encoded_urls]
+    # decoded_urls = decode_urls(articles_params)
+
+    # Instead use for loop one by one to get correct orders.
+    # If 1, 2, 3 given, return in 1, 2, 3 order.
+    decoded_urls = []
+    for url in encoded_urls:
+        articles_params = get_decoding_params(urlparse(url).path.split("/")[-1])
+        decoded_urls.append(decode_urls([articles_params])[0])
+
     return decoded_urls
 
 
 def convert_to_decoded_urls(urls: dict[str, list[dict[str, str]]]) -> dict[str, list[dict[str, str]]]:
+    # print("[URLs]", urls)
     urls_to_decode = []
     for key, articles in urls.items():
         urls_to_decode.extend([article["url"] for article in articles])
     # print("[Before]", urls_to_decode)
     decoded_urls = return_new_links(urls_to_decode)
-    reverse_decoded_urls = {url: decoded_url for url, decoded_url in zip(urls_to_decode, decoded_urls)}
-    # print("[After]", decoded_urls)
-    decoded_urls_iter = iter(reverse_decoded_urls)
+    # reverse_decoded_urls = {url: decoded_url for url, decoded_url in zip(urls_to_decode, decoded_urls)}
+    # print("[After]", decoded_urls) # list of urls
+    # update the urls
+    # make decoded_urls iterable
+    decoded_urls = iter(decoded_urls)
     for key, articles in urls.items():
         for article in articles:
-            # print(article["title"], "+", article["url"])
-            article["url"] = next(decoded_urls_iter)
-            # print(article["title"], "+", article["url"], "\n\n")
+            article["url"] = next(decoded_urls)
     return urls
-
 
 def _single_scrape_content(url: str) -> dict:
     """
@@ -313,9 +321,16 @@ def single(urls: dict, env: str, DOCKER_OR_LAMBDATEST: str, USERNAME: str, ACCES
     driver = init_driver(env, DOCKER_OR_LAMBDATEST, USERNAME, ACCESS_KEY)
 
     # Add 'content' key to each news
+    print(urls)
     for _, news in urls.items():
         for article in news:
-            article['content'] = _single_scrape_content(article['url'])
+            try:
+                article['content'] = _single_scrape_content(article['url'])
+                if not article['content']['text']:
+                    print("ERRRRRRRRRRRRRRRRRRRRPR", article['url'])
+            except Exception as e:
+                print(f"Error scraping content: {str(e)} for url: {article['url']}")
+                return e
     if USE_SELENIUM_TRUE_OR_FALSE != "false":
         for _, news in urls.items():
             for article in news:
@@ -386,11 +401,14 @@ def multiple_scrape_content(urls: dict, env: str, DOCKER_OR_LAMBDATEST: str, SIN
     Returns:
         dict: A dictionary with updated article data containing scraped text and media URLs.
     """
-    urls = convert_to_decoded_urls(urls)
-    if SINGLE_OR_PARALLEL == 'single' or USE_SELENIUM_TRUE_OR_FALSE == "false":
-        return single(urls, env, DOCKER_OR_LAMBDATEST, USERNAME, ACCESS_KEY)
-    return parallel(urls, env, DOCKER_OR_LAMBDATEST, USERNAME, ACCESS_KEY)
-
+    try:
+        urls = convert_to_decoded_urls(urls)
+        if SINGLE_OR_PARALLEL == 'single' or USE_SELENIUM_TRUE_OR_FALSE == "false":
+            return single(urls, env, DOCKER_OR_LAMBDATEST, USERNAME, ACCESS_KEY, USE_SELENIUM_TRUE_OR_FALSE)
+        return parallel(urls, env, DOCKER_OR_LAMBDATEST, USERNAME, ACCESS_KEY)
+    except Exception as e:
+        print(f"Error scraping content: {str(e)}")
+        raise e
 
 # if __name__ == '__main__':
 #     print(multiprocessing.cpu_count())
