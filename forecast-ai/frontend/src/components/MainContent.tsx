@@ -53,16 +53,4 @@ const MainContent: React.FC<MainContentProps> = ({ chats, setChatTitle, saveChat
     )
 }
 
-type ViewOnlyMainContentProps = {
-    chats: Chat[];
-};
-
-const ViewOnlyMainContent: React.FC<ViewOnlyMainContentProps> = ({ chats }) => {
-    return (
-        <div className="w-full h-[92vh] bg-screen-black text-white pb-7 space-y-6 flex flex-col justify-between items-center">
-            <ChatWindow chats={chats} />
-        </div>
-    )
-}
-
-export { MainContent, ViewOnlyMainContent };
+export default MainContent;

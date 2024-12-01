@@ -31,18 +31,6 @@ import { getFirestore, getDoc, doc, updateDoc } from "firebase/firestore";
  * @returns {JSX.Element} The HeaderBar component with title, buttons, and server status.
  */
 
-type ViewOnlyHeaderBarProps = {
-    title?: string;
-}
-
-const ViewOnlyHeaderBar: React.FC<ViewOnlyHeaderBarProps> = ({ title }) => {
-    return (
-        <header className="bg-screen-black text-header-bar-text px-6 py-6 w-full h-[8vh] flex items-center">
-            {title && <h3 className="flex-grow font-bold text-center text-[8px] sm:text-[10px] md:text-xs xl:text-sm">{title}</h3>}
-        </header>
-    );
-};
-
 
 type HeaderBarProps = {
     title?: string;
@@ -247,5 +235,4 @@ const HeaderBar: React.FC<HeaderBarProps> = ({ title, userId, chatId }) => {
 };
 
 
-
-export { HeaderBar, ViewOnlyHeaderBar };
+export default HeaderBar;

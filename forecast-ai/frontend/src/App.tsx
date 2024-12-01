@@ -3,7 +3,8 @@ import { BrowserRouter as Router, Route, Routes, useNavigate } from 'react-route
 import Login from './components/Login';
 import Signup from './components/Signup';
 import Logout from './components/Logout';
-import {MainContainer, ViewOnlyContainer} from './components/MainContainer';
+import MainContainer from './components/MainContainer';
+import ViewOnlyMainContainer from './components/ViewOnlyMainContainer';
 import RequestPasswordReset from './components/RequestPasswordReset';
 import ResetPassword from './components/ResetPassword'; 
 import HandleAction from './components/HandleAction'; 
@@ -53,7 +54,7 @@ const App: React.FC = () => {
         <Route path="/learn-more" element={<LearnMore />} />
 
         {/* When a user wants to use chatHash to view the shared chat by the link */}
-        <Route path="/view-only/:chatHash" element={<ViewOnlyContainer />} />
+        <Route path="/view-only/:chatRefHash" element={<ViewOnlyMainContainer />} />
       </Routes>
     </Router>
   );
