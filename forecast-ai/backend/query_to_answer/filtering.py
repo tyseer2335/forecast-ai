@@ -26,8 +26,13 @@ Guidelines:
 of 1.
 
 Your response should look like the following:
-Thoughts: {{ insert your thinking }}
 Rating: {{ insert your rating }}"""
+
+# Your response should look like the following:
+# Thoughts: {{ insert your thinking }}
+# Rating: {{ insert your rating }}"""
+
+# For faster speed, we're removing thoughts.
 
 
 def get_relevance_score(articles: dict[str, list[Article]], forecasting_question: str, client: any):
@@ -35,13 +40,13 @@ def get_relevance_score(articles: dict[str, list[Article]], forecasting_question
     Assigns a relevance score to each article based on its alignment with a forecasting question.
 
     Args:
-        articles (dict[str, list[Article]]): A dictionary where keys are source names, and values are lists of 
+        articles (dict[str, list[Article]]): A dictionary where keys are source names, and values are lists of
             `Article` objects to be evaluated.
         forecasting_question (str): The forecasting question to which the articles' relevance is measured.
         client (any): The client object used for making API requests to an LLM or similar service.
 
     Modifies:
-        Each `Article` object's `score` attribute is set to a relevance score (1 to 6) based on the LLM's assessment, 
+        Each `Article` object's `score` attribute is set to a relevance score (1 to 6) based on the LLM's assessment,
         with a default score of 1 for invalid ratings.
     """
     # get relevance score for each article wrt original forecasting question using LLM
@@ -68,10 +73,10 @@ def sort_and_filter(articles: dict[str, list[Article]], n: int, percentage_per_s
     Filters and sorts articles to return the top N most relevant articles per source.
 
     Args:
-        articles (dict[str, list[Article]]): A dictionary where keys are source names, and values are lists of 
+        articles (dict[str, list[Article]]): A dictionary where keys are source names, and values are lists of
             `Article` objects that have been scored for relevance.
         n (int): The total number of top articles to retain across all sources.
-        percentage_per_source (dict[str, float]): A dictionary where keys are source names, and values are the 
+        percentage_per_source (dict[str, float]): A dictionary where keys are source names, and values are the
             percentage of the top N articles to keep for each source.
 
     Returns:
