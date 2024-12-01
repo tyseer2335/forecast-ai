@@ -1,16 +1,25 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { getFirestore, collection, query, orderBy, onSnapshot, doc, deleteDoc } from 'firebase/firestore'; 
-import OwlLogo from '../assets/owl.svg';
-import SettingsLogo from '../assets/settings.svg';
-import DeleteIcon from '../assets/close-menu-button.svg';
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import {
+  getFirestore,
+  collection,
+  query,
+  orderBy,
+  onSnapshot,
+  doc,
+  deleteDoc,
+} from "firebase/firestore";
+import OwlLogo from "../assets/owl.svg";
+import SettingsLogo from "../assets/settings.svg";
+import DeleteIcon from "../assets/close-menu-button.svg";
+import CollapseIcon from "../assets/close-menu-button.svg";
 
 /**
  * Sidebar component that displays a list of chat sessions, categorized by time period, with options to start a new chat session, delete existing chats, and access settings.
- * 
+ *
  * Props:
  * - `newChatId`: (optional) If provided, triggers the selection of a new chat session by its ID.
- * 
+ *
  * State:
  * - `isSettingsOpen`: Boolean indicating whether the settings panel is open.
  * - `chats`: Array of chat objects fetched from Firestore, organized by time periods (today, last 7 days, etc.).
@@ -18,7 +27,7 @@ import DeleteIcon from '../assets/close-menu-button.svg';
  * - `hoveredChatId`: ID of the chat currently hovered over, used to display delete options.
  * - `deletingChatId`: ID of the chat being deleted, if any.
  * - `deletingChatTitle`: Title of the chat being deleted, if any.
- * 
+ *
  * Functionality:
  * - `categorizeChats`: Helper function to group chat sessions by time period for better organization.
  * - `NewChatSessionButton`: Renders a button to start a new chat session.
@@ -26,35 +35,39 @@ import DeleteIcon from '../assets/close-menu-button.svg';
  * - `DeleteChatButton`: Provides an option to delete chat sessions with a confirmation dialog.
  * - `toggleSettings`: Opens/closes the settings panel.
  * - `handleChatClick`: Updates the selected chat session, refreshing the UI.
- * 
+ *
  * Firebase:
  * - Fetches chat data for the logged-in user, organized by last update timestamp.
  * - Enables real-time updates on chat data via Firestore onSnapshot listener.
- * 
+ *
  * UI:
  * - The component is styled to fit within a sidebar, supporting responsive design.
  * - Conditional rendering is used to display dialogs for settings and chat deletion.
  * - Uses images and icons for a visually enhanced layout (e.g., settings and delete icons).
- * 
+ *
  * Note: Redirects to the login page if `userId` is not found in local storage.
  */
 
-
 type SidebarProps = {
   newChatId: string | null;
-}
+};
 
 const Sidebar: React.FC<SidebarProps> = ({ newChatId }) => {
   const db = getFirestore();
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [chats, setChats] = useState<any[]>([]);
   const navigate = useNavigate();
-  var userId : string = localStorage.getItem('userId') || "";
+  // Add collapsed state
+  const [isCollapsed, setIsCollapsed] = useState(false);
+
+  var userId: string = localStorage.getItem("userId") || "";
   if (!userId) {
-    window.location.href = '/login';
+    window.location.href = "/login";
     return null;
   }
-  var [selectedChatId, setSelectedChatId] = useState<string>(sessionStorage.getItem("selectedChatId") ?? "");
+  var [selectedChatId, setSelectedChatId] = useState<string>(
+    sessionStorage.getItem("selectedChatId") ?? ""
+  );
   var [hoveredChatId, setHoveredChatId] = useState<string>("");
   var [deletingChatId, setDeletingChatId] = useState<string>("");
   var [deletingChatTitle, setDeletingChatTitle] = useState<string>("");
@@ -66,9 +79,12 @@ const Sidebar: React.FC<SidebarProps> = ({ newChatId }) => {
   }, [newChatId]);
 
   useEffect(() => {
-    const q = query(collection(db, 'Users', userId, 'Chats'), orderBy('updated_at', 'desc'));
+    const q = query(
+      collection(db, "Users", userId, "Chats"),
+      orderBy("updated_at", "desc")
+    );
     const unsubscribe = onSnapshot(q, (querySnapshot) => {
-      const chatList = querySnapshot.docs.map(doc => ({
+      const chatList = querySnapshot.docs.map((doc) => ({
         id: doc.id,
         ...doc.data(),
       }));
@@ -81,7 +97,7 @@ const Sidebar: React.FC<SidebarProps> = ({ newChatId }) => {
     }
 
     return () => {
-      if (unsubscribe && typeof unsubscribe === 'function') {
+      if (unsubscribe && typeof unsubscribe === "function") {
         unsubscribe();
       }
     };
@@ -90,10 +106,10 @@ const Sidebar: React.FC<SidebarProps> = ({ newChatId }) => {
   // Helper function to categorize chats by time period
   const categorizeChats = (chatList: any[]) => {
     const categories: {
-      todayChats: any[],
-      last7DaysChats: any[],
-      last30DaysChats: any[],
-      earlierChats: any[],
+      todayChats: any[];
+      last7DaysChats: any[];
+      last30DaysChats: any[];
+      earlierChats: any[];
     } = {
       todayChats: [],
       last7DaysChats: [],
@@ -124,12 +140,15 @@ const Sidebar: React.FC<SidebarProps> = ({ newChatId }) => {
     return categories;
   };
 
-  const { todayChats, last7DaysChats, last30DaysChats, earlierChats } = categorizeChats(chats);
+  const { todayChats, last7DaysChats, last30DaysChats, earlierChats } =
+    categorizeChats(chats);
 
   // A New Chat Session Button
   const NewChatSessionButton = () => (
     <div
-      className={`p-2 hover:bg-button-hover rounded-md text-[10px] md:text-xs xl:text-sm cursor-pointer ${!selectedChatId ? 'bg-button-hover font-bold' : ''}`}
+      className={`p-2 hover:bg-button-hover rounded-md text-[10px] md:text-xs xl:text-sm cursor-pointer ${
+        !selectedChatId ? "bg-button-hover font-bold" : ""
+      }`}
       onClick={() => handleChatClick("")}
       data-testid="new-chat-session-button"
     >
@@ -145,33 +164,43 @@ const Sidebar: React.FC<SidebarProps> = ({ newChatId }) => {
     try {
       await deleteDoc(doc(db, "Users", userId, "Chats", chatId));
     } catch (error) {
-      alert(`Error deleting chat(ref: Users/${userId}/Chats/${chatId}): ${error}`);
+      alert(
+        `Error deleting chat(ref: Users/${userId}/Chats/${chatId}): ${error}`
+      );
     }
-    
+
     // If the chat is selected, then open a new chat session
     if (chatId === selectedChatId) {
       selectChatSession("");
     } else {
       setHoveredChatId("");
     }
-    setDeletingChatInfo({chatId: "", chatTitle: ""});
+    setDeletingChatInfo({ chatId: "", chatTitle: "" });
 
-    navigate('/');
-  }
+    navigate("/");
+  };
 
-  const setDeletingChatInfo= (chatInfo: any) => {
+  const setDeletingChatInfo = (chatInfo: any) => {
     setDeletingChatId(chatInfo.chatId);
     setDeletingChatTitle(chatInfo.chatTitle);
-  }
+  };
 
   // Note chatId is a struct { chatId: string }
   const DeleteChatButton = (chatId: any) => (
     <div className="flex bg-button-hover rounded-md cursor-pointer">
-      <button type="button"
-        onClick={(e) => {e.stopPropagation(); setDeletingChatInfo(chatId);}}
+      <button
+        type="button"
+        onClick={(e) => {
+          e.stopPropagation();
+          setDeletingChatInfo(chatId);
+        }}
         className="p-2 hover:bg-button-hover rounded-md cursor-pointer"
-        >
-        <img src={DeleteIcon} alt="delete" className="min-w-[8px] min-h-[8px]" />
+      >
+        <img
+          src={DeleteIcon}
+          alt="delete"
+          className="min-w-[8px] min-h-[8px]"
+        />
       </button>
     </div>
   );
@@ -180,24 +209,40 @@ const Sidebar: React.FC<SidebarProps> = ({ newChatId }) => {
   const ChatSession = ({ chat }: { chat: any }) => (
     <div
       key={chat.id}
-      className={`p-2 hover:bg-button-hover rounded-md cursor-pointer flex justify-between items-center ${chat.id === selectedChatId ? 'bg-button-hover font-bold' : ''}`}
+      className={`p-2 hover:bg-button-hover rounded-md cursor-pointer flex justify-between items-center ${
+        chat.id === selectedChatId ? "bg-button-hover font-bold" : ""
+      }`}
       onClick={() => handleChatClick(chat.id)}
       onMouseEnter={() => setHoveredChatId(chat.id)}
       onMouseLeave={() => setHoveredChatId("")}
       data-testid={`chat-session-${chat.id}`}
     >
-      <span className='text-[10px] md:text-xs xl:text-sm 2xl:text-[14px]'>{chat.title || `Chat ${chat.id}`}</span> 
-      {(hoveredChatId === chat.id || selectedChatId === chat.id) && <DeleteChatButton chatId={chat.id} chatTitle={chat.title || `Chat ${chat.id}`} />}
+      <span className="text-[10px] md:text-xs xl:text-sm 2xl:text-[14px]">
+        {chat.title || `Chat ${chat.id}`}
+      </span>
+      {(hoveredChatId === chat.id || selectedChatId === chat.id) && (
+        <DeleteChatButton
+          chatId={chat.id}
+          chatTitle={chat.title || `Chat ${chat.id}`}
+        />
+      )}
     </div>
-    
   );
 
   // Sub List of previous chat sessions by time period
-  const PrevChatSubList = ({ period, chatList }: { period: string; chatList: any[] }) => (
+  const PrevChatSubList = ({
+    period,
+    chatList,
+  }: {
+    period: string;
+    chatList: any[];
+  }) => (
     <>
       {chatList.length > 0 && (
         <>
-          <h3 className="p-1 text-[10px] md:text-xs xl:text-sm text-light-grey mt-4 font-bold">{period}</h3>
+          <h3 className="p-1 text-[10px] md:text-xs xl:text-sm text-light-grey mt-4 font-bold">
+            {period}
+          </h3>
           {chatList.map((chat) => (
             <ChatSession chat={chat} />
           ))}
@@ -211,7 +256,7 @@ const Sidebar: React.FC<SidebarProps> = ({ newChatId }) => {
     setSelectedChatId(chatId);
     sessionStorage.setItem("selectedChatId", chatId);
     setHoveredChatId("");
-  }
+  };
 
   const toggleSettings = () => {
     setIsSettingsOpen(!isSettingsOpen);
@@ -225,21 +270,46 @@ const Sidebar: React.FC<SidebarProps> = ({ newChatId }) => {
     }
 
     // Reloading the MainContainer component to refresh the selectedChatId
-    navigate('/');
+    navigate("/");
   };
 
   return (
-    <div className="bg-sidebar-bg text-light-grey h-full flex flex-col justify-between w-[25%] max-w-[300px] min-w-[170px]">
+    <div
+      className={`bg-sidebar-bg text-light-grey h-full flex flex-col justify-between transition-all duration-300 ease-in-out ${
+        isCollapsed ? "w-20" : "w-64"
+      }`}
+    >
       {/* Logo and program title */}
-      <div className="flex items-center justify-between p-4 fixed top-0 left-0 z-10`"> 
-        <div className="flex items-center">
-          <img src={OwlLogo} alt="logo" className="w-5 h-5 lg:w-6 lg:h-6 xl:w-8 xl:h-8" data-testid="logo"/>
-          <span className="lg:text-xl xl:text-2xl ps-2 text-light-grey font-light" data-testid="program-title">forecastAI</span>
-        </div>
+      <div className="flex items-center p-4">
+        <button
+          onClick={() => setIsCollapsed(!isCollapsed)}
+          className="flex items-center hover:bg-button-hover rounded-md p-2 transition-all"
+          title={isCollapsed ? "Expand sidebar" : "Collapse sidebar"}
+        >
+          <img
+            src={OwlLogo}
+            alt="logo"
+            className="w-5 h-5 sm:w-6 sm:h-6 md:w-8 md:h-8"
+            data-testid="logo"
+          />
+          {!isCollapsed && (
+            <span
+              className="text-base sm:text-xl md:text-2xl pl-2 text-light-grey font-light"
+              data-testid="program-title"
+            >
+              forecastAI
+            </span>
+          )}
+        </button>
       </div>
-      
-      {/* Chat Sessions */}
-      <div className="overflow-y-auto mt-16 px-4 pb-20 pt-3" data-testid="chat-sessions">
+
+      {/* Chat Sessions - hide when collapsed */}
+      <div
+        className={`overflow-y-auto flex-1 px-4 pb-4 pt-3 ${
+          isCollapsed ? "hidden" : ""
+        }`}
+        data-testid="chat-sessions"
+      >
         <NewChatSessionButton />
         <PrevChatSubList period="Today" chatList={todayChats} />
         <PrevChatSubList period="Previous 7 days" chatList={last7DaysChats} />
@@ -247,29 +317,40 @@ const Sidebar: React.FC<SidebarProps> = ({ newChatId }) => {
         <PrevChatSubList period="Earlier" chatList={earlierChats} />
       </div>
 
-      {/* Settings button */}
-      <div className="fixed bottom-0 left-0 p-4 flex justify-between items-center z-10">
-        <button
-          onClick={toggleSettings}
-          className="flex items-center hover:bg-button-hover p-2 rounded-md"
-          data-testid="settings-button"
-        >
-          <img src={SettingsLogo} alt="settings" className="w-5 h-5 lg:w-6 lg:h-6 xl:w-7 xl:h-7" /> 
-          <span className="px-2 text-light-grey text-xs lg:text-sm xl:text-base">Settings</span>
-        </button>
-      </div>
+      {/* Settings button - hide when collapsed */}
+      {!isCollapsed && (
+        <div className="p-4 flex justify-between items-center">
+          <button
+            onClick={toggleSettings}
+            className="flex items-center hover:bg-button-hover p-2 rounded-md"
+            data-testid="settings-button"
+          >
+            <img
+              src={SettingsLogo}
+              alt="settings"
+              className="w-5 h-5 sm:w-6 sm:h-6 md:w-7 md:h-7"
+            />
+            <span className="px-2 text-light-grey text-xs sm:text-sm md:text-base">
+              Settings
+            </span>
+          </button>
+        </div>
+      )}
 
-      {/* Popup delete confirmation window */}
+      {/* Delete Chat Modal */}
       {deletingChatId && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-20"
-        >
-          <div className="bg-[#282C2C] p-6 rounded-lg w-[400px]">
-            <h2 className="text-xl font-bold mb-4">Delete Chat?</h2>
-            <p className="text-light-grey">Are you sure you want to delete this chat?</p>
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-20">
+          <div className="bg-[#282C2C] p-6 rounded-lg w-[90%] max-w-sm">
+            <h2 className="text-lg font-bold mb-4">Delete Chat?</h2>
+            <p className="text-light-grey">
+              Are you sure you want to delete this chat?
+            </p>
             <p className="text-light-grey font-bold">{deletingChatTitle}</p>
             <div className="flex justify-end mt-4">
               <button
-                onClick={() => setDeletingChatInfo({chatId: "", chatTitle: ""})}
+                onClick={() =>
+                  setDeletingChatInfo({ chatId: "", chatTitle: "" })
+                }
                 className="bg-button-hover p-2 rounded-md mr-2"
               >
                 Cancel
@@ -285,29 +366,23 @@ const Sidebar: React.FC<SidebarProps> = ({ newChatId }) => {
         </div>
       )}
 
-      {/* Popup settings panel */}
+      {/* Settings Modal */}
       {isSettingsOpen && (
         <div
           className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-20"
           data-testid="settings-panel"
         >
-          <div className="bg-[#282C2C] p-6 rounded-lg w-[400px] relative">
-            <h2 className="text-xl font-bold mb-4">Settings</h2>
-
-            {/* Close Button */}
+          <div className="bg-[#282C2C] p-6 rounded-lg w-[90%] max-w-sm relative">
+            <h2 className="text-lg font-bold mb-4">Settings</h2>
             <button
               onClick={toggleSettings}
               className="absolute top-2 right-2 text-light-grey text-lg"
               data-testid="close-settings-button"
             >
-              &times; {/* Close icon (×) */}
+              &times;
             </button>
-
-            {/* Settings Content */}
-            {/* Add any settings content here */}
-
             <p
-              className="text-right bottom-2 right-2 italic text-[#9A9A9A] text-sm"
+              className="text-right italic text-[#9A9A9A] text-sm mt-4"
               onKeyDown={(e) => {
                 if (e.key === "Enter") {
                   toggleSettings();
@@ -322,5 +397,4 @@ const Sidebar: React.FC<SidebarProps> = ({ newChatId }) => {
     </div>
   );
 };
-
 export default Sidebar;
