@@ -4,7 +4,6 @@ import axios from "axios";
 import BookmarkButton from "../assets/bookmark-button.svg";
 import ShareButton from "../assets/share-button.svg";
 import { useNavigate } from "react-router-dom";
-import { getFirestore, getDoc, doc, updateDoc } from "firebase/firestore";
 
 /**
  * HeaderBar Component
@@ -70,15 +69,6 @@ const HeaderBar: React.FC<HeaderBarProps> = ({ title, userId, chatId }) => {
     navigate("/logout");
   };
 
-  // const handleChatShare = () => {
-  //   // Implement chat sharing functionality
-  //   // Use the chatId to generate a shareable link
-  // We need to use api from backend to generate a shareable link
-
-  // @app.post("/share_chat/share", dependencies=[Depends(verify_token)])
-  // async def share_chat(request: Request, chat_ref: str):
-  // }
-
   const handleChatShare = async () => {
     try {
       
@@ -110,16 +100,6 @@ const HeaderBar: React.FC<HeaderBarProps> = ({ title, userId, chatId }) => {
         const shareableLink = `${window.location.origin}/view-only/${chatRefHash}`;
         console.log("Shareable Link:", shareableLink);
         setShareableLink(shareableLink);
-        // Also change the isShared state to true of this chat
-        const db = getFirestore();
-        if (!chatId) {
-          // Note that this case should not occure as the share button is disabled when chatId is null
-          throw new Error("Chat ID is not defined");
-        }
-        const chatDoc = doc(db, "Users", userId, "Chats", chatId);
-        await updateDoc(chatDoc, {
-          isShared: true
-        });
       }
     } catch (error) {
       console.error("Error sharing chat:", error);
@@ -139,7 +119,7 @@ const HeaderBar: React.FC<HeaderBarProps> = ({ title, userId, chatId }) => {
                 <img src={BookmarkButton} alt="bookmark-btn" className="w-4 h-5 lg:w-4 lg:h-6 xl:w-5 xl:h-7" />
             </button>
             {/* ShareButton */}
-            {/* Is chatId is null, then disable this button */}
+            {/* If chatId is null, the share button is disabled */}
             {!chatId ? (
               <button className="ml-auto bg-share-btn-bg py-2.5 px-3 flex space-x-1 justify-center items-center rounded-md opacity-50 cursor-not-allowed">
                 <img src={ShareButton} alt="export-btn" className="w-3 h-3 xl:w-4 xl:h-4" />
@@ -219,7 +199,12 @@ const HeaderBar: React.FC<HeaderBarProps> = ({ title, userId, chatId }) => {
                 className="w-full bg-[#333333] text-light-grey p-2 rounded-md"
               />
               <button
-                onClick={copyToClipboard}
+                onClick={
+                  () => {
+                    copyToClipboard();
+                    setIsShareButtonClicked(false);
+                  }
+                }
                 className="bg-[#4CAF50] text-white px-4 py-2 rounded-md"
               >
                 Copy
