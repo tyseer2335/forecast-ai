@@ -29,11 +29,11 @@ import { Answer, Chat, SourceObject, GlobalMetrics } from "../hooks/types";
  * - Contains a `PromptBar` component for user input and managing advanced query options.
  * - Adjusts layout to fit most screen sizes, providing a consistent user experience.
  */
-
+    
 
 type MainContentProps = {
     chats: Chat[];
-    setChatTitle: React.Dispatch<React.SetStateAction<string>>
+    setChatTitle: React.Dispatch<React.SetStateAction<string>>;
     saveChatToDB: (chat: Chat) => void;
     addQuery: (query: string) => void;
     addSources: (sources: SourceObject[]) => void;
@@ -43,7 +43,8 @@ type MainContentProps = {
     addStatus: (status: string) => void;
 };
 
-const MainContent: React.FC<MainContentProps> = ({ chats, setChatTitle, saveChatToDB, addQuery, addSources, addAnswer, addError, toggleLoading, addStatus }) => {
+const MainContent: React.FC<MainContentProps> = ({ chats, setChatTitle, saveChatToDB, addQuery, addSources, addAnswer, addError, toggleLoading, addStatus}) => {
+
     return (
         <div className="w-full h-[92vh] bg-screen-black text-white pb-7 space-y-6 flex flex-col justify-between items-center">
             <ChatWindow chats={chats} />

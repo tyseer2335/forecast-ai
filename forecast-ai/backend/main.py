@@ -36,6 +36,8 @@ DOCKER_OR_LAMBDATEST = os.getenv("DOCKER_OR_LAMBDATEST")
 SINGLE_OR_PARALLEL = os.getenv("SINGLE_OR_PARALLEL")
 USERNAME = os.getenv("USERNAME")
 ACCESS_KEY = os.getenv("ACCESS_KEY")
+USE_SELENIUM_TRUE_OR_FALSE = os.getenv('USE_SELENIUM_TRUE_OR_FALSE')
+
 # Initialize Firebase Admin with a service account key
 cred = credentials.Certificate(os.getenv("FIREBASE_SERVICE_ACCOUNT_KEY"))
 firebase_app = firebase_admin.initialize_app(cred)
@@ -45,7 +47,6 @@ import hashlib
 from google.cloud.firestore_v1.base_query import FieldFilter
 
 db = firestore.client(firebase_app)
-USE_SELENIUM_TRUE_OR_FALSE = os.getenv('USE_SELENIUM_TRUE_OR_FALSE')
 
 app.add_middleware(
     CORSMiddleware,
@@ -54,7 +55,6 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-
 
 # Dictionary to store WebSocket connections
 active_connections = {}

@@ -1,8 +1,5 @@
 from model.article import Article
 
-MIN_RELEVANCE_SCORE = 1
-MAX_RELEVANCE_SCORE = 6
-
 relevance_prompt = """Please consider the following forecasting question.
 After that, I will give you a news article and ask you to rate its relevance with respect to the forecasting question.
 
@@ -35,7 +32,9 @@ Rating: {{ insert your rating }}"""
 # For faster speed, we're removing thoughts.
 
 
-def get_relevance_score(articles: dict[str, list[Article]], forecasting_question: str, client: any):
+def get_relevance_score(
+    articles: dict[str, list[Article]], forecasting_question: str, client: any
+):
     """
     Assigns a relevance score to each article based on its alignment with a forecasting question.
 
@@ -52,12 +51,14 @@ def get_relevance_score(articles: dict[str, list[Article]], forecasting_question
     # get relevance score for each article wrt original forecasting question using LLM
     for key in articles.keys():
         for article in articles[key]:
-            article_text = "\n---\nTitle: {title}\n\n{text}\n---\n".format(title=article.title,
-                                                                           text=article.content["text"])
-            prompt = relevance_prompt.format(question=forecasting_question, article=article_text)
+            article_text = "\n---\nTitle: {title}\n\n{text}\n---\n".format(
+                title=article.title, text=article.content["text"]
+            )
+            prompt = relevance_prompt.format(
+                question=forecasting_question, article=article_text
+            )
             response = client.chat.completions.create(
-                model="gpt-4o-mini",
-                messages=[{"role": "user", "content": prompt}]
+                model="gpt-4o-mini", messages=[{"role": "user", "content": prompt}]
             ).to_dict()
             loc = response["choices"][0]["message"]["content"].split("Rating:")
             rating = loc[1].split()[0]
@@ -67,8 +68,9 @@ def get_relevance_score(articles: dict[str, list[Article]], forecasting_question
                 article.score = 1.0  # for not numeric (invalid) rating
 
 
-def sort_and_filter(articles: dict[str, list[Article]], n: int, percentage_per_source: dict[str, float]) -> \
-        dict[str, list[Article]]:
+def sort_and_filter(
+    articles: dict[str, list[Article]], n: int, percentage_per_source: dict[str, float]
+) -> dict[str, list[Article]]:
     """
     Filters and sorts articles to return the top N most relevant articles per source.
 
@@ -90,9 +92,11 @@ def sort_and_filter(articles: dict[str, list[Article]], n: int, percentage_per_s
     filtered_articles = {}
     for source in articles.keys():
         try:
-            sorted_articles = sorted(articles[source], key=lambda article: article.score, reverse=True)
+            sorted_articles = sorted(
+                articles[source], key=lambda article: article.score, reverse=True
+            )
             num_articles = n * percentage_per_source[source]
-            filtered_articles[source] = sorted_articles[:int(num_articles)]
+            filtered_articles[source] = sorted_articles[: int(num_articles)]
         except Exception as e:
             raise Exception(f"Error sorting and filtering articles: {str(e)}")
     return filtered_articles

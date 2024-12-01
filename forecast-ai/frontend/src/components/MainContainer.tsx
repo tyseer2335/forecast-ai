@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import HeaderBar from "./HeaderBar";
 import MainContent from "./MainContent";
 import Sidebar from "./Sidebar";
-import { Answer, Chat, SourceObject, GlobalMetrics } from "../hooks/types";
+import { Answer, Chat, SourceObject } from "../hooks/types";
 import useSaveChat from "../hooks/saveChat/useSaveChat";
 import { doc, getDoc } from "firebase/firestore";
 import { getFirestore } from "firebase/firestore";
@@ -161,7 +161,7 @@ const MainContainer: React.FC = () => {
     <div className="min-h-screen h-screen w-screen flex bg-screen-black text-white font-inter">
     <Sidebar newChatId={chatId} />
     <div className="flex flex-col flex-grow">
-      <HeaderBar title={chatTitle} />
+      <HeaderBar title={chatTitle} userId={userId} chatId={chatId} />
       <MainContent chats={chats} setChatTitle={setChatTitle} saveChatToDB={saveChatToDB} addQuery={addQuery} addSources={addSources} addAnswer={addAnswer} addError={addError} toggleLoading={toggleLoading} addStatus={addStatus} />
         </div>
       </div>
