@@ -223,10 +223,6 @@ async def query_to_answer(
             **answer_with_bias,
             "raw_rationale": raw_response,
             "article_summaries": article_summaries,
-            "global_metrics": {
-                "min_relevance_score": filtering.MIN_RELEVANCE_SCORE,
-                "max_relevance_score": filtering.MAX_RELEVANCE_SCORE,
-            },
         }
 
         state = 9
