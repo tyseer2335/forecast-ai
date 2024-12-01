@@ -68,9 +68,9 @@ def convert_to_decoded_urls(urls: dict[str, list[dict[str, str]]]) -> dict[str, 
     decoded_urls_iter = iter(reverse_decoded_urls)
     for key, articles in urls.items():
         for article in articles:
-            print(article["title"], "+", article["url"])
+            # print(article["title"], "+", article["url"])
             article["url"] = next(decoded_urls_iter)
-            print(article["title"], "+", article["url"], "\n\n")
+            # print(article["title"], "+", article["url"], "\n\n")
     return urls
 
 
