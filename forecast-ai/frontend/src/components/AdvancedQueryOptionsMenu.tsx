@@ -15,9 +15,9 @@ type AdvancedQueryOptionsMenuProps = {
 }
 
 const initialPlatformRatios = [
-    { platformName: 'News', platformRatio: 60 },
-    { platformName: 'X', platformRatio: 20 },
-    { platformName: 'Facebook', platformRatio: 20 }
+    { platformName: 'News', platformRatio: 100 },
+    { platformName: 'X', platformRatio: 0 },
+    { platformName: 'Facebook', platformRatio: 0 }
 ];
 
 const AdvancedQueryOptionsMenu: React.FC<AdvancedQueryOptionsMenuProps> = ({ isMenuOpen, setIsMenuOpen, setRequest, submitRequest }) => {
