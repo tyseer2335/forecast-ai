@@ -1,3 +1,30 @@
+# Technical Documentation
+
+## Tech Stack
+Our application uses a modern tech stack to ensure scalability, reliability, and an intuitive user experience:
+
+- **Frontend**: React and Typescript, providing a responsive and interactive web application.
+- **Backend**: Python with FastAPI, offering robust and fast API endpoints for processing user queries and interfacing with external APIs.
+- **Authentication**: Firebase Auth, ensuring secure user access and management.
+- **Database**: Cloud Firestore which is a NoSQL database for storing user data and application configurations.
+
+### External APIs and Tools:
+- **OpenAI API**: Provides AI-powered forecasting and analysis.
+- **Google News API**: Aggregates relevant news data for forecasts.
+- **Selenium**: Handles web scraping and automation for additional data sources.
+- **Jest**: Used for testing frontend components to ensure their functionality and reliability.
+
+### Deployment:
+- Frontend hosted on Netlify.
+- Backend hosted on Render.
+- Dockerized for consistent builds and deployments.
+
+## Architecture
+
+## Design
+
+---
+
 # Development Requirements 
 
 To set up your own environment to continue working on this project, you will need Netlify,  Firebase, Docker, and Render for hosting, deployment, and managing the backend and frontend components. You will also need an [OpenAi API Key](https://openai.com/index/openai-api/).
@@ -134,4 +161,3 @@ To set up your own environment to continue working on this project, you will nee
 
 14. The application should now be running locally!
 
----
