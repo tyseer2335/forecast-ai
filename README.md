@@ -59,7 +59,7 @@ Our application is accessible online. Follow these steps to get started and expl
 1. **Visit**: Go to [ForecastAI](https://forecastai.netlify.app/signup) in your browser.
 2. **Register**: Create an account by clicking **Sign Up** and entering your email and password.
 
-### Key Features
+### Features
 
 #### 1. User Dashboard
    - **Overview**: View recent activities and insights.

@@ -3,23 +3,69 @@
 ## Tech Stack
 Our application uses a modern tech stack to ensure scalability, reliability, and an intuitive user experience:
 
-- **Frontend**: React and Typescript, providing a responsive and interactive web application.
+- **Frontend**: React and TypeScript, providing a responsive and interactive web application.
 - **Backend**: Python with FastAPI, offering robust and fast API endpoints for processing user queries and interfacing with external APIs.
-- **Authentication**: Firebase Auth, ensuring secure user access and management.
-- **Database**: Cloud Firestore which is a NoSQL database for storing user data and application configurations.
+- **Authentication**: Firebase Authentication, ensuring secure user access and management.
+- **Database**: Cloud Firestore (NoSQL) for storing user chat histories and other data.
 
 ### External APIs and Tools:
-- **OpenAI API**: Provides AI-powered forecasting and analysis.
+- **OpenAI API**: Provides AI-powered query generation, forecasting, relevance filtering, and bias analysis.
 - **Google News API**: Aggregates relevant news data for forecasts.
-- **Selenium**: Handles web scraping and automation for additional data sources.
-- **Jest**: Used for testing frontend components to ensure their functionality and reliability.
+- **Selenium**: Handles web scraping and automation for additional data sources when APIs fall short.
+- **Jest**: Used for testing frontend components to ensure functionality and reliability.
 
 ### Deployment:
-- Frontend hosted on Netlify.
-- Backend hosted on Render.
-- Dockerized for consistent builds and deployments.
+- **Frontend**: Hosted on Netlify for fast and scalable deployment.
+- **Backend**: Hosted on Render, offering an easy-to-manage and scalable backend environment.
+- **Docker**: Used for containerizing the application, ensuring consistent builds and deployments across environments.
+
+---
 
 ## Architecture
+
+Our application follows a modular and scalable architecture designed to perform data-driven forecasting effectively. Below is an image that illustrates our architecture:
+
+<img src="images/architecture.png" alt="forecastai's architecture" width="500"/>
+
+### 1. **Frontend**:
+- **User Interaction**:
+  - Captures user questions for forecasting.
+  - Displays forecasting results, bias heatmaps, and chat history.
+- **Authentication and Data Management**:
+  - Firebase Authentication secures user sessions.
+  - Cloud Firestore retrieves and stores user chat data seamlessly.
+- **Communication with Backend**:
+  - Sends HTTP requests to the backend for generating forecasts and receiving processed results.
+
+### 2. **Backend**:
+- **Main Framework**: Python with FastAPI.
+- **Core Functionalities**:
+  - Processes forecasting requests.
+  - Integrates external APIs (OpenAI, Google News) and handles web scraping with Selenium.
+- **API Integration**:
+  - OpenAI API for generating search queries, filtering relevant content, and generating forecasts.
+  - Google News API for retrieving relevant news links.
+- **Bias Analysis**:
+  - Uses OpenAI to create a bias heatmap, analyzing token-level biases in retrieved text.
+
+### 3. Backend Forecasting Pipeline:
+- **Search Query Extraction**:
+  - Prompt GPT-4o to get google search queries that find objective information for forecasting question from different (specified) sources.
+- **Article Retrieval**:
+  - Uses the **Google News API** to fetch links to relevant articles for each search query.
+  - Employs **Selenium** to scrape content from websites when necessary, extracting full text, titles, and metadata.
+- **Relevance Filtering**:
+  - Prompts **GPT-4-mini** to evaluate the relevance of each retrieved article with respect to the original forecasting question.
+  - Scores articles on relevance, filters the top N articles, and prepares them for forecast generation.
+- **Forecast Generation**:
+  - Prompts **GPT-4** to synthesize selected articles and generate:
+    - A probability-based forecast for the question.
+    - A rationale explaining the reasoning behind the forecast.
+  - Offers flexibility for future integration of custom forecasting models or pipelines.
+
+- **Bias Heatmap Generation**:
+  - Evaluates selected articles for biases across specified features.
+  - Generates a heatmap visualizing token-level bias, which is returned to the frontend for display.
 
 ## Design
 
