@@ -61,11 +61,16 @@ def convert_to_decoded_urls(urls: dict[str, list[dict[str, str]]]) -> dict[str, 
     urls_to_decode = []
     for key, articles in urls.items():
         urls_to_decode.extend([article["url"] for article in articles])
+    # print("[Before]", urls_to_decode)
     decoded_urls = return_new_links(urls_to_decode)
-    decoded_urls_iter = iter(decoded_urls)
+    reverse_decoded_urls = {url: decoded_url for url, decoded_url in zip(urls_to_decode, decoded_urls)}
+    # print("[After]", decoded_urls)
+    decoded_urls_iter = iter(reverse_decoded_urls)
     for key, articles in urls.items():
         for article in articles:
+            print(article["title"], "+", article["url"])
             article["url"] = next(decoded_urls_iter)
+            print(article["title"], "+", article["url"], "\n\n")
     return urls
 
 
