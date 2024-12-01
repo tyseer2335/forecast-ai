@@ -36,16 +36,17 @@ This platform empowers researchers and analysts by simplifying complex forecasti
      - Visualizations display the collected data in an intuitive format, making it easier for users to understand trends and patterns on their own.
 
 2. **Cognitive Bias Detection**
-   - **Purpose**: To identify and visualizee cognitive biases.
+   - **Purpose**: To identify and visualize cognitive biases.
    - **Details**: 
      - The platform uses a custom-trained AI model to analyze predictions for potential biases, such as confirmation bias or overfitting to specific data.
      - Biases are color-coded in visual representations: darker colors indicate significant bias, softer colors represent minimal bias, and uncolored elements denote neutrality, allowing users to quickly assess the reliability of the forecast.
 
 3. **User-Friendly Query System**
-   - **Purpose**: To allow users to ask complex questions simply.
+   - **Purpose**: To enable users to easily ask complex questions and receive clear, AI-generated forecasts.
    - **Details**: 
      - Users can pose questions such as “Who will win the 2025 Canadian Election?” and receive comprehensive AI-generated forecasts.
      - The system automatically gathers relevant data, validates it, and provides a clear output that users can easily interpret.
+     - Users can fine-tune the forecasting process by specifying detailed parameters for source collection, allocation, and display.
 
 ---
 
@@ -58,7 +59,7 @@ Our application is accessible online. Follow these steps to get started and expl
 1. **Visit**: Go to [ForecastAI](https://forecastai.netlify.app/signup) in your browser.
 2. **Register**: Create an account by clicking **Sign Up** and entering your email and password.
 
-### Key Features
+### Features
 
 #### 1. User Dashboard
    - **Overview**: View recent activities and insights.
@@ -72,99 +73,28 @@ Our application is accessible online. Follow these steps to get started and expl
 
 #### 3. Cognitive Bias Detection
    - **Purpose**: Analyze biases in AI forecasts with a color-coded heatmap.
-   - **Steps**: Each forecast will be color-coded to indicate reliability (darker colors indicate higher bias).
+   - **Access**: Each forecast will be color-coded to indicate reliability (darker colors indicate higher bias).
 
-#### 4. Account Management
-   - **Purpose**: Update settings, reset passwords, and log out.
-   - **Steps**: Go to **Settings** to manage your account or **Log Out** to end your session. 
-  
----
+#### 4. Advanced Query Options
 
-## Development Requirements 
-0. Ensure you have Node.js, npm, git, and an IDE such as VS Code installed.
+- **Purpose**: Allow users customize forecasting by specifying parameters for different metrics, improving data relevance.  
 
-   - **Node.js and npm install guide**: [Node.js & npm](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm)
-   - **Git install**: [Git Downloads](https://git-scm.com/downloads)
-   - **VS Code Install**: [Visual Studio Code](https://code.visualstudio.com/download)
+- **Steps**:  
+  1. **Set Total Sources to Collect**:  
+     - Enter the total number of data sources to include in the forecast (e.g., 5).  
 
-1. Clone the repository by typing in a new terminal:
-   ```bash
-   git clone https://github.com/csc301-2024-f/project-14-ml-cs-uoft.git
-   ```
+  2. **Allocate Source Percentages**:  
+     - Distribute percentages across source categories (e.g., *News Ratio*, *X Ratio*, *Facebook Ratio*).  
+     - Adjust sliders or input values to define the contribution of each category, ensuring the total equals 100%.  
+     - Add new source types if needed by clicking on the *Add Source Platform* button.  
 
-2. Navigate to the frontend project directory:
-   ```bash
-   cd forecast-ai/frontend
-   ```
+  3. **Specify Date Range**:  
+     - Define the timeframe for data collection by selecting *From* and *To* dates using the calendar interface.  
+     - Mark dates as *Unspecified* if the range is flexible or not restricted.  
 
-3. Install the frontend dependencies:
-   ```bash
-   npm install
-   ```
-
-4. Set up frontend .env:
-   - Create a Firebase project and obtain your API keys. Here is a guide: [Firebase Setup](https://firebase.google.com/docs/web/setup).
-   - Create a `.env` file in the frontend folder and add the following:
-     ```plaintext
-     REACT_APP_FIREBASE_API_KEY=your-firebase-api-key
-     REACT_APP_FIREBASE_AUTH_DOMAIN=your-firebase-auth-domain
-     REACT_APP_FIREBASE_PROJECT_ID=your-firebase-project-id
-     REACT_APP_FIREBASE_STORAGE_BUCKET=your-firebase-storage-bucket
-     REACT_APP_FIREBASE_MESSAGING_SENDER_ID=your-firebase-messaging-sender-id
-     REACT_APP_FIREBASE_APP_ID=your-firebase-app-id
-     ```
-
-5.  Navigate to the backend project directory:
-      ```bash
-      cd forecast-ai/backend
-      ```
-
-6. Set up backend .env:
-   - Open another terminal in the backend folder and create a `.env` file with the following:
-     ```plaintext
-     OPENAPI_API_KEY=your-openai-api-key
-     LOCAL_OR_PROD=local
-     DOCKER_OR_LAMBDATEST=lambdatest/docker
-     SINGLE_OR_PARALLEL=single/parallel
-     USERNAME=your-lambdatest-username
-     ACCESS_KEY=your-lambdatest-access-key
-     FIREBASE_SERVICE_ACCOUNT_KEY=your-firebase-service-account-key
-     ```
-   - Here, `OPENAPI_API_KEY` is your OpenAI API key, and `USERNAME` and `ACCESS_KEY` are for LambdaTest credentials.
-   - Option 1:
-      ```plaintext
-      DOCKER_OR_LAMBDATEST=docker
-      SINGLE_OR_PARALLEL=single/parallel
-      ```
-      This will run selenium on local device, the value of `SINGLE_OR_PARALLEL` can be either single or parallel.
-   - Option 2:
-      ```plaintext
-      DOCKER_OR_LAMBDATEST=lambdatest
-      SINGLE_OR_PARALLEL=single/parallel
-      ```
-      This will use lambdatest on cloud, the value of `SINGLE_OR_PARALLEL` can be either single or parallel.
-
-7. Set up backend secret files:
-   - Attached the provided `prompt.py` file into the `query_to_answer/` folder
-   - Attached the provided `heavylifters-72698-firebase-adminsdk-xwo0b-da4dabc257.json` file into the base folder
-
-8. Install the backend dependencies:
-     ```bash
-     pip install -r requirements.txt
-     ```
-
-9. Run the Backend Server:
-     ```bash
-     uvicorn main:app
-     ```
-   The backend will be available at `http://127.0.0.1:8000`.
-
-10. Run the Development Server for the Frontend:
-      ```bash
-      npm start
-      ```
-
-11. The application should now be running! Open `http://localhost:3000` in your browser to access it.
+  4. **Adjust Display Settings**:  
+     - Set the number of sources to display in the results (e.g., 2).  
+     - Review the configuration to ensure it aligns with the analysis goals before running the forecast.
 
 ---
 
@@ -223,6 +153,12 @@ Our application is accessible online. Follow these steps to get started and expl
 ## Coding Standards and Guidelines
 
   Our code will follow the coding standards that help keep our code understandable, consistent and maintanable. We will follow language-specific style guides (such as PEP 8 for Python), conduct code reviews to ensure quality, and write comprehensive documentation including comments to clarify complex code. 
+
+---
+
+## Developer Documentation
+
+For detailed instructions on setting up a development environment to continue developing this project, see [DEVELOPER_README.md](forecast-ai/DEVELOPER-README.md).
 
 ---
 
