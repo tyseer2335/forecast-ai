@@ -4,6 +4,7 @@ import Login from './components/Login';
 import Signup from './components/Signup';
 import Logout from './components/Logout';
 import MainContainer from './components/MainContainer';
+import ViewOnlyMainContainer from './components/ViewOnlyMainContainer';
 import RequestPasswordReset from './components/RequestPasswordReset';
 import ResetPassword from './components/ResetPassword'; 
 import HandleAction from './components/HandleAction'; 
@@ -46,10 +47,14 @@ const App: React.FC = () => {
         <Route path="/signup" element={<Signup />} />
         <Route path="/logout" element={<Logout />} />
         <Route path="/" element={<MainContainer/>} />
+        
         <Route path="/recover-password" element={<RequestPasswordReset />} />
         <Route path="/handle-action" element={<HandleAction />} /> 
         <Route path="/reset-password" element={<ResetPassword />} /> 
         <Route path="/learn-more" element={<LearnMore />} />
+
+        {/* When a user wants to use chatHash to view the shared chat by the link */}
+        <Route path="/view-only/:chatRefHash" element={<ViewOnlyMainContainer />} />
       </Routes>
     </Router>
   );
