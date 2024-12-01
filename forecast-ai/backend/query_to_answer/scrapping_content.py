@@ -321,7 +321,7 @@ def single(urls: dict, env: str, DOCKER_OR_LAMBDATEST: str, USERNAME: str, ACCES
     driver = init_driver(env, DOCKER_OR_LAMBDATEST, USERNAME, ACCESS_KEY)
 
     # Add 'content' key to each news
-    print(urls)
+    # print(urls)
     for _, news in urls.items():
         for article in news:
             try:
