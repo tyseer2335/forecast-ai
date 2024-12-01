@@ -32,6 +32,7 @@ ACCESS_KEY = os.getenv('ACCESS_KEY')
 # Initialize Firebase Admin with a service account key
 cred = credentials.Certificate(os.getenv("FIREBASE_SERVICE_ACCOUNT_KEY"))
 firebase_admin.initialize_app(cred)
+USE_SELENIUM_TRUE_OR_FALSE = os.getenv('USE_SELENIUM_TRUE_OR_FALSE')
 
 app.add_middleware(
     CORSMiddleware,
@@ -123,7 +124,7 @@ async def query_to_answer(check_request: Request, request: ForecastRequest, quer
         print(time.time())
         news_with_content = scrapping_content.multiple_scrape_content(news, LOCAL_OR_PROD,
                                                                       DOCKER_OR_LAMBDATEST, SINGLE_OR_PARALLEL,
-                                                                      USERNAME, ACCESS_KEY)
+                                                                      USERNAME, ACCESS_KEY, USE_SELENIUM_TRUE_OR_FALSE)
         # print(news_with_content)
         # await send_status_update(query_id, str(news_with_content))
 

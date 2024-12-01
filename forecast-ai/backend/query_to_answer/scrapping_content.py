@@ -293,7 +293,8 @@ def scrape_content_process(url, env, DOCKER_OR_LAMBDATEST, USERNAME, ACCESS_KEY)
     return res
 
 
-def single(urls: dict, env: str, DOCKER_OR_LAMBDATEST: str, USERNAME: str, ACCESS_KEY: str) -> dict:
+def single(urls: dict, env: str, DOCKER_OR_LAMBDATEST: str, USERNAME: str, ACCESS_KEY: str,
+           USE_SELENIUM_TRUE_OR_FALSE: str = "false") -> dict:
     """
     Scrapes content from multiple URLs in a single-threaded manner.
 
@@ -315,18 +316,18 @@ def single(urls: dict, env: str, DOCKER_OR_LAMBDATEST: str, USERNAME: str, ACCES
     for _, news in urls.items():
         for article in news:
             article['content'] = _single_scrape_content(article['url'])
-    # if env == 'local':
-    for _, news in urls.items():
-        for article in news:
-            if not article['content']['text']:
-                try:
-                    res = advanced_selenium_scrape_content(driver, article['url'])
-                    article['content']['text'] = res['text']
-                    article['url'] = res['final_url']  # Update the URL to the final redirected URL
-                    if not article['content']['media']:
-                        article['content']['media'] = res['media']
-                except Exception as e:
-                    print(f"Error scraping content: {str(e)} for url: {article['url']}")
+    if USE_SELENIUM_TRUE_OR_FALSE != "false":
+        for _, news in urls.items():
+            for article in news:
+                if not article['content']['text']:
+                    try:
+                        res = advanced_selenium_scrape_content(driver, article['url'])
+                        article['content']['text'] = res['text']
+                        article['url'] = res['final_url']  # Update the URL to the final redirected URL
+                        if not article['content']['media']:
+                            article['content']['media'] = res['media']
+                    except Exception as e:
+                        print(f"Error scraping content: {str(e)} for url: {article['url']}")
     driver.quit()
     return urls
 
@@ -370,7 +371,7 @@ def parallel(urls: dict, env: str, DOCKER_OR_LAMBDATEST: str, USERNAME: str, ACC
 
 
 def multiple_scrape_content(urls: dict, env: str, DOCKER_OR_LAMBDATEST: str, SINGLE_OR_PARALLEL: str,
-                            USERNAME: str, ACCESS_KEY: str) -> dict:
+                            USERNAME: str, ACCESS_KEY: str, USE_SELENIUM_TRUE_OR_FALSE: str = "false") -> dict:
     """
     Chooses between single-threaded or parallel scraping for content based on configuration.
 
@@ -386,7 +387,7 @@ def multiple_scrape_content(urls: dict, env: str, DOCKER_OR_LAMBDATEST: str, SIN
         dict: A dictionary with updated article data containing scraped text and media URLs.
     """
     urls = convert_to_decoded_urls(urls)
-    if SINGLE_OR_PARALLEL == 'single':
+    if SINGLE_OR_PARALLEL == 'single' or USE_SELENIUM_TRUE_OR_FALSE == "false":
         return single(urls, env, DOCKER_OR_LAMBDATEST, USERNAME, ACCESS_KEY)
     return parallel(urls, env, DOCKER_OR_LAMBDATEST, USERNAME, ACCESS_KEY)
 
