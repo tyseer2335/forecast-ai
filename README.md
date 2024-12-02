@@ -117,6 +117,15 @@ Our application is accessible online. Follow these steps to get started and expl
       - As *interaction is disabled for viewers*, viewers can only see chat messages and titles without the UIs for interaction.
       - Shared chats are updated *dynamically*, reflecting new prompts or answers in real-time.
       - When the backend is busy, there may be a delay in sharing or retrieving chats. Please be patient and try again after a few minutes.
+   
+   <!-- 3 Example videos of chat sharing: how to share + view,  no need to login, dynamic shared video-->
+   - **Example**:
+      - Below are three videos demonstrating chat sharing features:
+      1) How to share a chat.
+
+      2) How to view a shared chat without logging in.
+
+      3) Dynamic updates in shared chats.
 
 
 #### 6. Chart Visualization
@@ -129,6 +138,11 @@ Our application is accessible online. Follow these steps to get started and expl
    - **Types**:
       - **Bar/Pie Chart**: Displays the average bias score for the forecast.
       - **Line Graph**: Shows the bias score per token, allowing users to identify trends and patterns.
+   
+   - **Example**:
+      - Below is a video demonstrating the chart visualization feature, along with different visual components.
+      
+
       
 ---
 
