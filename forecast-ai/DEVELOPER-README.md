@@ -97,7 +97,12 @@ Our application follows a modular and scalable architecture designed to perform 
 
 * Please note, following is instruction for both local and production deployment.
 
-To set up your own environment to continue working on this project, you will need Netlify,  Firebase, Docker, and Render for hosting, deployment, and managing the backend and frontend components. You will also need an [OpenAi API Key](https://openai.com/index/openai-api/).
+To set up your own environment to continue working on this project, you will need Netlify, Firebase, Docker, and Render for hosting, deployment, and managing the backend and frontend components. You will also need an [OpenAi API Key](https://openai.com/index/openai-api/). Optionally, you can use [Lambdatest](https://www.lambdatest.com/) for cloud-based Selenium testing. Otherwise, you can use Selenium on your local device, or with proper configuration, you can disable Selenium in the backend, using html2text and beautifulsoup for scraping the content from the website (works both locally and in production).
+
+As an overview with environment variables, for frontend, you only need one .env file, and for backend, you need one .env file, one prompt.py file, and one firebase service account key json file.
+
+We highly recommend you to read from top to bottom first, and then following the steps to set up the local development setting and production deployment.
+
 
 0. Ensure you have Node.js, npm, git, and an IDE such as VS Code installed.
 
@@ -116,9 +121,10 @@ To set up your own environment to continue working on this project, you will nee
 
 2. Deploy frontend on Netlify:
    - Please follow the [guide](https://www.netlify.com/blog/2016/09/29/a-step-by-step-guide-deploying-on-netlify/) to do this.
+   - You will need to create a Netlify account and link it to your GitHub repository. We first recommend you go through the guide to understand the process and setting the GitHub repository first.
    - For the build settings, please refer to the image below.
 ![Netlify build settings](images/netlify-build.png)
-   - For the environment variables, use the credentials that has been shared to add them to netlify "environment variables" section.
+   - For the environment variables, use the credentials that has been shared to add them to netlify "environment variables" section. Or, please go through this guide till the end to set up the environment variables.
 
 3. If you want to run frontend locally, navigate to the frontend project directory:
    ```bash
@@ -126,7 +132,7 @@ To set up your own environment to continue working on this project, you will nee
    ```
 
     Set up frontend .env:
-   - Create a Firebase project and obtain your API keys. Here is a guide: [Firebase Setup](https://firebase.google.com/docs/web/setup).
+   - Create a Firebase project and obtain your API keys. Here is a guide: [Firebase Setup](https://firebase.google.com/docs/web/setup). Please follow step 5. for more details on how to get the firebase credentials.
    - Create a `.env` file in the frontend folder and add the following:
      ```plaintext
      REACT_APP_FIREBASE_API_KEY=your-firebase-api-key
@@ -137,6 +143,7 @@ To set up your own environment to continue working on this project, you will nee
      REACT_APP_FIREBASE_APP_ID=your-firebase-app-id
      REACT_APP_BACKEND_URL=your-render-url
      ```
+    - *Fill in those fields, as you follow this guide.
 
 4. Install the frontend dependencies:
    ```bash
@@ -153,7 +160,7 @@ To set up your own environment to continue working on this project, you will nee
       cd forecast-ai/backend
       ```
 
-    To get firebase SDK credentials:
+    Again, to get firebase SDK credentials:
    - First, go to Google Cloud Console and select your firebase project. 
    - Then, [create your service account key](https://cloud.google.com/iam/docs/keys-create-delete). Make sure to download the json file to your computer since that will be your firebase service account key. For reference, here is what the json file would look like:
    ```plaintext
