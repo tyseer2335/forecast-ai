@@ -125,9 +125,9 @@ const HeaderBar: React.FC<HeaderBarProps> = ({ title, userId, chatId }) => {
     <header className="bg-screen-black text-header-bar-text px-6 py-6 w-full h-[8vh] flex items-center">
         {title && <h3 className="flex-grow font-bold text-center text-[8px] sm:text-[10px] md:text-xs xl:text-sm">{title}</h3>}
         <div className="flex justify-between items-center space-x-5 ml-auto">
-            <button>
+            {/* <button>
                 <img src={BookmarkButton} alt="bookmark-btn" className="w-4 h-5 lg:w-4 lg:h-6 xl:w-5 xl:h-7" />
-            </button>
+            </button> */}
             {/* ShareButton */}
             {/* If chatId is null, the share button is disabled */}
             {!chatId ? (
@@ -163,16 +163,16 @@ const HeaderBar: React.FC<HeaderBarProps> = ({ title, userId, chatId }) => {
               />
 
               {/* Profile dropdown */}
-              {isDropdownOpen && (
-                <div className="absolute right-0 mt-2 w-40 bg-white text-black rounded-lg shadow-lg z-20">
+                {isDropdownOpen && (
+                <div className="absolute right-0 mt-2 w-48 bg-screen-black border border-gray-700 text-header-bar-text rounded-lg shadow-lg z-20">
                   <button
                     onClick={handleLogout}
-                    className="w-full text-left px-4 py-2 text-sm hover:bg-gray-200 rounded-t-lg"
+                    className="w-full py-2 px-4 text-center hover:bg-gray-700"
                   >
                     Logout
                   </button>
                 </div>
-              )}
+                )}
             </button>
             <div className="ml-4">
                 {serverStatus === "loading" ? (

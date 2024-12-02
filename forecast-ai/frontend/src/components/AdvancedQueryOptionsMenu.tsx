@@ -202,237 +202,86 @@ const AdvancedQueryOptionsMenu: React.FC<AdvancedQueryOptionsMenuProps> = ({
   }, [isMenuOpen]);
 
   return (
-    <div
-      ref={menuRef}
-      className={`
-      w-[520px] h-[45vh] bg-query-options-menu-bg 
-      rounded-xl shadow-lg
-      transform transition-all duration-300 ease-in-out
-      ${
-        isMenuOpen
-          ? "translate-y-0 opacity-100"
-          : "translate-y-[-100%] opacity-0 -z-50"
-      }
-      absolute top-[-46vh] p-6
-      overflow-y-auto scrollbar-thin scrollbar-thumb-gray-600 scrollbar-track-transparent
-    `}
-    >
-      {/* Header */}
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-lg text-metrics-text font-semibold">
-          Advanced Query Options
-        </h1>
-        <button
-          onClick={handleClose}
-          className="p-2 hover:bg-gray-700 rounded-full transition-colors"
-        >
-          <img src={CloseMenuButton} alt="close" className="w-3.5 h-3.5" />
+        <div ref={menuRef} className={`w-[480px] h-[40vh] bg-query-options-menu-bg py-5 px-4 pb-10 flex flex-col space-y-4 justify-center items-center absolute top-[-41vh] overflow-y-auto ${!isMenuOpen && '-z-50'}`}>
+            <div className="w-full h-[10%] flex justify-between items-center">
+                <h1 className="text-sm text-metrics-text font-bold">Advanced Query Options</h1>
+                <button onClick={handleClose}>
+                    <img src={CloseMenuButton} alt="close-menu-btn" className="w-[12px] h-[12px]" />
         </button>
       </div>
-
-      <div className="space-y-8">
-        {/* Data Source Section */}
-        <section>
-          <h3 className="text-source-text font-semibold text-sm border-b border-gray-700 pb-2 mb-4">
-            Data Source Collection Settings
-          </h3>
-
-          <div className="space-y-6 px-2">
-            {/* Sources Input */}
+            <div className="w-full h-[90%] px-2 space-y-8">
+                <div className="w-full space-y-4">
+                    <h3 className="text-source-text font-bold underline text-xs">Data Source Collect Settings</h3>
+                    <div className="w-full px-2 space-y-5">
             <div className="w-full space-y-2">
-              <label className="text-sm text-metrics-text font-medium">
-                Total Sources to Collect
-              </label>
-              <div className="mt-2">
-                <input
-                  type="number"
-                  min="1"
-                  className="bg-query-options-input-bg border border-metrics-text rounded-sm w-[100px] h-[40px] p-2 px-3 text-sm"
-                  value={totalSourcesToCollect}
-                  onChange={(e) =>
-                    setTotalSourcesToCollect(Number(e.target.value))
-                  }
-                  data-testid="total-sources-to-collect-input"
-                />
-              </div>
+                            <h4 className="text-xs text-metrics-text">Total Sources to Collect</h4>
+                            <input type="number" min='1' className="bg-query-options-input-bg border border-metrics-text rounded-sm w-[100px] h-[40px] p-2 px-3 text-sm" value={totalSourcesToCollect} onChange={e => setTotalSourcesToCollect(Number(e.target.value))} data-testid="total-sources-to-collect-input" />
             </div>
-
-            {/* Platform Ratios */}
-            <div className="space-y-3">
-              <label className="text-sm text-metrics-text font-medium">
-                Sources Percentage Allocation
-              </label>
-              <div className="space-y-3">
-                {platformRatios.map((ratio, index) => (
-                  <SourcePlatformRatioInput
-                    key={index}
-                    {...ratio}
-                    index={index}
-                    setPlatformRatio={handlePlatformRatioChange}
-                  />
+                        <div className="w-full space-y-2">
+                            <h4 className="text-xs text-metrics-text">Sources Percentage Allocation</h4>
+                            <div className="w-full space-y-2">
+                                {platformRatios.map(({ platformName, platformRatio }, index) => (
+                                    <SourcePlatformRatioInput key={index} index={index} platformName={platformName} platformRatio={platformRatio} setPlatformRatio={handlePlatformRatioChange} />
                 ))}
               </div>
-
-              {/* Add New Platform */}
-              <div className="mt-4">
+                            <div className="w-full flex flex-col items-start space-y-4" style={{ marginTop: '20px' }}>
                 {isNewSourcePlatformInputOpen && (
-                  <div className="bg-gray-800 rounded-lg p-4 mb-3 animate-fadeIn">
-                    <label className="text-sm text-metrics-text mb-2 block">
-                      New Source Platform
-                    </label>
-                    <div className="flex items-center gap-4">
-                      <input
-                        type="text"
-                        placeholder="domain.domain"
-                        className="
-                        flex-1 bg-transparent border-b-2 
-                        text-header-bar-text border-header-bar-text
-                        text-sm focus:outline-none focus:border-source-text
-                        transition-all py-1
-                      "
-                        value={newSourcePlatformName}
-                        onChange={(e) =>
-                          setNewSourcePlatformName(e.target.value)
-                        }
-                        onKeyDown={handleKeyPress}
-                      />
-                      <button
-                        onClick={handleAddNewSourcePlatformRatio}
-                        className="text-sm text-source-text hover:text-source-text-hover transition-colors"
-                      >
-                        Add
-                      </button>
-                      <button
-                        onClick={handleCloseAddNewSourcePlatformInput}
-                        className="p-1.5 hover:bg-gray-700 rounded-full transition-colors"
-                      >
-                        <img
-                          src={CloseMenuButton}
-                          alt="close"
-                          className="w-2.5 h-2.5"
-                        />
+                                    <div className="w-full flex flex-col space-y-2">
+                                        <label className="text-xs text-metrics-text">New Source Platform</label>
+                                        <div className="flex space-x-7">
+                                            <div className="w-[58%] flex items-center space-x-3">
+                                                <input type="text" placeholder="domain.domain" className="bg-transparent border-b-2 text-header-bar-text border-header-bar-text text-xs focus:outline-none pr-1 py-1 flex-1" value={newSourcePlatformName} onChange={e => setNewSourcePlatformName(e.target.value)} onKeyDown={handleKeyPress} />
+                                                <button onClick={handleAddNewSourcePlatformRatio} className="text-xs text-source-text">Add</button>
+                                            </div>
+                                            <button onClick={handleCloseAddNewSourcePlatformInput}>
+                                                <img src={CloseMenuButton} alt="close-menu-btn" className="w-[8px] h-[8px]" />
                       </button>
                     </div>
                   </div>
                 )}
-
-                <button
-                  className="text-source-text text-sm hover:text-source-text-hover transition-colors"
-                  onClick={handleOpenAddNewSourcePlatformInput}
-                >
-                  + Add Source Platform
-                </button>
+                                <button className="text-source-text text-xs" onClick={handleOpenAddNewSourcePlatformInput}>+ Add Source Platform</button>
               </div>
             </div>
-
-            {/* Date Range */}
-            <div className="space-y-3">
-              <label className="text-sm text-metrics-text font-medium">
-                Date Range
-              </label>
-              <div className="flex gap-6">
-                {["From", "To"].map((label, i) => (
-                  <div key={label} className="flex-1 space-y-3">
-                    <p className="text-center text-sm text-header-bar-text">
-                      {label}
-                    </p>
-                    <button
-                      className={`
-                      w-full rounded-lg py-2.5 text-xs border transition-all
-                      ${
-                        !fromDate
-                          ? "text-query-options-date-picker-active-color border-query-options-date-picker-active-color bg-query-options-date-picker-bg"
-                          : "text-query-options-date-picker-color border-query-options-date-picker-color hover:bg-gray-700"
-                      }
-                    `}
-                      onClick={() =>
-                        i === 0 ? setFromDate(undefined) : setToDate(undefined)
-                      }
-                    >
-                      Unspecified
-                    </button>
-                    <DayPicker
-                      mode="single"
-                      captionLayout="dropdown"
-                      selected={i === 0 ? fromDate : toDate}
-                      onSelect={i === 0 ? setFromDate : setToDate}
-                      className="bg-gray-800 rounded-lg p-3"
-                    />
+                        <div className="w-full space-y-2">
+                            <h4 className="text-xs text-metrics-text">Date Range</h4>
+                            <div className="w-full flex justify-between">
+                                <div className="w-[45%] space-y-3">
+                                    <p className="text-center text-xs text-header-bar-text">From</p>
+                                    <button className={`w-full rounded-lg h-9 text-[10px] border ${!fromDate? 'text-query-options-date-picker-active-color border-query-options-date-picker-active-color bg-query-options-date-picker-bg' : 'text-query-options-date-picker-color border-query-options-date-picker-color'}`} onClick={e => setFromDate(undefined)}>Unspecifed</button>
+                                    <DayPicker mode="single" captionLayout="dropdown" selected={fromDate} onSelect={setFromDate} />
                   </div>
-                ))}
+                                <div className="w-[45%] space-y-3">
+                                    <p className="text-center text-xs text-header-bar-text">To</p>
+                                    <button className={`w-full rounded-lg h-9 text-[10px] border ${!toDate? 'text-query-options-date-picker-active-color border-query-options-date-picker-active-color bg-query-options-date-picker-bg' : 'text-query-options-date-picker-color border-query-options-date-picker-color'}`}  onClick={e => setToDate(undefined)}>Unspecifed</button>
+                                    <DayPicker mode="single" captionLayout="dropdown" selected={toDate} onSelect={setToDate} />
               </div>
             </div>
           </div>
-        </section>
-
-        {/* Display Settings */}
-        <section>
-          <h3 className="text-source-text font-semibold text-sm border-b border-gray-700 pb-2 mb-4">
-            Display Settings
-          </h3>
-
+                    </div>
+                </div>
+                <div className="w-full space-y-4">
+                    <h3 className="text-source-text font-bold underline text-xs">Display Settings</h3>
+                    <div className="w-full px-2 space-y-5">
           <div className="w-full space-y-2">
-            <label className="text-sm text-metrics-text font-medium">
-              Total Sources to Display
-            </label>
-            <div className="mt-2">
-              <input
-                type="number"
-                min="1"
-                max={totalSourcesToCollect}
-                className="bg-query-options-input-bg border border-metrics-text rounded-sm w-[100px] h-[40px] p-2 px-3 text-sm"
-                value={totalSourcesToDisplay}
-                onChange={(e) =>
-                  setTotalSourcesToDisplay(Number(e.target.value))
-                }
-                data-testid="total-sources-to-display-input"
-              />
+                            <h4 className="text-xs text-metrics-text">Total Sources to Display</h4>
+                            <input type="number" min='1' max={totalSourcesToCollect} className="bg-query-options-input-bg border border-metrics-text rounded-sm w-[100px] h-[40px] p-2 px-3 text-sm" value={totalSourcesToDisplay} onChange={e => setTotalSourcesToDisplay(Number(e.target.value))} data-testid="total-sources-to-display-input" />
             </div>
           </div>
-        </section>
-
-        {/* Apply Button */}
-        <div className="flex justify-end pt-4">
-          <button
-            className="
-            px-6 py-2.5 rounded-lg text-source-text 
-            border border-source-text text-sm
-            hover:bg-source-text hover:text-black
-            transition-all duration-200
-          "
-            onClick={handleApply}
-            data-testid="apply-btn"
-          >
-            Apply
-          </button>
+                </div>
+                <div className="flex justify-end items-center">
+                    <button className="px-4 py-2 rounded-lg text-source-text border border-source-text text-sm" onClick={handleApply} data-testid="apply-btn">Apply</button>
         </div>
       </div>
-
-      {/* Warning Modal */}
       {displayWarningMessage && (
-        <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-20 animate-fadeIn">
-          <div
-            className="
-          bg-[#282C2C] p-8 rounded-xl w-[440px]
-          shadow-xl transform transition-all
-          animate-slideIn
-        "
-          >
-            <h2 className="text-xl font-semibold mb-4 text-source-text">
-              Warning
-            </h2>
-            <p className="text-light-grey mb-2">{warningMessage}</p>
-            <p className="text-light-grey font-semibold">
-              {warningInstruction}
-            </p>
-            <div className="flex justify-end mt-6">
+                <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-20">
+                  <div className="bg-[#282C2C] p-6 rounded-lg w-[420px]">
+                    <h2 className="text-xl font-bold mb-4">Warning</h2>
+                    <p className="text-light-grey">{warningMessage}</p>
+                    <p className="text-light-grey font-bold">{warningInstruction}</p>
+                    <div className="flex justify-end mt-4">
               <button
                 onClick={() => setDisplayWarningMessage(false)}
-                className="
-                bg-button-hover px-5 py-2.5 rounded-lg
-                text-sm font-medium
-                hover:bg-button-hover/80 transition-colors
-              "
+                        className="bg-button-hover p-2 rounded-md mr-2"
               >
                 Close
               </button>
@@ -441,7 +290,7 @@ const AdvancedQueryOptionsMenu: React.FC<AdvancedQueryOptionsMenuProps> = ({
         </div>
       )}
     </div>
-  );
-};
+    )
+}
 
 export default AdvancedQueryOptionsMenu;

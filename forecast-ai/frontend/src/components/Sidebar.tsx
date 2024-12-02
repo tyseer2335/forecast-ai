@@ -13,6 +13,7 @@ import OwlLogo from "../assets/owl.svg";
 import SettingsLogo from "../assets/settings.svg";
 import DeleteIcon from "../assets/close-menu-button.svg";
 import CollapseIcon from "../assets/close-menu-button.svg";
+import LogOutIcon from "../assets/logout.svg";
 
 /**
  * Sidebar component that displays a list of chat sessions, categorized by time period, with options to start a new chat session, delete existing chats, and access settings.
@@ -54,10 +55,9 @@ type SidebarProps = {
 
 const Sidebar: React.FC<SidebarProps> = ({ newChatId }) => {
   const db = getFirestore();
-  const [isSettingsOpen, setIsSettingsOpen] = useState(false);
+  const [isLogoutOpen, setIsLogoutOpen] = useState(false);
   const [chats, setChats] = useState<any[]>([]);
   const navigate = useNavigate();
-  // Add collapsed state
   const [isCollapsed, setIsCollapsed] = useState(false);
 
   var userId: string = localStorage.getItem("userId") || "";
@@ -138,6 +138,10 @@ const Sidebar: React.FC<SidebarProps> = ({ newChatId }) => {
     });
 
     return categories;
+  };
+
+  const handleLogout = () => {
+    navigate("/logout");
   };
 
   const { todayChats, last7DaysChats, last30DaysChats, earlierChats } =
@@ -258,8 +262,8 @@ const Sidebar: React.FC<SidebarProps> = ({ newChatId }) => {
     setHoveredChatId("");
   };
 
-  const toggleSettings = () => {
-    setIsSettingsOpen(!isSettingsOpen);
+  const toggleLogout = () => {
+    setIsLogoutOpen(!isLogoutOpen);
   };
 
   const handleChatClick = (chatId: string) => {
@@ -317,21 +321,21 @@ const Sidebar: React.FC<SidebarProps> = ({ newChatId }) => {
         <PrevChatSubList period="Earlier" chatList={earlierChats} />
       </div>
 
-      {/* Settings button - hide when collapsed */}
+      {/* Logout button - hide when collapsed */}
       {!isCollapsed && (
         <div className="p-4 flex justify-between items-center">
           <button
-            onClick={toggleSettings}
+            onClick={toggleLogout}
             className="flex items-center hover:bg-button-hover p-2 rounded-md"
-            data-testid="settings-button"
+            data-testid="logout-button"
           >
             <img
-              src={SettingsLogo}
-              alt="settings"
+              src={LogOutIcon}
+              alt="logout"
               className="w-5 h-5 sm:w-6 sm:h-6 md:w-7 md:h-7"
             />
             <span className="px-2 text-light-grey text-xs sm:text-sm md:text-base">
-              Settings
+              Logout
             </span>
           </button>
         </div>
@@ -366,35 +370,43 @@ const Sidebar: React.FC<SidebarProps> = ({ newChatId }) => {
         </div>
       )}
 
-      {/* Settings Modal */}
-      {isSettingsOpen && (
+      {/* Logout Modal */}
+      {isLogoutOpen && (
         <div
           className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-20"
-          data-testid="settings-panel"
+          data-testid="logout-panel"
         >
           <div className="bg-[#282C2C] p-6 rounded-lg w-[90%] max-w-sm relative">
-            <h2 className="text-lg font-bold mb-4">Settings</h2>
+            <h2 className="text-lg font-bold mb-4">Logout</h2>
             <button
-              onClick={toggleSettings}
+              onClick={toggleLogout}
               className="absolute top-2 right-2 text-light-grey text-lg"
-              data-testid="close-settings-button"
+              data-testid="close-logout-button"
             >
               &times;
             </button>
-            <p
-              className="text-right italic text-[#9A9A9A] text-sm mt-4"
-              onKeyDown={(e) => {
-                if (e.key === "Enter") {
-                  toggleSettings();
-                }
-              }}
-            >
-              Press ENTER to apply
+            <p className="text-light-grey">
+              Are you sure you want to logout?
             </p>
+            <div className="flex justify-end mt-4">
+              <button
+                onClick={toggleLogout}
+                className="bg-button-hover p-2 rounded-md mr-2"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleLogout}
+                className="bg-red-500 p-2 rounded-md text-white"
+              >
+                Logout
+              </button>
+            </div>
           </div>
         </div>
       )}
     </div>
   );
 };
+
 export default Sidebar;
