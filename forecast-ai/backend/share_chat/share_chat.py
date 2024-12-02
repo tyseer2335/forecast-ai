@@ -20,9 +20,26 @@ from fastapi import HTTPException, Request
 #   It returns the user_id and chat_id, which can be used to retrieve the chat from the db.
 
 
+### Functions ###
+# store_and_get_chat_ref_hash
+# Description:
+# - This function generates the chat_ref_hash and stores it in the db.
+# - It returns the chat_ref_hash, which is used as a shareable link to the chat.
 def store_and_get_chat_ref_hash(
     request: Request, user_id: str, chat_id: str, db: firestore.client
 ):
+    """
+    Generate chat_ref_hash and store it in the db.
+
+    Parameters:
+    - request: Request object containing the user info
+    - user_id: The user_id of the chat owner
+    - chat_id: The chat_id of the chat to be shared
+    - db: Firestore client object
+
+    Returns:
+    - chat_ref_hash: The unique hash for the shared chat
+    """
     try:
         if not request.state.user:
             raise HTTPException(
@@ -51,9 +68,24 @@ def store_and_get_chat_ref_hash(
         raise HTTPException(status_code=500, detail=f"Error sharing chat: {str(e)}")
 
 
+# get_user_id_and_chat_id_from_chat_ref_hash
+# Description:
+# - This function retrieves the user_id and chat_id from the chat_ref_hash.
+# - It returns the user_id and chat_id, which can be used to retrieve the chat from the db.
 def get_user_id_and_chat_id_from_chat_ref_hash(
     chat_ref_hash: str, db: firestore.client
 ):
+    """
+    Retrieve user_id and chat_id from the chat_ref_hash.
+
+    Parameters:
+    - chat_ref_hash: The unique hash for the shared chat
+    - db: Firestore client object
+
+    Returns:
+    - user_id: The user_id of the chat owner
+    - chat_id: The chat_id of the chat to be shared
+    """
     try:
         # Split the chat_ref_hash to get the user_id_hash and chat_id_hash
         user_id_hash, chat_id_hash = chat_ref_hash.split("_")
