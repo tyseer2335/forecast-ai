@@ -27,7 +27,7 @@ import { Timestamp } from 'firebase/firestore';
 // ✓ displays logo
 // ✓ displays program title
 // ✓ displays chat history
-// ✓ displays settings button
+// ✓ displays logout button
 //
 // 3. Sidebar :: Chat History Display Tests
 // These tests focus on how chat sessions are displayed depending on the number of sessions and their timing.
@@ -186,7 +186,7 @@ describe('Sidebar :: Layout Tests', () => {
     (useNavigate as jest.Mock).mockReturnValue(mockNavigate);
   });
 
-  // Basic Components (logo, program-title, settings-button, chat-sessions)
+  // Basic Components (logo, program-title, logout-button, chat-sessions)
 
   it('displays logo', async () => {
     render(
@@ -210,11 +210,11 @@ describe('Sidebar :: Layout Tests', () => {
     expect(screen.getByTestId('chat-sessions')).toBeInTheDocument();
   });
 
-  it('displays settings button', async () => {
+  it('displays logout button', async () => {
     render(
         <Sidebar newChatId={null} />
       );
-    expect(screen.getByTestId('settings-button')).toBeInTheDocument();
+    expect(screen.getByTestId('logout-button')).toBeInTheDocument();
   });
   
   it('displays chat history', async () => {
