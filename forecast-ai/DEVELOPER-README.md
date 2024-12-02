@@ -51,21 +51,43 @@ Our application follows a modular and scalable architecture designed to perform 
 ### 3. Backend Forecasting Pipeline:
 - **Search Query Extraction**:
   - Prompt GPT-4o to get google search queries that find objective information for forecasting question from different (specified) sources.
+
+  - This involves reorganizing and dividing the forecasting question into multiple search queries to get the most relevant information. We ensure we make use of total news to collect and final news data to display, and use those numbers to appropriately divide the search queries, and re-organize them to get the most relevant information.
+  
 - **Article Retrieval**:
   - Uses the **Google News API** to fetch links to relevant articles for each search query.
-  - Employs **Selenium** to scrape content from websites when necessary, extracting full text, titles, and metadata.
+  - However, Gnews returns new link which will redirect to the actual news article. We use two ways to tackle this problem: a) When using single processing, we decode the link to get the actual news article. b) When using parallel processing, we use **Selenium** to scrape the actual news article from the link.
+  - This solves the problem of getting the actual news article from the link.
+
+  - Employs **Selenium** to scrape content from websites when necessary, extracting full text, titles, and metadata. This works well locally, but for production, we use **Lambdatest** to run the selenium tests on the cloud. Docker can be used as well, however, we found that Lambdatest is faster and more efficient. Currently, as requested, we are disabling the use of Selenium in the backend, but it can be enabled by setting the `USE_SELENIUM_TRUE_OR_FALSE` environment variable to `true`.
+
+  - We use WHITELIST in the prompt.py to filter out the websites that we want to scrape the content from. This is to ensure that we only scrape the content from the websites that we trust and that we know are reliable. For example, as requested, for demo purpose, we disabled, X, Facebook, and other websites that we do not want to scrape the content from, along with disabling the use of Selenium.
+
+  - If config for USE_SELENIUM_TRUE_OR_FALSE is set to false, we use html2text and beutifulsoup to scrape the content from the website. This ensure faster and more efficient scraping of the content.
+
+
 - **Relevance Filtering**:
-  - Prompts **GPT-4-mini** to evaluate the relevance of each retrieved article with respect to the original forecasting question.
+  - Prompts **GPT-4o-mini/GPT3.5 Turbo** to evaluate the relevance of each retrieved article with respect to the original forecasting question.
   - Scores articles on relevance, filters the top N articles, and prepares them for forecast generation.
+  - We try to ensure our backend outputs formatted data as much as possible, so that next processing steps can be done easily.
+  - For the empty, or irrelevant articles, we try to ensure that we do not include them in the final output, and we try to ensure that we only include the relevant articles in the final output.
+  - For example, ones with score 1 will be excluded from the final output.
+
+
 - **Forecast Generation**:
-  - Prompts **GPT-4** to synthesize selected articles and generate:
+  - Prompts **GPT-4o-mini** to synthesize selected articles and generate:
     - A probability-based forecast for the question.
     - A rationale explaining the reasoning behind the forecast.
   - Offers flexibility for future integration of custom forecasting models or pipelines.
 
+  - This involves first summarizing the articles, and then generating the forecast. We ensure that we summarize the articles to get the most relevant information, and then generate the forecast based on the summarized articles. This ensures that we get the most relevant information for the forecast.
+
+  - Then to avoid maximum token exceed error, we summarize the forecasting answer to get the most relevant information. Then this will be feeded to the GPT-4o-mini to generate the forecast bias heatmap.
+
 - **Bias Heatmap Generation**:
-  - Evaluates selected articles for biases across specified features.
   - Generates a heatmap visualizing token-level bias, which is returned to the frontend for display.
+
+  - As mentioned above, we generate the bias heatmap based on the summarized forecasting answer. This ensures we avoid maximum token exceed error, and get the most relevant information for the bias heatmap. Maximum token exceed error happens otherwise, since we use function calling to get expected formatted structured data. We used to use dictionary to store the data, but we found that it was not efficient, and we were getting maximum token exceed error. So we changed dictionary to list, ensuring faster and more efficient processing of the data.
 
 ## Design
 
