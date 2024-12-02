@@ -7,9 +7,8 @@ import { doc, getDoc } from "firebase/firestore";
 import { getFirestore } from "firebase/firestore";
 import { DocumentReference, DocumentData } from "@firebase/firestore";
 import { useEffect } from "react";
-import axios from "axios";
+import axios, { isAxiosError } from "axios";
 import { set } from "date-fns";
-import { error } from "console";
 
 /**
  * ViewOnlyMainContainer Component
@@ -68,19 +67,24 @@ const ViewOnlyMainContainer: React.FC = () => {
         const chatRef = doc(db, "Users", response.data.user_id, "Chats", response.data.chat_id);
         // const chatRef : DocumentReference<DocumentData, DocumentData> = doc(db, "Users", userId, "Chats", chatId);
         fetchChatDoc(chatRef);
-      } // Should I put these if else branches in catch block? --> No, because we are handling the error in the catch block
-      else if (response.status === 401) {
-        console.error("Unauthorized access.");
-        setErrorMessage("Unauthorized access. Please ask the chat owner to share the chat again.");
-
-      } else if (response.status === 404) {
-        console.error("Chat reference not found.");
-        // Use HTTPException's detail as the error message
-        setErrorMessage(`Chat reference not found: ${response.data.detail}`);
-      }
+      } 
     } catch (error) {
       console.error("Error fetching chat reference:", error);
-      setErrorMessage("Error in viewing the chat. Please ask the chat owner to share the chat again.");
+      setErrorMessage("Error in viewing the chat.\nCheck the link again, or ask the chat owner to share the chat again.");
+      setChatTitle("Error");
+      
+      if (isAxiosError(error) && error.response && error.response.data && error.response.data.detail) {
+        if (error.status === 401) {
+          console.error(error.response.data.detail);
+          setErrorMessage("Unauthorized access. Please ask the chat owner to share the chat again.");
+
+        } else if (error.status === 404) {
+          console.error(error.response.data.detail);
+          // setErrorMessage(`Chat reference not found: ${error.response.data.detail}`);
+          setErrorMessage("Chat reference not found.");
+        }
+      }
+      
     }
   };
 
@@ -122,20 +126,20 @@ const ViewOnlyMainContainer: React.FC = () => {
 
   return (
     <div className="min-h-screen h-screen w-screen flex bg-screen-black text-white font-inter">
-    {/* <Sidebar newChatId={chatId} /> */}
-    <div className="flex flex-col flex-grow">
-      <ViewOnlyHeaderBar title={chatTitle} />
-      {errorMessage ? (
-        <div className="flex-grow flex items-center justify-center">
-          <p className="text-center text-[10px] sm:text-[12px] md:text-xs xl:text-sm">
+      <div className="flex flex-col flex-grow">
+        <ViewOnlyHeaderBar isError={errorMessage !== ""} title={chatTitle} />
+
+        {errorMessage ? 
+        <div className="flex-grow flex justify-center ">
+          <p className="text-center border rounded-md border-error-message-box-border-bg bg-error-message-box-bg h-fit p-4 text-chat-message-text whitespace-pre-wrap">
             {errorMessage}
-            </p>
+          </p>
         </div>
-      ) : (
+        :
         <ViewOnlyMainContent chats={chats} />
-      )}
-        </div>
+        }
       </div>
+    </div>
     );
 
 }
