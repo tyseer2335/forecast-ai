@@ -1,13 +1,14 @@
 // src/components/AnswerDisplay.tsx
 import React from "react";
 import { useState } from "react";
-import { Answer, BiasColor } from "../hooks/types";
+import { Answer, BiasColor, BiasColorForChart } from "../hooks/types";
 import {
   biasColorToBiasNameMap,
   biasColorToHexCodeMap,
   biasColorToRGBAMap,
 } from "../hooks/constants";
 import "../css/answer-display-custom-css.css";
+import BiasChartDisplay from './BiasChartDisplay';
 
 /**
  * @file AnswerDisplay.tsx
@@ -126,6 +127,8 @@ const AnswerDisplay: React.FC<AnswerDisplayProps> = ({
             : renderRationale()}
         </p>
       </div>
+
+    <BiasChartDisplay answer={answer} visibleBiasColor={visibleBiasColor as BiasColorForChart | ""} />
     </div>
   );
 };
