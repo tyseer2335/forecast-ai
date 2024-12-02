@@ -7,6 +7,15 @@ import SourcePlatformRatioInput from "./SourcePlatformRatioInput";
 import "react-day-picker/style.css";
 import "../css/advanced-query-options-menu-custom-css.css";
 
+/**
+ * Type definition for the props used in the AdvancedQueryOptionsMenu component.
+ * 
+ * @interface AdvancedQueryOptionsMenuProps
+ * @property {boolean} isMenuOpen - Indicates whether the advanced query options menu is open.
+ * @property {React.Dispatch<React.SetStateAction<boolean>>} setIsMenuOpen - A function to set the state of `isMenuOpen`.
+ * @property {React.Dispatch<React.SetStateAction<Request>>} setRequest - A function to update the request object with new settings.
+ * @property {boolean} submitRequest - A boolean indicating if the request should be submitted (resets settings when true).
+ */
 type AdvancedQueryOptionsMenuProps = {
   isMenuOpen: boolean;
   setIsMenuOpen: React.Dispatch<React.SetStateAction<boolean>>;
@@ -14,12 +23,37 @@ type AdvancedQueryOptionsMenuProps = {
   submitRequest: boolean;
 };
 
+/**
+ * Initial platform ratios for the default set of platforms.
+ * 
+ * @constant {Array} initialPlatformRatios - Default platform names and their corresponding ratios.
+ */
 const initialPlatformRatios = [
   { platformName: "News", platformRatio: 100 },
   { platformName: "X", platformRatio: 0 },
   { platformName: "Facebook", platformRatio: 0 },
 ];
 
+/**
+ * AdvancedQueryOptionsMenu Component
+ *
+ * This component provides a menu for advanced query options where users can configure the data source collection settings, 
+ * platform ratio allocation, and date range filters. It allows adding new source platforms, adjusting platform ratios, 
+ * and applying the settings to the request.
+ *
+ * @component
+ * @example
+ * ```jsx
+ * <AdvancedQueryOptionsMenu
+ *   isMenuOpen={isMenuOpen}
+ *   setIsMenuOpen={setIsMenuOpen}
+ *   setRequest={setRequest}
+ *   submitRequest={submitRequest}
+ * />
+ * ```
+ * @param {AdvancedQueryOptionsMenuProps} props - The props passed to the component.
+ * @returns {React.Element} The rendered JSX for the advanced query options menu.
+ */
 const AdvancedQueryOptionsMenu: React.FC<AdvancedQueryOptionsMenuProps> = ({
   isMenuOpen,
   setIsMenuOpen,
@@ -42,11 +76,22 @@ const AdvancedQueryOptionsMenu: React.FC<AdvancedQueryOptionsMenuProps> = ({
 
   const menuRef = useRef<HTMLDivElement | null>(null);
 
+  /**
+   * Closes the menu when the close button is clicked.
+   * 
+   * @param {React.MouseEvent<HTMLButtonElement, MouseEvent>} e - The mouse click event.
+   */
   const handleClose = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     e.preventDefault();
     setIsMenuOpen(false);
   };
 
+  /**
+   * Applies the advanced query options and updates the request object.
+   * Checks if the platform ratios sum to 100 before applying changes.
+   * 
+   * @param {React.MouseEvent<HTMLButtonElement>} e - The mouse click event.
+   */
   const handleApply = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
 
@@ -87,6 +132,13 @@ const AdvancedQueryOptionsMenu: React.FC<AdvancedQueryOptionsMenuProps> = ({
     setIsMenuOpen(false);
   };
 
+  /**
+   * Handles the change in the platform ratio for a specific platform.
+   * Ensures the total ratio doesn't exceed 100.
+   * 
+   * @param {number} index - The index of the platform whose ratio is being updated.
+   * @param {number} value - The new platform ratio value.
+   */
   const handlePlatformRatioChange = (index: number, value: number) => {
     const newPlaformRatios = [...platformRatios];
     newPlaformRatios[index] = {
@@ -108,6 +160,11 @@ const AdvancedQueryOptionsMenu: React.FC<AdvancedQueryOptionsMenuProps> = ({
     }
   };
 
+  /**
+   * Adds a new source platform to the platform ratios list if it's valid.
+   * 
+   * @param {any} e - The event triggered by the "Add" button click.
+   */
   const handleAddNewSourcePlatformRatio = (e: any) => {
     e.preventDefault();
 
@@ -143,12 +200,23 @@ const AdvancedQueryOptionsMenu: React.FC<AdvancedQueryOptionsMenuProps> = ({
     setIsNewSourcePlatformInputOpen(false);
   };
 
+  /**
+   * Handles key press events for the new source platform input field.
+   * Triggers the addition of the platform when "Enter" is pressed.
+   * 
+   * @param {React.KeyboardEvent<HTMLInputElement>} e - The key press event.
+   */
   const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
       handleAddNewSourcePlatformRatio(e);
     }
   };
 
+  /**
+   * Opens the input field to add a new source platform.
+   * 
+   * @param {React.MouseEvent<HTMLButtonElement>} e - The mouse click event.
+   */
   const handleOpenAddNewSourcePlatformInput = (
     e: React.MouseEvent<HTMLButtonElement>
   ) => {
@@ -158,6 +226,11 @@ const AdvancedQueryOptionsMenu: React.FC<AdvancedQueryOptionsMenuProps> = ({
     }
   };
 
+  /**
+   * Closes the input field to add a new source platform.
+   * 
+   * @param {React.MouseEvent<HTMLButtonElement>} e - The mouse click event.
+   */
   const handleCloseAddNewSourcePlatformInput = (
     e: React.MouseEvent<HTMLButtonElement>
   ) => {
@@ -166,6 +239,9 @@ const AdvancedQueryOptionsMenu: React.FC<AdvancedQueryOptionsMenuProps> = ({
     setIsNewSourcePlatformInputOpen(false);
   };
 
+  /**
+   * Resets the menu settings when a new request is submitted.
+   */
   useEffect(() => {
     if (submitRequest) {
       setTotalSourcesToCollect(5);
@@ -201,6 +277,12 @@ const AdvancedQueryOptionsMenu: React.FC<AdvancedQueryOptionsMenuProps> = ({
     }
   }, [isMenuOpen]);
 
+  /**
+   * The main component for the advanced query options menu.
+   * It contains input fields for source collection settings, percentage allocation, and date range.
+   * 
+   * @returns {JSX.Element} The rendered AdvancedQueryOptionsMenu component.
+   */
   return (
         <div ref={menuRef} className={`w-[480px] h-[40vh] bg-query-options-menu-bg py-5 px-4 pb-10 flex flex-col space-y-4 justify-center items-center absolute top-[-41vh] overflow-y-auto ${!isMenuOpen && '-z-50'}`}>
             <div className="w-full h-[10%] flex justify-between items-center">
