@@ -291,7 +291,7 @@ def scrape_content_process(url, env, DOCKER_OR_LAMBDATEST, USERNAME, ACCESS_KEY)
     try:
         res = advanced_selenium_scrape_content(driver, url)
     except Exception as e:
-        print(f"Error scraping content: {str(e)} for url: {url}")
+        print(f"[1] Error scraping content: {str(e)} for url: {url}")
         res = {
             'text': '',
             'media': [],
@@ -329,8 +329,7 @@ def single(urls: dict, env: str, DOCKER_OR_LAMBDATEST: str, USERNAME: str, ACCES
                 if not article['content']['text']:
                     print("ERRRRRRRRRRRRRRRRRRRRPR", article['url'])
             except Exception as e:
-                print(f"Error scraping content: {str(e)} for url: {article['url']}")
-                return e
+                print(f"[2] Error scraping content: {str(e)} for url: {article['url']}")
     if USE_SELENIUM_TRUE_OR_FALSE != "false":
         for _, news in urls.items():
             for article in news:
@@ -342,7 +341,7 @@ def single(urls: dict, env: str, DOCKER_OR_LAMBDATEST: str, USERNAME: str, ACCES
                         if not article['content']['media']:
                             article['content']['media'] = res['media']
                     except Exception as e:
-                        print(f"Error scraping content: {str(e)} for url: {article['url']}")
+                        print(f"[3] Error scraping content: {str(e)} for url: {article['url']}")
     driver.quit()
     return urls
 
@@ -407,7 +406,7 @@ def multiple_scrape_content(urls: dict, env: str, DOCKER_OR_LAMBDATEST: str, SIN
             return single(urls, env, DOCKER_OR_LAMBDATEST, USERNAME, ACCESS_KEY, USE_SELENIUM_TRUE_OR_FALSE)
         return parallel(urls, env, DOCKER_OR_LAMBDATEST, USERNAME, ACCESS_KEY)
     except Exception as e:
-        print(f"Error scraping content: {str(e)}")
+        print(f"[4] Error scraping content: {str(e)}")
         raise e
 
 # if __name__ == '__main__':
