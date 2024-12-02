@@ -97,7 +97,7 @@ Our application follows a modular and scalable architecture designed to perform 
 
 * Please note, following is instruction for both local and production deployment.
 
-To set up your own environment to continue working on this project, you will need Netlify, Firebase, Docker, and Render for hosting, deployment, and managing the backend and frontend components. You will also need an [OpenAi API Key](https://openai.com/index/openai-api/). Optionally, you can use [Lambdatest](https://www.lambdatest.com/) for cloud-based Selenium testing. Otherwise, you can use Selenium on your local device, or with proper configuration, you can disable Selenium in the backend, using html2text and beautifulsoup for scraping the content from the website (works both locally and in production).
+To set up your own environment to continue working on this project, you will need Netlify, Firebase, Docker, and Render for hosting, deployment, and managing the backend and frontend components. You will also need an [OpenAI API Key](https://openai.com/index/openai-api/). Optionally, you can use [Lambdatest](https://www.lambdatest.com/) for cloud-based Selenium testing. Otherwise, you can use Selenium on your local device, or with proper configuration, you can disable Selenium in the backend, using html2text and beautifulsoup for scraping the content from the website (works both locally and in production).
 
 As an overview with environment variables, for frontend, you only need one .env file, and for backend, you need one .env file, one prompt.py file, and one firebase service account key json file.
 
