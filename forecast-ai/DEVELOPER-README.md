@@ -25,7 +25,7 @@ Our application uses a modern tech stack to ensure scalability, reliability, and
 
 Our application follows a modular and scalable architecture designed to perform data-driven forecasting effectively. Below is an image that illustrates our architecture:
 
-<img src="images/architecture.png" alt="forecastai's architecture" width="500"/>
+<img src="images/architecture.png" alt="forecastai's architecture" width="600"/>
 
 ### 1. **Frontend**:
 - **User Interaction**:
