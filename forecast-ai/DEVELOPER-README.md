@@ -61,7 +61,7 @@ Our application follows a modular and scalable architecture designed to perform 
 
   - Employs **Selenium** to scrape content from websites when necessary, extracting full text, titles, and metadata. This works well locally, but for production, we use **Lambdatest** to run the selenium tests on the cloud. Docker can be used as well, however, we found that Lambdatest is faster and more efficient. Currently, as requested, we are disabling the use of Selenium in the backend, but it can be enabled by setting the `USE_SELENIUM_TRUE_OR_FALSE` environment variable to `true`.
 
-  - We use WHITELIST in the prompt.py to filter out the websites that we want to scrape the content from. This is to ensure that we only scrape the content from the websites that we trust and that we know are reliable. For example, as requested, for demo purpose, we disabled, X, Facebook, and other websites that we do not want to scrape the content from, along with disabling the use of Selenium.
+  - We use BLACKLIST in the prompt.py to filter out the websites that we don't want to scrape the content from. This is to ensure that we only scrape the content from the websites that we trust and that we know are reliable. For example, as requested, for demo purpose, we disabled, X, Facebook, and other websites that we do not want to scrape the content from, along with disabling the use of Selenium.
 
   - If config for USE_SELENIUM_TRUE_OR_FALSE is set to false, we use html2text and beutifulsoup to scrape the content from the website. This ensure faster and more efficient scraping of the content.
 
@@ -88,8 +88,6 @@ Our application follows a modular and scalable architecture designed to perform 
   - Generates a heatmap visualizing token-level bias, which is returned to the frontend for display.
 
   - As mentioned above, we generate the bias heatmap based on the summarized forecasting answer. This ensures we avoid maximum token exceed error, and get the most relevant information for the bias heatmap. Maximum token exceed error happens otherwise, since we use function calling to get expected formatted structured data. We used to use dictionary to store the data, but we found that it was not efficient, and we were getting maximum token exceed error. So we changed dictionary to list, ensuring faster and more efficient processing of the data.
-
-## Design
 
 ---
 

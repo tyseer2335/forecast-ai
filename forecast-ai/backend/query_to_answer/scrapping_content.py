@@ -17,7 +17,7 @@ from selenium.common.exceptions import TimeoutException, WebDriverException
 from typing import Optional
 import json
 from urllib.parse import quote, urlparse
-from query_to_answer.prompt import WHITELIST
+from query_to_answer.prompt import BLACKLIST
 
 
 def get_decoding_params(gn_art_id):
@@ -93,7 +93,7 @@ def _single_scrape_content(url: str) -> dict:
     Returns:
         dict: A dictionary containing the text content and a list of media URLs (e.g., images) on the page.
     """
-    if not any(x in url for x in WHITELIST):
+    if not any(x in url for x in BLACKLIST):
         response = requests.get(url)
         soup = BeautifulSoup(response.content, 'html.parser')
 

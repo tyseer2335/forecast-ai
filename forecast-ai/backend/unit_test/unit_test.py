@@ -50,7 +50,7 @@ def test_env_var() -> tuple[OpenAI, str]:
     Test if environment variables are loaded correctly
     :return:
     """
-    load_dotenv(dotenv_path='./.env')
+    load_dotenv(dotenv_path='../.env')
     OPENAI_API_KEY = os.getenv('OPENAPI_API_KEY')
     client = OpenAI(api_key=OPENAI_API_KEY)
     LOCAL_OR_PROD = os.getenv('LOCAL_OR_PROD')  # set to `local` or `prod`. use `local` for testing selenium
@@ -161,8 +161,11 @@ def test_collect_news(search_queries: dict, request: ForecastRequest) -> dict:
     assert all('url' in article for value in news.values() for article in value)
     assert all('publisher' in article for value in news.values() for article in value)
     assert all(isinstance(article['publisher'], dict) for value in news.values() for article in value)
-    # assert total # of articles is equal to request.before_ranking_num_articles
-    assert sum(len(value) for value in news.values()) == request.before_ranking_num_articles
+    # assert total # of articles is within expected range (given floor division)
+    num_articles_collected = sum(len(value) for value in news.values())
+    lower_bound = request.before_ranking_num_articles - request.num_queries
+    upper_bound = request.before_ranking_num_articles + request.num_queries
+    assert lower_bound <= num_articles_collected <= upper_bound
     logging.info(f"\033[92m[test_collect_news] news: {news}\033[0m")
     return news
 

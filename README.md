@@ -132,6 +132,12 @@ Our application is accessible online. Follow these steps to get started and expl
       
 ---
 
+## Developer Documentation
+
+For detailed instructions on setting up a development environment to continue developing this project, please see [DEVELOPER_README.md](forecast-ai/DEVELOPER-README.md).
+
+---
+
 ## Deployment and GitHub Workflow
 
 ### Branching and Naming Conventions
@@ -187,12 +193,6 @@ Our application is accessible online. Follow these steps to get started and expl
 ## Coding Standards and Guidelines
 
   Our code will follow the coding standards that help keep our code understandable, consistent and maintanable. We will follow language-specific style guides (such as PEP 8 for Python), conduct code reviews to ensure quality, and write comprehensive documentation including comments to clarify complex code. 
-
----
-
-## Developer Documentation
-
-For detailed instructions on setting up a development environment to continue developing this project, see [DEVELOPER_README.md](forecast-ai/DEVELOPER-README.md).
 
 ---
 
