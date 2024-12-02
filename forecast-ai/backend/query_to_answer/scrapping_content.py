@@ -21,6 +21,15 @@ from query_to_answer.prompt import BLACKLIST
 
 
 def get_decoding_params(gn_art_id):
+    """
+    Fetches the decoding parameters for a given Google News article ID.
+
+    Args:
+        gn_art_id (str): The Google News article ID.
+
+    Returns:
+        dict: A dictionary containing the signature, timestamp, and the article ID.
+    """
     response = requests.get(f"https://news.google.com/rss/articles/{gn_art_id}")
     response.raise_for_status()
     soup = BeautifulSoup(response.text, "lxml")
@@ -33,6 +42,15 @@ def get_decoding_params(gn_art_id):
 
 
 def decode_urls(articles):
+    """
+    Decodes a list of encoded articles by sending requests to Google's batch API.
+
+    Args:
+        articles (list): A list of dictionaries containing article parameters (gn_art_id, timestamp, signature).
+
+    Returns:
+        list: A list of decoded URLs from the batch API response.
+    """
     articles_reqs = [
         [
             "Fbv4je",
@@ -52,6 +70,16 @@ def decode_urls(articles):
 
 
 def return_new_links(encoded_urls: list[str]) -> list[str]:
+    """
+    Takes a list of encoded URLs, decodes them in order, and returns the decoded links in the same order.
+
+    Args:
+        encoded_urls (list): A list of encoded URLs to be decoded.
+
+    Returns:
+        list: A list of decoded URLs.
+    """
+
     # articles_params = [get_decoding_params(urlparse(url).path.split("/")[-1]) for url in encoded_urls]
     # decoded_urls = decode_urls(articles_params)
 
@@ -66,6 +94,17 @@ def return_new_links(encoded_urls: list[str]) -> list[str]:
 
 
 def convert_to_decoded_urls(urls: dict[str, list[dict[str, str]]]) -> dict[str, list[dict[str, str]]]:
+    """
+    Converts the URLs in the input dictionary from encoded to decoded by first extracting the URLs, 
+    decoding them, and then updating the original dictionary.
+
+    Args:
+        urls (dict): A dictionary where the key is a category and the value is a list of articles 
+                     with their respective URLs.
+
+    Returns:
+        dict: The original dictionary with URLs replaced by decoded ones.
+    """
     # print("[URLs]", urls)
     urls_to_decode = []
     for key, articles in urls.items():
@@ -190,8 +229,16 @@ def _ensure_content_loaded_with_new_url(
         max_retries: int = 3
 ) -> Optional[str]:
     """
-    Load URL and ensure content is fully loaded with proper redirect handling
-    Returns final URL or None if failed
+    Load a URL and ensure that content is fully loaded with proper redirect handling.
+
+    Args:
+        driver (webdriver.Chrome): The Selenium WebDriver instance used to load the page.
+        url (str): The URL of the web page to load.
+        timeout (int): The maximum time (in seconds) to wait for the content to load (default is 10 seconds).
+        max_retries (int): The maximum number of retries to attempt in case of failure (default is 3).
+
+    Returns:
+        Optional[str]: The final URL after redirect or None if loading fails after retries.
     """
     retry_count = 0
 
