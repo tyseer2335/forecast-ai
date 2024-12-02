@@ -8,6 +8,8 @@ import { getFirestore } from "firebase/firestore";
 import { DocumentReference, DocumentData } from "@firebase/firestore";
 import { useEffect } from "react";
 import axios from "axios";
+import { set } from "date-fns";
+import { error } from "console";
 
 /**
  * ViewOnlyMainContainer Component
@@ -38,7 +40,8 @@ const ViewOnlyMainContainer: React.FC = () => {
 
   const db = getFirestore();
   const [chats, setChats] = useState<Chat[]>([]);
-  const [chatTitle, setChatTitle] = useState<string>("Shared Chat");
+  const [chatTitle, setChatTitle] = useState<string>("Loading...");
+  const [errorMessage, setErrorMessage] = useState<string>("");
 
   // Fetch the chat reference from Firestore using the chatRefHash
   const fetchChatRef = async () => {
@@ -65,9 +68,18 @@ const ViewOnlyMainContainer: React.FC = () => {
         const chatRef = doc(db, "Users", response.data.user_id, "Chats", response.data.chat_id);
         // const chatRef : DocumentReference<DocumentData, DocumentData> = doc(db, "Users", userId, "Chats", chatId);
         fetchChatDoc(chatRef);
+      } else if (response.status === 401) {
+        console.error("Unauthorized access.");
+        setErrorMessage("Unauthorized access. Please ask the chat owner to share the chat again.");
+
+      } else if (response.status === 404) {
+        console.error("Chat reference not found.");
+        // Use HTTPException's detail as the error message
+        setErrorMessage(`Chat reference not found: ${response.data.detail}`);
       }
     } catch (error) {
       console.error("Error fetching chat reference:", error);
+      setErrorMessage("Error in viewing the chat. Please ask the chat owner to share the chat again.");
     }
   };
 
@@ -102,6 +114,7 @@ const ViewOnlyMainContainer: React.FC = () => {
   };
 
   useEffect(() => {
+    setErrorMessage("");
     fetchChatRef();
   }, []);
     
@@ -111,7 +124,15 @@ const ViewOnlyMainContainer: React.FC = () => {
     {/* <Sidebar newChatId={chatId} /> */}
     <div className="flex flex-col flex-grow">
       <ViewOnlyHeaderBar title={chatTitle} />
-      <ViewOnlyMainContent chats={chats} />
+      {errorMessage ? (
+        <div className="flex-grow flex items-center justify-center">
+          <p className="text-center text-[10px] sm:text-[12px] md:text-xs xl:text-sm">
+            {errorMessage}
+            </p>
+        </div>
+      ) : (
+        <ViewOnlyMainContent chats={chats} />
+      )}
         </div>
       </div>
     );

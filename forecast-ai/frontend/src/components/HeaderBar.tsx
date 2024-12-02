@@ -105,6 +105,8 @@ const HeaderBar: React.FC<HeaderBarProps> = ({ title, userId, chatId }) => {
         setShareableLink(shareableLink);
         setIsShareableLinkCreated(true);
         setIsErrorInSharing(false);
+      } else {
+        setIsErrorInSharing(true);
       }
     } catch (error) {
       console.error("Error sharing chat:", error);
