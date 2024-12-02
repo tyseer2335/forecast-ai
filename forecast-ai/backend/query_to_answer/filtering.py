@@ -50,7 +50,6 @@ def truncate_str_to_max_token(text: str, max_token: int = MAX_TOKEN_LENGTH):
         return " ".join(tokens[:max_token])
     return text
 
-
 def get_relevance_score(
     articles: dict[str, list[Article]], forecasting_question: str, client: any
 ):
@@ -70,21 +69,25 @@ def get_relevance_score(
     # get relevance score for each article wrt original forecasting question using LLM
     for key in articles.keys():
         for article in articles[key]:
-            article_text = "\n---\nTitle: {title}\n\n{text}\n---\n".format(
-                title=article.title, text=truncate_str_to_max_token(article.content["text"], 128000)
-            )
-            prompt = relevance_prompt.format(
-                question=forecasting_question, article=article_text
-            )
-            response = client.chat.completions.create(
-                model="gpt-4o-mini", messages=[{"role": "user", "content": prompt}]
-            ).to_dict()
-            loc = response["choices"][0]["message"]["content"].split("Rating:")
-            rating = loc[1].split()[0]
-            if rating.isnumeric():
-                article.score = float(rating)
-            else:
-                article.score = 1.0  # for not numeric (invalid) rating
+            try:
+                article_text = "\n---\nTitle: {title}\n\n{text}\n---\n".format(
+                    title=article.title, text=truncate_str_to_max_token(article.content["text"], 128000)
+                )
+                prompt = relevance_prompt.format(
+                    question=forecasting_question, article=article_text
+                )
+                response = client.chat.completions.create(
+                    model="gpt-4o-mini", messages=[{"role": "user", "content": prompt}]
+                ).to_dict()
+                loc = response["choices"][0]["message"]["content"].split("Rating:")
+                rating = loc[1].split()[0]
+                if rating.isnumeric():
+                    article.score = float(rating)
+                else:
+                    article.score = 1.0  # for not numeric (invalid) rating
+            except Exception as e:
+                print(f"Error getting relevance score: {str(e)}")
+                article.score = 1.0
 
 
 def sort_and_filter(
