@@ -96,6 +96,28 @@ Our application is accessible online. Follow these steps to get started and expl
      - Set the number of sources to display in the results (e.g., 2).  
      - Review the configuration to ensure it aligns with the analysis goals before running the forecast.
 
+
+#### 5. Chat Sharing
+   - **Purpose**: Share forecasts and insights with other users dynamically.
+   
+   - **Steps**:
+      - <u>For Sharing</u>:
+         1. Go to an existing chat.
+         2. Click on the **Share** button.
+         3. Wait for the shareable link to be generated.
+         4. Copy the link by clicking the **Copy** button or manually copying it.
+         5. Share the link with the intended user.
+      - <u>For Viewing</u>:
+         1. Open the shared link.
+         2. View chat messages and insights. (Note: Interaction is disabled for viewers.)
+
+   - **Note**: 
+      - Shared links are *encrypted* and *do not reveal* user or chat IDs.
+      - Viewers *do not need to log in* to access shared chats.
+      - As *interaction is disabled for viewers*, viewers can only see chat messages and titles without the UIs for interaction.
+      - Shared chats are updated *dynamically*, reflecting new prompts or answers in real-time.
+
+
 ---
 
 ## Deployment and GitHub Workflow
