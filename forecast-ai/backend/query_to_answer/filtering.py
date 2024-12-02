@@ -1,4 +1,5 @@
 from model.article import Article
+from query_to_answer.prompt import MAX_TOKEN_LENGTH
 
 relevance_prompt = """Please consider the following forecasting question.
 After that, I will give you a news article and ask you to rate its relevance with respect to the forecasting question.
@@ -33,6 +34,23 @@ Rating: {{ insert your rating }}"""
 # For faster speed, we're removing thoughts.
 
 
+def truncate_str_to_max_token(text: str, max_token: int = MAX_TOKEN_LENGTH):
+    """
+    Truncate the string to the maximum token length.
+
+    Args:
+        text (str): The text to truncate.
+        max_token (int): The maximum token length to truncate the text to.
+
+    Returns:
+        str: The truncated text.
+    """
+    tokens = text.split()
+    if len(tokens) > max_token:
+        return " ".join(tokens[:max_token])
+    return text
+
+
 def get_relevance_score(
     articles: dict[str, list[Article]], forecasting_question: str, client: any
 ):
@@ -53,7 +71,7 @@ def get_relevance_score(
     for key in articles.keys():
         for article in articles[key]:
             article_text = "\n---\nTitle: {title}\n\n{text}\n---\n".format(
-                title=article.title, text=article.content["text"]
+                title=article.title, text=truncate_str_to_max_token(article.content["text"], 128000)
             )
             prompt = relevance_prompt.format(
                 question=forecasting_question, article=article_text
