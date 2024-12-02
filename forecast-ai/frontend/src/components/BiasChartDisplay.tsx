@@ -8,8 +8,10 @@ import {
   CategoryScale,
   LinearScale,
   BarElement,
+  LineElement,
+  PointElement,
 } from "chart.js";
-import { Pie, Bar } from "react-chartjs-2";
+import { Pie, Bar, Line } from "react-chartjs-2";
 import { Answer, BiasColorForChart } from "../hooks/types";
 import {
   biasColorToBiasNameMap,
@@ -22,7 +24,9 @@ ChartJS.register(
   Legend,
   CategoryScale,
   LinearScale,
-  BarElement
+  BarElement,
+  LineElement,
+  PointElement
 );
 
 type BiasChartDisplayProps = {
@@ -150,6 +154,34 @@ const BiasChartDisplay: React.FC<BiasChartDisplayProps> = ({
     },
   };
 
+  // Add token-wise chart data preparation
+  const getTokenWiseData = () => {
+    const llmFeatures = answer.llm_features;
+    const tokens = answer.forecaster_rationale.split(" ");
+    const datasets = Object.values(BiasColorForChart).map((biasColor) => {
+      const biasName = biasColorToBiasNameMap[biasColor];
+      const hexColor = biasColorToHexCodeMap[biasColor];
+
+      const data = tokens.map((_, index) => {
+        return llmFeatures[biasName]?.[`token_${index}`] || 0;
+      });
+
+      return {
+        label: biasName,
+        data,
+        borderColor: hexColor,
+        backgroundColor: hexColor,
+        tension: 0.4,
+        pointRadius: 2,
+      };
+    });
+
+    return {
+      labels: tokens,
+      datasets,
+    };
+  };
+
   return (
     <div className="p-4 bg-sidebar-bg rounded-md flex flex-col space-y-6 w-full max-w-[933px]">
       <div className="flex justify-between items-center">
@@ -214,6 +246,76 @@ const BiasChartDisplay: React.FC<BiasChartDisplayProps> = ({
           </li>
           <li>Right: Absolute scores showing the strength of each bias type</li>
         </ul>
+      </div>
+
+      <div className="bg-[#2A2A2A] p-6 rounded-lg border border-gray-700">
+        <div className="flex items-center justify-between mb-4">
+          <h4 className="text-white font-medium">
+            Token-wise Bias Distribution
+          </h4>
+          <div className="text-xs text-gray-400">Score per token</div>
+        </div>
+        <div className="h-[300px]">
+          <Line
+            data={getTokenWiseData()}
+            options={{
+              responsive: true,
+              maintainAspectRatio: false,
+              scales: {
+                y: {
+                  beginAtZero: true,
+                  grid: {
+                    color: "rgba(255, 255, 255, 0.1)",
+                  },
+                  ticks: {
+                    color: "white",
+                  },
+                },
+                x: {
+                  ticks: {
+                    color: "white",
+                    maxRotation: 45,
+                    autoSkip: true,
+                    maxTicksLimit: 20,
+                  },
+                  grid: {
+                    display: false,
+                  },
+                },
+              },
+              plugins: {
+                legend: {
+                  position: "bottom",
+                  labels: {
+                    color: "white",
+                    padding: 20,
+                    font: { size: 11 },
+                  },
+                },
+                tooltip: {
+                  backgroundColor: "rgba(0, 0, 0, 0.8)",
+                  titleColor: "white",
+                  bodyColor: "white",
+                  callbacks: {
+                    title: (items) =>
+                      `Token: ${getTokenWiseData().labels[items[0].dataIndex]}`,
+                    label: (context) =>
+                      `${context.dataset.label}: ${(
+                        (context.raw as number) * 100
+                      ).toFixed(1)}%`,
+                  },
+                },
+              },
+            }}
+          />
+        </div>
+      </div>
+
+      <div className="text-xs text-gray-400 bg-[#1A1A1A] p-3 rounded-md">
+        <p>
+          The chart above shows the distribution of bias intensity scores for
+          each token in the forecaster rationale.
+        </p>
       </div>
     </div>
   );
