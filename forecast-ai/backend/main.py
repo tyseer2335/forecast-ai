@@ -36,7 +36,7 @@ DOCKER_OR_LAMBDATEST = os.getenv("DOCKER_OR_LAMBDATEST")
 SINGLE_OR_PARALLEL = os.getenv("SINGLE_OR_PARALLEL")
 USERNAME = os.getenv("USERNAME")
 ACCESS_KEY = os.getenv("ACCESS_KEY")
-USE_SELENIUM_TRUE_OR_FALSE = os.getenv('USE_SELENIUM_TRUE_OR_FALSE')
+USE_SELENIUM_TRUE_OR_FALSE = os.getenv("USE_SELENIUM_TRUE_OR_FALSE")
 
 # Initialize Firebase Admin with a service account key
 cred = credentials.Certificate(os.getenv("FIREBASE_SERVICE_ACCOUNT_KEY"))
@@ -62,6 +62,15 @@ active_connections = {}
 
 # dependency function to verify the token
 async def verify_token(request: Request):
+    """
+    Verify the token in the Authorization header of the request.
+
+    Parameters:
+    - request: Request object containing the token in the Authorization header
+
+    Returns:
+    - None
+    """
     auth_header = request.headers.get("Authorization")
     print("Received Authorization header:", auth_header)
     if not auth_header:
@@ -82,6 +91,16 @@ async def verify_token(request: Request):
 # WebSocket endpoint to send real-time status updates
 @app.websocket("/status")
 async def websocket_status(websocket: WebSocket, query_id: str):
+    """
+    WebSocket endpoint to send real-time status updates for the query_id.
+
+    Parameters:
+    - websocket: WebSocket object
+    - query_id: The unique ID for the query
+
+    Returns:
+    - None
+    """
     await websocket.accept()
     active_connections[query_id] = websocket
     try:
@@ -93,7 +112,18 @@ async def websocket_status(websocket: WebSocket, query_id: str):
         await websocket.close()
 
 
+# Function to send status update message to the WebSocket connection
 async def send_status_update(query_id: str, message: str):
+    """
+    Send status update message to the WebSocket connection for the query_id.
+
+    Parameters:
+    - query_id: The unique ID for the query
+    - message: The status update message to send
+
+    Returns:
+    - None
+    """
     if query_id in active_connections:
         websocket = active_connections[query_id]
         try:
@@ -104,10 +134,22 @@ async def send_status_update(query_id: str, message: str):
             del active_connections[query_id]
 
 
+# API to generate answer to the query
 @app.post("/query_to_answer", dependencies=[Depends(verify_token)])
 async def query_to_answer(
     check_request: Request, request: ForecastRequest, query_id: str
 ):
+    """
+    Generate answer to the query using the Forecast AI model.
+
+    Parameters:
+    - check_request: Request object containing the user info
+    - request: ForecastRequest object containing the query and other parameters
+    - query_id: The unique ID for the query
+
+    Returns:
+    - final_response: The final response containing the answer, rationale, forecast, sources, and bias
+    """
     state = 0
     print("Start")
     try:
@@ -240,17 +282,46 @@ async def query_to_answer(
 
 @app.get("/")
 async def read_root():
+    """
+    Check if the server is running.
+
+    Returns:
+    - status: "Server is running"
+    """
     return {"status": "Server is running"}
 
 
-# The below APIs are for the chat sharing feature
-# API to generate chat_ref_hash from user_id and chat_id
+# The APIs below are for chat sharing functionality
+# API to generate chat_ref_hash and store it in the db
 @app.post("/share_chat/share", dependencies=[Depends(verify_token)])
 async def share_chat_api(request: Request, user_id: str, chat_id: str):
+    """
+    Generate chat_ref_hash and store it in the db.
+    The chat_ref_hash is a unique hash for the shared chat, which is
+    to be embedded in the shareable link in the frontend.
+
+    Parameters:
+    - request: Request object containing the user info
+    - user_id: The user_id of the chat owner
+    - chat_id: The chat_id of the chat to be shared
+
+    Returns:
+    - chat_ref_hash: The unique hash for the shared chat
+    """
     return share_chat.store_and_get_chat_ref_hash(request, user_id, chat_id, db)
 
 
 # API to generate user_id and chat_id from chat_ref_hash
 @app.post("/share_chat/view")
 async def view_chat_api(chat_ref_hash: str):
+    """
+    Retrieve user_id and chat_id from the chat_ref_hash.
+
+    Parameters:
+    - chat_ref_hash: The unique hash for the shared chat
+
+    Returns:
+    - user_id: The user_id of the chat owner
+    - chat_id: The chat_id of the chat to be shared
+    """
     return share_chat.get_user_id_and_chat_id_from_chat_ref_hash(chat_ref_hash, db)
