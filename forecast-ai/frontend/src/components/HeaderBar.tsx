@@ -45,7 +45,7 @@ const HeaderBar: React.FC<HeaderBarProps> = ({ title, userId, chatId }) => {
   const [isShareChatPanelOpen, setIsShareChatPanelOpen] = useState(false); // state for share button click
   const navigate = useNavigate();
   const [isShareableLinkCreated, setIsShareableLinkCreated] = useState(false);
-  const [isErrorInSharing, setIsErrorInSharing] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
 
   useEffect(() => {
     const checkServerStatus = async () => {
@@ -73,6 +73,7 @@ const HeaderBar: React.FC<HeaderBarProps> = ({ title, userId, chatId }) => {
   };
 
   const handleChatShare = async () => {
+    console.log("Sharing chat...");
     try {
       
       // Retrieve token from local storage
@@ -95,7 +96,6 @@ const HeaderBar: React.FC<HeaderBarProps> = ({ title, userId, chatId }) => {
           },
         }
       );
-      console.log("Response:", response.data);
 
       if (response.status === 200) {
         // Extract the chat_hash from the response
@@ -103,16 +103,18 @@ const HeaderBar: React.FC<HeaderBarProps> = ({ title, userId, chatId }) => {
         const shareableLink = `${window.location.origin}/view-only/${chatRefHash}`;
         console.log("Shareable Link:", shareableLink);
         setShareableLink(shareableLink);
+        console.log("Shareable Link:", shareableLink);
         setIsShareableLinkCreated(true);
-        setIsErrorInSharing(false);
-      } else {
-        setIsErrorInSharing(true);
+        setErrorMessage("");
       }
     } catch (error) {
       console.error("Error sharing chat:", error);
-      setIsErrorInSharing(true);
+      if (axios.isAxiosError(error) && error.response && error.response.status === 401) {
+        setErrorMessage(error.response.data.detail);
+      } else {
+        setErrorMessage("Error in sharing the chat. Please try again later.");
+      }
     }
-    
   }
 
   const copyToClipboard = () => {
@@ -140,7 +142,7 @@ const HeaderBar: React.FC<HeaderBarProps> = ({ title, userId, chatId }) => {
                 () => {
                   setIsShareChatPanelOpen(true);
                   setIsShareableLinkCreated(false);
-                  setIsErrorInSharing(false);
+                  setErrorMessage("");
                   handleChatShare();
                 }
               }
@@ -195,8 +197,7 @@ const HeaderBar: React.FC<HeaderBarProps> = ({ title, userId, chatId }) => {
             <button
               onClick={() => {
                 setIsShareChatPanelOpen(false);
-                setIsShareableLinkCreated(false);
-                setIsErrorInSharing(false);
+                setErrorMessage("");
               }}
               className="absolute top-2 right-2 text-light-grey text-lg"
               data-testid="close-settings-button"
@@ -206,11 +207,12 @@ const HeaderBar: React.FC<HeaderBarProps> = ({ title, userId, chatId }) => {
 
             {/* Display message to wait while shareable link is being created, because when backend is busy, it may take some time */}
             {/* Display shareable link created and a button next to it when clicked, copy the link */}
-            { isErrorInSharing ? (
-                <p className="text-red-500 mb-4">Taking too long to create shareable link. Please try again after some time.</p>
+            { errorMessage ? (
+                <p className="text-red-500 mb-4">{errorMessage}</p>
               ) :
               !isShareableLinkCreated ? (
-                <p className="text-light-grey mb-4">Please wait while we create a shareable link for you...</p>
+                <p className="text-light-grey mb-4 justify-center text-center
+                ">Please wait while we create a shareable link for you...</p>
               ) : (
                   <div className="flex items-center space-x-2">
                   <input
@@ -224,8 +226,7 @@ const HeaderBar: React.FC<HeaderBarProps> = ({ title, userId, chatId }) => {
                       () => {
                         copyToClipboard();
                         setIsShareChatPanelOpen(false);
-                        setIsShareableLinkCreated(false);
-                        setIsErrorInSharing(false);
+                        setErrorMessage("");
                       }
                     }
                     className="bg-[#4CAF50] text-white px-4 py-2 rounded-md"

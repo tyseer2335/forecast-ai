@@ -68,7 +68,8 @@ const ViewOnlyMainContainer: React.FC = () => {
         const chatRef = doc(db, "Users", response.data.user_id, "Chats", response.data.chat_id);
         // const chatRef : DocumentReference<DocumentData, DocumentData> = doc(db, "Users", userId, "Chats", chatId);
         fetchChatDoc(chatRef);
-      } else if (response.status === 401) {
+      } // Should I put these if else branches in catch block? --> No, because we are handling the error in the catch block
+      else if (response.status === 401) {
         console.error("Unauthorized access.");
         setErrorMessage("Unauthorized access. Please ask the chat owner to share the chat again.");
 
