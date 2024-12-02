@@ -7,7 +7,8 @@ import { doc, getDoc } from "firebase/firestore";
 import { getFirestore } from "firebase/firestore";
 import { DocumentReference, DocumentData } from "@firebase/firestore";
 import { useEffect } from "react";
-import axios from "axios";
+import axios, { isAxiosError } from "axios";
+import { set } from "date-fns";
 
 /**
  * ViewOnlyMainContainer Component
@@ -38,7 +39,8 @@ const ViewOnlyMainContainer: React.FC = () => {
 
   const db = getFirestore();
   const [chats, setChats] = useState<Chat[]>([]);
-  const [chatTitle, setChatTitle] = useState<string>("Shared Chat");
+  const [chatTitle, setChatTitle] = useState<string>("Loading...");
+  const [errorMessage, setErrorMessage] = useState<string>("");
 
   // Fetch the chat reference from Firestore using the chatRefHash
   const fetchChatRef = async () => {
@@ -65,9 +67,24 @@ const ViewOnlyMainContainer: React.FC = () => {
         const chatRef = doc(db, "Users", response.data.user_id, "Chats", response.data.chat_id);
         // const chatRef : DocumentReference<DocumentData, DocumentData> = doc(db, "Users", userId, "Chats", chatId);
         fetchChatDoc(chatRef);
-      }
+      } 
     } catch (error) {
       console.error("Error fetching chat reference:", error);
+      setErrorMessage("Error in viewing the chat.\nCheck the link again, or ask the chat owner to share the chat again.");
+      setChatTitle("Error");
+      
+      if (isAxiosError(error) && error.response && error.response.data && error.response.data.detail) {
+        if (error.status === 401) {
+          console.error(error.response.data.detail);
+          setErrorMessage("Unauthorized access. Please ask the chat owner to share the chat again.");
+
+        } else if (error.status === 404) {
+          console.error(error.response.data.detail);
+          // setErrorMessage(`Chat reference not found: ${error.response.data.detail}`);
+          setErrorMessage("Chat reference not found.");
+        }
+      }
+      
     }
   };
 
@@ -102,18 +119,27 @@ const ViewOnlyMainContainer: React.FC = () => {
   };
 
   useEffect(() => {
+    setErrorMessage("");
     fetchChatRef();
   }, []);
     
 
   return (
     <div className="min-h-screen h-screen w-screen flex bg-screen-black text-white font-inter">
-    {/* <Sidebar newChatId={chatId} /> */}
-    <div className="flex flex-col flex-grow">
-      <ViewOnlyHeaderBar title={chatTitle} />
-      <ViewOnlyMainContent chats={chats} />
+      <div className="flex flex-col flex-grow">
+        <ViewOnlyHeaderBar isError={errorMessage !== ""} title={chatTitle} />
+
+        {errorMessage ? 
+        <div className="flex-grow flex justify-center ">
+          <p className="text-center border rounded-md border-error-message-box-border-bg bg-error-message-box-bg h-fit p-4 text-chat-message-text whitespace-pre-wrap">
+            {errorMessage}
+          </p>
         </div>
+        :
+        <ViewOnlyMainContent chats={chats} />
+        }
       </div>
+    </div>
     );
 
 }

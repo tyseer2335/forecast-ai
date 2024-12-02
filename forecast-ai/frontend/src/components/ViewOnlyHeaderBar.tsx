@@ -19,11 +19,12 @@ import React from "react";
  */
 type ViewOnlyHeaderBarProps = {
     title?: string;
+    isError: boolean;
 }
 
-const ViewOnlyHeaderBar: React.FC<ViewOnlyHeaderBarProps> = ({ title }) => {
+const ViewOnlyHeaderBar: React.FC<ViewOnlyHeaderBarProps> = ({ title, isError }) => {
     return (
-        <header className="bg-screen-black text-header-bar-text px-6 py-6 w-full h-[8vh] flex items-center">
+        <header className={`bg-screen-blackpx-6 py-6 w-full h-[8vh] flex items-center text-header-bar-text ${isError ? 'text-error-message-box-border-bg' : ''}`}>
             {title && <h3 className="flex-grow font-bold text-center text-[8px] sm:text-[10px] md:text-xs xl:text-sm">{title}</h3>}
         </header>
     );
