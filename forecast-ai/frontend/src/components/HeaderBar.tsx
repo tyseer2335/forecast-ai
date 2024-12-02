@@ -4,6 +4,7 @@ import axios from "axios";
 import BookmarkButton from "../assets/bookmark-button.svg";
 import ShareButton from "../assets/share-button.svg";
 import { useNavigate } from "react-router-dom";
+import { set } from "date-fns";
 
 /**
  * HeaderBar Component
@@ -41,8 +42,10 @@ const HeaderBar: React.FC<HeaderBarProps> = ({ title, userId, chatId }) => {
   const [serverStatus, setServerStatus] = useState<"up" | "down" | "loading">("loading");
   const [isDropdownOpen, setIsDropdownOpen] = useState(false); // state for dropdown visibility
   const [shareableLink, setShareableLink] = useState(""); // state for shareable link
-  const [isShareButtonClicked, setIsShareButtonClicked] = useState(false); // state for share button click
+  const [isShareChatPanelOpen, setIsShareChatPanelOpen] = useState(false); // state for share button click
   const navigate = useNavigate();
+  const [isShareableLinkCreated, setIsShareableLinkCreated] = useState(false);
+  const [isErrorInSharing, setIsErrorInSharing] = useState(false);
 
   useEffect(() => {
     const checkServerStatus = async () => {
@@ -100,9 +103,12 @@ const HeaderBar: React.FC<HeaderBarProps> = ({ title, userId, chatId }) => {
         const shareableLink = `${window.location.origin}/view-only/${chatRefHash}`;
         console.log("Shareable Link:", shareableLink);
         setShareableLink(shareableLink);
+        setIsShareableLinkCreated(true);
+        setIsErrorInSharing(false);
       }
     } catch (error) {
       console.error("Error sharing chat:", error);
+      setIsErrorInSharing(true);
     }
     
   }
@@ -130,7 +136,9 @@ const HeaderBar: React.FC<HeaderBarProps> = ({ title, userId, chatId }) => {
               <button className="ml-auto bg-share-btn-bg py-2.5 px-3 flex space-x-1 justify-center items-center rounded-md hover:bg-share-btn-hover-bg"
               onClick={
                 () => {
-                  setIsShareButtonClicked(true);
+                  setIsShareChatPanelOpen(true);
+                  setIsShareableLinkCreated(false);
+                  setIsErrorInSharing(false);
                   handleChatShare();
                 }
               }
@@ -172,45 +180,59 @@ const HeaderBar: React.FC<HeaderBarProps> = ({ title, userId, chatId }) => {
                 )}
             </div>
         </div>
-        {/* Popup if isShareButtonClicked */}
-        {isShareButtonClicked && (
+        {/* Popup if isShareChatPanelOpen */}
+        {isShareChatPanelOpen && (
         <div
           className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-20"
-          data-testid="settings-panel"
+          data-testid="share-chat-panel"
         >
           <div className="bg-[#282C2C] p-6 rounded-lg w-[400px] relative">
-            <h2 className="text-xl font-bold mb-4">Settings</h2>
+            <h2 className="text-xl font-bold mb-4">Share Chat</h2>
 
             {/* Close Button */}
             <button
-              onClick={() => setIsShareButtonClicked(false)}
+              onClick={() => {
+                setIsShareChatPanelOpen(false);
+                setIsShareableLinkCreated(false);
+                setIsErrorInSharing(false);
+              }}
               className="absolute top-2 right-2 text-light-grey text-lg"
               data-testid="close-settings-button"
             >
               &times; {/* Close icon (×) */}
             </button>
 
+            {/* Display message to wait while shareable link is being created, because when backend is busy, it may take some time */}
             {/* Display shareable link created and a button next to it when clicked, copy the link */}
-            <div className="flex items-center space-x-2">
-              <input
-                type="text"
-                value={shareableLink}
-                readOnly
-                className="w-full bg-[#333333] text-light-grey p-2 rounded-md"
-              />
-              <button
-                onClick={
-                  () => {
-                    copyToClipboard();
-                    setIsShareButtonClicked(false);
-                  }
-                }
-                className="bg-[#4CAF50] text-white px-4 py-2 rounded-md"
-              >
-                Copy
-              </button>
-            </div>
-
+            { isErrorInSharing ? (
+                <p className="text-red-500 mb-4">Taking too long to create shareable link. Please try again after some time.</p>
+              ) :
+              !isShareableLinkCreated ? (
+                <p className="text-light-grey mb-4">Please wait while we create a shareable link for you...</p>
+              ) : (
+                  <div className="flex items-center space-x-2">
+                  <input
+                    type="text"
+                    value={shareableLink}
+                    readOnly
+                    className="w-full bg-[#333333] text-light-grey p-2 rounded-md"
+                  />
+                  <button
+                    onClick={
+                      () => {
+                        copyToClipboard();
+                        setIsShareChatPanelOpen(false);
+                        setIsShareableLinkCreated(false);
+                        setIsErrorInSharing(false);
+                      }
+                    }
+                    className="bg-[#4CAF50] text-white px-4 py-2 rounded-md"
+                  >
+                    Copy
+                  </button>
+                </div>
+              )
+            }
             
           </div>
         </div>
