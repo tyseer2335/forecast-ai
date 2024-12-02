@@ -151,16 +151,16 @@ const HeaderBar: React.FC<HeaderBarProps> = ({ title, userId, chatId }) => {
               />
 
               {/* Profile dropdown */}
-              {isDropdownOpen && (
-                <div className="absolute right-0 mt-2 w-40 bg-white text-black rounded-lg shadow-lg z-20">
+                {isDropdownOpen && (
+                <div className="absolute right-0 mt-2 w-48 bg-screen-black border border-gray-700 text-header-bar-text rounded-lg shadow-lg z-20">
                   <button
                     onClick={handleLogout}
-                    className="w-full text-left px-4 py-2 text-sm hover:bg-gray-200 rounded-t-lg"
+                    className="w-full py-2 px-4 text-center hover:bg-gray-700"
                   >
                     Logout
                   </button>
                 </div>
-              )}
+                )}
             </button>
             <div className="ml-4">
                 {serverStatus === "loading" ? (
