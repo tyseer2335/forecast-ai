@@ -89,8 +89,6 @@ Our application follows a modular and scalable architecture designed to perform 
 
   - As mentioned above, we generate the bias heatmap based on the summarized forecasting answer. This ensures we avoid maximum token exceed error, and get the most relevant information for the bias heatmap. Maximum token exceed error happens otherwise, since we use function calling to get expected formatted structured data. We used to use dictionary to store the data, but we found that it was not efficient, and we were getting maximum token exceed error. So we changed dictionary to list, ensuring faster and more efficient processing of the data.
 
-## Design
-
 ---
 
 # Development Requirements 
