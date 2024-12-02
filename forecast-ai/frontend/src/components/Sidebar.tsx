@@ -13,6 +13,7 @@ import OwlLogo from "../assets/owl.svg";
 import SettingsLogo from "../assets/settings.svg";
 import DeleteIcon from "../assets/close-menu-button.svg";
 import CollapseIcon from "../assets/close-menu-button.svg";
+import LogOutIcon from "../assets/logout.svg";
 
 /**
  * Sidebar component that displays a list of chat sessions, categorized by time period, with options to start a new chat session, delete existing chats, and access settings.
@@ -329,7 +330,7 @@ const Sidebar: React.FC<SidebarProps> = ({ newChatId }) => {
             data-testid="logout-button"
           >
             <img
-              src={SettingsLogo}
+              src={LogOutIcon}
               alt="logout"
               className="w-5 h-5 sm:w-6 sm:h-6 md:w-7 md:h-7"
             />
