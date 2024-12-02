@@ -123,9 +123,18 @@ Our application is accessible online. Follow these steps to get started and expl
       - Below are three videos demonstrating chat sharing features:
       1) How to share a chat.
 
+         https://github.com/user-attachments/assets/a5908cfa-e7e2-484d-8e1b-1e96cd3357a5
+
+
       2) How to view a shared chat without logging in.
 
+         https://github.com/user-attachments/assets/922e7d5d-fb20-43f3-9984-3c41ef7258fd
+
+
       3) Dynamic updates in shared chats.
+
+         https://github.com/user-attachments/assets/a3044d2a-f94f-48fe-ab9f-961c1f53f24d
+
 
 
 #### 6. Chart Visualization
@@ -141,7 +150,7 @@ Our application is accessible online. Follow these steps to get started and expl
    
    - **Example**:
       - Below is a video demonstrating the chart visualization feature, along with different visual components.
-      
+         https://github.com/user-attachments/assets/f3ac1d62-19b6-4d02-b0dd-2666efee25a8
 
       
 ---
