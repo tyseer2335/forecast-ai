@@ -29,21 +29,44 @@ ChartJS.register(
   PointElement
 );
 
+/**
+ * Props for the BiasChartDisplay component.
+ * @property {Answer} answer - The answer object containing the LLM features and other data.
+ * @property {BiasColorForChart | ""} visibleBiasColor - The bias color to be shown (optional).
+ */
 type BiasChartDisplayProps = {
   answer: Answer;
   visibleBiasColor: BiasColorForChart | "";
 };
 
+/**
+ * A component that displays various charts showing bias analysis.
+ * It shows a pie chart, bar chart, and token-wise line chart to represent bias scores.
+ * 
+ * @param {BiasChartDisplayProps} props - The component's props
+ * @returns {JSX.Element} - The JSX of the BiasChartDisplay component
+ */
 const BiasChartDisplay: React.FC<BiasChartDisplayProps> = ({
   answer,
   visibleBiasColor,
 }) => {
+  /**
+   * Calculates the average bias score for a given feature.
+   * 
+   * @param {string} feature - The feature name for which the bias score should be calculated.
+   * @returns - The average bias score for the feature.
+   */
   const calculateAverageBias = (feature: string) => {
     const featureData = answer.llm_features[feature];
     const values = Object.values(featureData) as number[];
     return values.reduce((acc, val) => acc + val, 0) / values.length;
   };
 
+  /**
+   * Gets the bias data by iterating over bias colors and calculating the average bias score for each.
+   * 
+   * @returns - A dictionary where the keys are bias names and the values are the average bias scores.
+   */
   const getBiasData = () => {
     const biasData: { [key: string]: number } = {};
 
@@ -58,7 +81,7 @@ const BiasChartDisplay: React.FC<BiasChartDisplayProps> = ({
   };
 
   const biasData = getBiasData();
-  // Update the chart data configuration
+  // Pie chart data configuration
   const pieChartData = {
     labels: Object.keys(biasData),
     datasets: [
@@ -77,6 +100,7 @@ const BiasChartDisplay: React.FC<BiasChartDisplayProps> = ({
     ],
   };
 
+  // Bar chart data configuration
   const barChartData = {
     labels: Object.keys(biasData),
     datasets: [
@@ -95,6 +119,7 @@ const BiasChartDisplay: React.FC<BiasChartDisplayProps> = ({
     ],
   };
 
+  // General options for the charts
   const options = {
     responsive: true,
     maintainAspectRatio: false,
@@ -154,7 +179,10 @@ const BiasChartDisplay: React.FC<BiasChartDisplayProps> = ({
     },
   };
 
-  // Add token-wise chart data preparation
+  /**
+   * Retrieves the token-wise bias data for charting.
+   * @returns An object containing the token-wise data for each bias color.
+   */
   const getTokenWiseData = () => {
     const llmFeatures = answer.llm_features;
     const tokens = answer.forecaster_rationale.split(" ");

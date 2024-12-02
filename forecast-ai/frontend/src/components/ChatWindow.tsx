@@ -42,15 +42,29 @@ import { Chat, BiasColor } from "../hooks/types";
  * @module ChatWindow
  */
 
-
+// Array of chat objects to display in the chat window
 type ChatWindowProps = {
   chats: Chat[];
 };
 
+/**
+ * ChatWindow Component
+ * Renders a scrollable chat window with messages, sources, and answers.
+ * Auto-scrolls to the latest message whenever new data is added.
+ *
+ * @param ChatWindowProps props - The chats for the component
+ * @returns JSX.Element - The JSX to render the chat window
+ */
 const ChatWindow: React.FC<ChatWindowProps> = ({ chats }) => {
-    
+  // Ref to the bottom of the chat window for auto-scrolling
   const bottomRef = useRef<HTMLDivElement>(null);
+
+  // State to track which bias color is currently visible in the chat window
   const [visibleBiasColor, setVisibleBiasColor] = useState<BiasColor | "">("green");
+
+  /**
+   * Effect hook that scrolls the chat window to the bottom when `chats` changes.
+   */
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [chats]);

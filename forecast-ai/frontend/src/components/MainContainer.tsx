@@ -71,6 +71,11 @@ const MainContainer: React.FC = () => {
   // II. addQuery(query): Add Query to DB
   // ================================================
 
+  /**
+   * Fetches the chat document from Firestore and extracts the chat title and messages.
+   * 
+   * @param {DocumentReference} chatRef - Reference to the chat document in Firestore
+   */
   const fetchChatDoc = async (chatRef: DocumentReference) => {
     
     // 1. chatRef --> chatDoc
@@ -101,6 +106,11 @@ const MainContainer: React.FC = () => {
     setChats(tempChats);
   }
 
+  /**
+   * Saves the current chat to Firestore.
+   * 
+   * @param {Chat} chat - The chat to save to the database
+   */
   const saveChatToDB = async (chat: Chat) => {
     chatId = sessionStorage.getItem("selectedChatId") ?? "";
     saveChat(userId, chatId, chat.query, chat.sources, chat.answer);
@@ -111,12 +121,22 @@ const MainContainer: React.FC = () => {
     }
   };
 
+  /**
+   * Adds a query to the chat history.
+   * 
+   * @param {string} query - The query text to add
+   */
   const addQuery = (query: string) => {
       setChats((prevChats): Chat[] => {
           return [...prevChats, { query: query, sources: [], loading: true }];
       })
   };
 
+  /**
+   * Adds sources to the last chat message in the history.
+   * 
+   * @param {SourceObject[]} sources - The sources associated with the current chat
+   */
   const addSources = (sources: SourceObject[]) => {
       setChats((prevChats): Chat[] => {
           const newChats = [...prevChats];
@@ -125,6 +145,11 @@ const MainContainer: React.FC = () => {
       })
   }
 
+  /**
+   * Adds an answer to the last chat message in the history.
+   * 
+   * @param {Answer} answer - The answer text to add to the chat message
+   */
   const addAnswer = (answer: Answer) => {
       setChats((prevChats): Chat[] => {
         const newChats = [...prevChats];
@@ -133,6 +158,11 @@ const MainContainer: React.FC = () => {
       })
   }
 
+  /**
+   * Adds an error message to the last chat message in the history.
+   * 
+   * @param {string} error - The error message to add
+   */
   const addError = (error: string) => {
       setChats((prevChats): Chat[] => {
           const newChats = [...prevChats];
@@ -141,6 +171,11 @@ const MainContainer: React.FC = () => {
       })
   }
 
+  /**
+   * Toggles the loading state for the last chat message in the history.
+   * 
+   * @param {boolean} loading - The loading state to set for the last chat message
+   */
   const toggleLoading = (loading: boolean) => {
       setChats((prevChats): Chat[] => {
           const newChats = [...prevChats];
@@ -149,6 +184,11 @@ const MainContainer: React.FC = () => {
       })
   }
 
+  /**
+   * Adds a status message to the last chat message in the history.
+   * 
+   * @param {string} status - The status message to add
+   */
   const addStatus = (status: string) => {
       setChats((prevChats): Chat[] => {
         const newChats = [...prevChats];

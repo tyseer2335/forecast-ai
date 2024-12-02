@@ -8,7 +8,18 @@ from query_to_answer.mock_generate_forecast import ForecastGenerator
 
 
 def create_mock_article(query: str, platform: str, title: str, content_text: str) -> Article:
-    """Helper function to create mock articles"""
+    """
+    Helper function to create a mock Article object.
+
+    Args:
+        query (str): The query associated with the article.
+        platform (str): The platform where the article is published.
+        title (str): The title of the article.
+        content_text (str): The textual content of the article.
+
+    Returns:
+        Article: A mock Article instance containing the given parameters.
+    """
     return Article(
         query=query,
         platform=platform,
@@ -22,7 +33,13 @@ def create_mock_article(query: str, platform: str, title: str, content_text: str
 
 
 def create_mock_news_data():
-    """Create mock news data for testing"""
+    """
+    Create mock news data for testing purposes.
+
+    Returns:
+        dict: A dictionary of mock articles grouped by platform.
+            The dictionary contains a list of articles for each platform such as 'x.com', 'facebook.com', and 'automatic'.
+    """
     return {
         'x.com': [
             create_mock_article(
@@ -64,7 +81,15 @@ def create_mock_news_data():
 
 
 async def test_simple():
-    """Simple test with minimal data"""
+    """
+    Run a simple test with minimal data to verify the basic functionality of the forecast generator.
+
+    This test creates a basic forecast request with minimal news data and verifies that the forecast and rationale
+    are returned correctly.
+
+    Returns:
+        None
+    """
     print("\nRunning simple test...")
 
     # Create a basic forecast request
@@ -101,7 +126,16 @@ async def test_simple():
 
 
 async def test_comprehensive():
-    """Comprehensive test with full mock data"""
+    """
+    Run a comprehensive test with full mock data to verify the forecast generator's ability to handle
+    more complex requests.
+
+    This test evaluates how well the generator works with detailed forecast requests, multiple sources,
+    and specific date ranges.
+
+    Returns:
+        None
+    """
     print("\nRunning comprehensive test...")
 
     # Create a detailed forecast request
@@ -138,7 +172,14 @@ async def test_comprehensive():
 
 
 async def main():
-    """Run all tests"""
+    """
+    Run all tests in sequence to verify the functionality of the forecast generator.
+
+    This function will sequentially execute the simple and comprehensive tests, handling any exceptions that occur.
+
+    Returns:
+        None
+    """
     print("Starting forecast generator tests...")
 
     try:
