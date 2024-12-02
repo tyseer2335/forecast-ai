@@ -116,6 +116,7 @@ Our application is accessible online. Follow these steps to get started and expl
       - Viewers *do not need to log in* to access shared chats.
       - As *interaction is disabled for viewers*, viewers can only see chat messages and titles without the UIs for interaction.
       - Shared chats are updated *dynamically*, reflecting new prompts or answers in real-time.
+      - When the backend is busy, there may be a delay in sharing or retrieving chats. Please be patient and try again after a few minutes.
 
 
 ---
