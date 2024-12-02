@@ -211,8 +211,9 @@ const HeaderBar: React.FC<HeaderBarProps> = ({ title, userId, chatId }) => {
                 <p className="text-red-500 mb-4">{errorMessage}</p>
               ) :
               !isShareableLinkCreated ? (
-                <p className="text-light-grey mb-4 justify-center text-center
-                ">Please wait while we create a shareable link for you...</p>
+                <p className="text-light-grey mb-4 justify-center text-center whitespace-pre-line">
+                {"Creating shareable link.\nPlease wait..."}
+                </p>
               ) : (
                   <div className="flex items-center space-x-2">
                   <input
