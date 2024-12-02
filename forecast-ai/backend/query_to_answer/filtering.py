@@ -23,8 +23,13 @@ Guidelines:
 of 1.
 
 Your response should look like the following:
-Thoughts: {{ insert your thinking }}
 Rating: {{ insert your rating }}"""
+
+# Your response should look like the following:
+# Thoughts: {{ insert your thinking }}
+# Rating: {{ insert your rating }}"""
+
+# For faster speed, we're removing thoughts.
 
 
 def get_relevance_score(

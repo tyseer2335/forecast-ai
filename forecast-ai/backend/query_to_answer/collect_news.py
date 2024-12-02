@@ -1,6 +1,7 @@
 from gnews import GNews
 from model.forecast_request import ForecastRequest
 from utils.process_date import convert_str_to_datetime
+from query_to_answer.prompt import WHITELIST
 
 
 def _get_forecasting_news(queries: list[str], max_results: int = 10, language: str = 'en', country: str = 'US',
@@ -26,7 +27,7 @@ def _get_forecasting_news(queries: list[str], max_results: int = 10, language: s
     """
     google_news = GNews(max_results=max_results, language=language, country=country, period=period,
                         start_date=convert_str_to_datetime(start_date), end_date=convert_str_to_datetime(end_date),
-                        exclude_websites=exclude_websites, proxy=proxy)
+                        exclude_websites=WHITELIST, proxy=proxy)
     all_news_per_query = {}
     for query in queries:
         all_news_per_query[query] = google_news.get_news(query)

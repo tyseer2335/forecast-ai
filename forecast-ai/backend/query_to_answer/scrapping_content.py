@@ -15,8 +15,72 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import TimeoutException, WebDriverException
 from typing import Optional
+import json
+from urllib.parse import quote, urlparse
+from query_to_answer.prompt import WHITELIST
 
 
+def get_decoding_params(gn_art_id):
+    response = requests.get(f"https://news.google.com/rss/articles/{gn_art_id}")
+    response.raise_for_status()
+    soup = BeautifulSoup(response.text, "lxml")
+    div = soup.select_one("c-wiz > div")
+    return {
+        "signature": div.get("data-n-a-sg"),
+        "timestamp": div.get("data-n-a-ts"),
+        "gn_art_id": gn_art_id,
+    }
+
+
+def decode_urls(articles):
+    articles_reqs = [
+        [
+            "Fbv4je",
+            f'["garturlreq",[["X","X",["X","X"],null,null,1,1,"US:en",null,1,null,null,null,null,null,0,1],"X","X",1,[1,1,1],1,1,null,0,0,null,0],"{art["gn_art_id"]}",{art["timestamp"]},"{art["signature"]}"]',
+        ]
+        for art in articles
+    ]
+    payload = f"f.req={quote(json.dumps([articles_reqs]))}"
+    headers = {"content-type": "application/x-www-form-urlencoded;charset=UTF-8"}
+    response = requests.post(
+        url="https://news.google.com/_/DotsSplashUi/data/batchexecute",
+        headers=headers,
+        data=payload,
+    )
+    response.raise_for_status()
+    return [json.loads(res[2])[1] for res in json.loads(response.text.split("\n\n")[1])[:-2]]
+
+
+def return_new_links(encoded_urls: list[str]) -> list[str]:
+    # articles_params = [get_decoding_params(urlparse(url).path.split("/")[-1]) for url in encoded_urls]
+    # decoded_urls = decode_urls(articles_params)
+
+    # Instead use for loop one by one to get correct orders.
+    # If 1, 2, 3 given, return in 1, 2, 3 order.
+    decoded_urls = []
+    for url in encoded_urls:
+        articles_params = get_decoding_params(urlparse(url).path.split("/")[-1])
+        decoded_urls.append(decode_urls([articles_params])[0])
+
+    return decoded_urls
+
+
+def convert_to_decoded_urls(urls: dict[str, list[dict[str, str]]]) -> dict[str, list[dict[str, str]]]:
+    # print("[URLs]", urls)
+    urls_to_decode = []
+    for key, articles in urls.items():
+        urls_to_decode.extend([article["url"] for article in articles])
+    # print("[Before]", urls_to_decode)
+    decoded_urls = return_new_links(urls_to_decode)
+    # reverse_decoded_urls = {url: decoded_url for url, decoded_url in zip(urls_to_decode, decoded_urls)}
+    # print("[After]", decoded_urls) # list of urls
+    # update the urls
+    # make decoded_urls iterable
+    decoded_urls = iter(decoded_urls)
+    for key, articles in urls.items():
+        for article in articles:
+            article["url"] = next(decoded_urls)
+    return urls
 
 def _single_scrape_content(url: str) -> dict:
     """
@@ -28,25 +92,26 @@ def _single_scrape_content(url: str) -> dict:
     Returns:
         dict: A dictionary containing the text content and a list of media URLs (e.g., images) on the page.
     """
-    # response = requests.get(url)
-    # soup = BeautifulSoup(response.content, 'html.parser')
-    #
-    # cleaner = html2text.HTML2Text()
-    # cleaner.ignore_links = True
-    # cleaner.ignore_images = True
-    # clean_text = cleaner.handle(str(soup))
-    #
-    # # Extract text content from common tags
-    # text_elements = soup.find_all(['p', 'h1', 'h2', 'h3', 'span', 'div'])
-    # clean_text = ' '.join([elem.get_text(strip=True) for elem in text_elements])
-    #
-    # # Extract media content
-    # media = [img['src'] for img in soup.find_all('img')]
-    #
-    # return {
-    #     'text': clean_text,
-    #     'media': media
-    # }
+    if not any(x in url for x in WHITELIST):
+        response = requests.get(url)
+        soup = BeautifulSoup(response.content, 'html.parser')
+
+        cleaner = html2text.HTML2Text()
+        cleaner.ignore_links = True
+        cleaner.ignore_images = True
+        clean_text = cleaner.handle(str(soup))
+
+        # Extract text content from common tags
+        text_elements = soup.find_all(['p', 'h1', 'h2', 'h3', 'span', 'div'])
+        clean_text = ' '.join([elem.get_text(strip=True) for elem in text_elements])
+
+        # Extract media content
+        media = [img['src'] for img in soup.find_all('img')]
+
+        return {
+            'text': clean_text,
+            'media': media
+        }
     return {
         'text': '',
         'media': []
@@ -236,7 +301,8 @@ def scrape_content_process(url, env, DOCKER_OR_LAMBDATEST, USERNAME, ACCESS_KEY)
     return res
 
 
-def single(urls: dict, env: str, DOCKER_OR_LAMBDATEST: str, USERNAME: str, ACCESS_KEY: str) -> dict:
+def single(urls: dict, env: str, DOCKER_OR_LAMBDATEST: str, USERNAME: str, ACCESS_KEY: str,
+           USE_SELENIUM_TRUE_OR_FALSE: str = "false") -> dict:
     """
     Scrapes content from multiple URLs in a single-threaded manner.
 
@@ -255,21 +321,28 @@ def single(urls: dict, env: str, DOCKER_OR_LAMBDATEST: str, USERNAME: str, ACCES
     driver = init_driver(env, DOCKER_OR_LAMBDATEST, USERNAME, ACCESS_KEY)
 
     # Add 'content' key to each news
+    # print(urls)
     for _, news in urls.items():
         for article in news:
-            article['content'] = _single_scrape_content(article['url'])
-    # if env == 'local':
-    for _, news in urls.items():
-        for article in news:
-            # if not article['content']['text']:
             try:
-                res = advanced_selenium_scrape_content(driver, article['url'])
-                article['content']['text'] = res['text']
-                article['url'] = res['final_url']  # Update the URL to the final redirected URL
-                if not article['content']['media']:
-                    article['content']['media'] = res['media']
+                article['content'] = _single_scrape_content(article['url'])
+                if not article['content']['text']:
+                    print("ERRRRRRRRRRRRRRRRRRRRPR", article['url'])
             except Exception as e:
                 print(f"Error scraping content: {str(e)} for url: {article['url']}")
+                return e
+    if USE_SELENIUM_TRUE_OR_FALSE != "false":
+        for _, news in urls.items():
+            for article in news:
+                if not article['content']['text']:
+                    try:
+                        res = advanced_selenium_scrape_content(driver, article['url'])
+                        article['content']['text'] = res['text']
+                        article['url'] = res['final_url']  # Update the URL to the final redirected URL
+                        if not article['content']['media']:
+                            article['content']['media'] = res['media']
+                    except Exception as e:
+                        print(f"Error scraping content: {str(e)} for url: {article['url']}")
     driver.quit()
     return urls
 
@@ -313,7 +386,7 @@ def parallel(urls: dict, env: str, DOCKER_OR_LAMBDATEST: str, USERNAME: str, ACC
 
 
 def multiple_scrape_content(urls: dict, env: str, DOCKER_OR_LAMBDATEST: str, SINGLE_OR_PARALLEL: str,
-                            USERNAME: str, ACCESS_KEY: str) -> dict:
+                            USERNAME: str, ACCESS_KEY: str, USE_SELENIUM_TRUE_OR_FALSE: str = "false") -> dict:
     """
     Chooses between single-threaded or parallel scraping for content based on configuration.
 
@@ -328,10 +401,14 @@ def multiple_scrape_content(urls: dict, env: str, DOCKER_OR_LAMBDATEST: str, SIN
     Returns:
         dict: A dictionary with updated article data containing scraped text and media URLs.
     """
-    if SINGLE_OR_PARALLEL == 'single':
-        return single(urls, env, DOCKER_OR_LAMBDATEST, USERNAME, ACCESS_KEY)
-    return parallel(urls, env, DOCKER_OR_LAMBDATEST, USERNAME, ACCESS_KEY)
-
+    try:
+        urls = convert_to_decoded_urls(urls)
+        if SINGLE_OR_PARALLEL == 'single' or USE_SELENIUM_TRUE_OR_FALSE == "false":
+            return single(urls, env, DOCKER_OR_LAMBDATEST, USERNAME, ACCESS_KEY, USE_SELENIUM_TRUE_OR_FALSE)
+        return parallel(urls, env, DOCKER_OR_LAMBDATEST, USERNAME, ACCESS_KEY)
+    except Exception as e:
+        print(f"Error scraping content: {str(e)}")
+        raise e
 
 # if __name__ == '__main__':
 #     print(multiprocessing.cpu_count())
