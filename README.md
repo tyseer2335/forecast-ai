@@ -119,6 +119,17 @@ Our application is accessible online. Follow these steps to get started and expl
       - When the backend is busy, there may be a delay in sharing or retrieving chats. Please be patient and try again after a few minutes.
 
 
+#### 6. Chart Visualization
+   - **Purpose**: View bias analysis in a visual format for better understanding.
+
+   - **Steps**:
+      - Below a forecast response, visualizations are generated to represent the bias score.
+      - You can access either by asking a question or viewing a shared chat.
+
+   - **Types**:
+      - **Bar/Pie Chart**: Displays the average bias score for the forecast.
+      - **Line Graph**: Shows the bias score per token, allowing users to identify trends and patterns.
+      
 ---
 
 ## Deployment and GitHub Workflow
