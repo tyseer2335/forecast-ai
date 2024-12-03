@@ -2,10 +2,10 @@
 import { BiasColor, BiasColorToBiasNameMap, BiasColorToHexCodeMap } from "./types";
 
 export const biasColorToBiasNameMap : BiasColorToBiasNameMap = {
-    green: "statistical_reasoning",
-    yellow: "statistical_refinement",
-    purple: "causal_reasoning",
-    red: "statistical_causal_blend",
+    green: "availability_heuristic",
+    yellow: "anchoring_bias",
+    purple: "confirmation_bias",
+    red: "framing_effect",
 };
 
 export const biasColorToHexCodeMap : BiasColorToHexCodeMap = {
