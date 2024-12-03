@@ -36,7 +36,7 @@ import { onAuthStateChanged } from 'firebase/auth';
 
 const App: React.FC = () => {
   // Auth Check: Set up a listener to check the authentication state
-  if (!localStorage.getItem("userId") && window.location.pathname == '/') {
+  if (window.location.pathname == '/' && (!localStorage.getItem('userId') || !localStorage.getItem('authToken'))) {
     window.location.href = '/login';
   }
 
