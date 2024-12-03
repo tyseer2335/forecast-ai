@@ -5,6 +5,7 @@ import coloredlogs
 from dotenv import load_dotenv
 from openai import OpenAI
 
+load_dotenv()
 # Add the parent directory of 'unit_test' to the Python path
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
