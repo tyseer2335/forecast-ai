@@ -95,6 +95,7 @@ def get_user_id_and_chat_id_from_chat_ref_hash(
         try:
             user_docs = db.collection("Users").get()
             for user_doc in user_docs:
+
                 try:
                     if user_doc.get("userIdHash") == user_id_hash:
                         user_id = user_doc.id
@@ -118,9 +119,14 @@ def get_user_id_and_chat_id_from_chat_ref_hash(
                 db.collection("Users").document(user_id).collection("Chats").get()
             )
             for chat_doc in chat_docs:
-                if chat_doc.get("chatIdHash") == chat_id_hash:
-                    chat_id = chat_doc.id
-                    break
+
+                try:
+                    if chat_doc.get("chatIdHash") == chat_id_hash:
+                        chat_id = chat_doc.id
+                        break
+                except Exception as e:
+                    continue
+
         except Exception as e:
             raise HTTPException(
                 status_code=404,
