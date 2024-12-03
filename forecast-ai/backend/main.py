@@ -29,7 +29,7 @@ import time
 # uvicorn main:app
 app = FastAPI()
 load_dotenv()
-OPENAI_API_KEY = os.getenv("OPENAPI_API_KEY")
+OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 client = OpenAI(api_key=OPENAI_API_KEY)
 LOCAL_OR_PROD = os.getenv("LOCAL_OR_PROD")
 DOCKER_OR_LAMBDATEST = os.getenv("DOCKER_OR_LAMBDATEST")

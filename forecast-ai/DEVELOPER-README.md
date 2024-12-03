@@ -178,7 +178,7 @@ We highly recommend you to read from top to bottom first, and then following the
      ```
     - Finally, create a `.env` file in the backend folder with the following:
      ```plaintext
-     OPENAPI_API_KEY=your-openai-api-key
+     OPENAI_API_KEY=your-openai-api-key
      LOCAL_OR_PROD=local/prod
      DOCKER_OR_LAMBDATEST=lambdatest/docker
      SINGLE_OR_PARALLEL=single/parallel
@@ -187,7 +187,7 @@ We highly recommend you to read from top to bottom first, and then following the
      FIREBASE_SERVICE_ACCOUNT_KEY=your-firebase-service-account-key
      USE_SELENIUM_TRUE_OR_FALSE=true/false
      ```
-   - Here, `OPENAPI_API_KEY` is your OpenAI API key, and `USERNAME` and `ACCESS_KEY` are for your LambdaTest credentials. To get a lambdatest key, refer to this [guide](https://www.lambdatest.com/support/docs/hyperexecute-how-to-get-my-username-and-access-key/).
+   - Here, `OPENAI_API_KEY` is your OpenAI API key, and `USERNAME` and `ACCESS_KEY` are for your LambdaTest credentials. To get a lambdatest key, refer to this [guide](https://www.lambdatest.com/support/docs/hyperexecute-how-to-get-my-username-and-access-key/).
    - Option 1:
       ```plaintext
       DOCKER_OR_LAMBDATEST=docker
