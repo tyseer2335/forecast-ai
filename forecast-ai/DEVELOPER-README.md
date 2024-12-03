@@ -202,9 +202,8 @@ We highly recommend you to read from top to bottom first, and then following the
       ```
       This option will run lambdatest on the cloud and will be much faster, regardless of the LOCAL_OR_PROD setting.
 
-6. Set up backend files:
-   - To run our app, you will need to put a `prompt.py` file into the `query_to_answer/` folder
-   - Lastly, you will need to put the firebase service account key json file in the backend folder.
+6. Set up backend file:
+   - To run our app, you will need to put the firebase service account key json file in the backend folder.
 
 7. Install the backend dependencies by navigating to the backend folder via the terminal:
      ```bash
