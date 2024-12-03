@@ -5,5 +5,5 @@
 .env
 venv/
 
-query_to_answer/prompt.py
+# query_to_answer/prompt.py
 heavylifters-72698-firebase-adminsdk-xwo0b-da4dabc257.json
