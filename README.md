@@ -149,8 +149,15 @@ Our application is accessible online. Follow these steps to get started and expl
       - **Line Graph**: Shows the bias score per token, allowing users to identify trends and patterns.
    
    - **Example**:
-      - Below is a video demonstrating the chart visualization feature, along with different visual components.
+      - Below are two videos demonstrating the chart visualization feature, along with different visual components.
+      1) Automatic generation of bar, pie, and line charts.
+
          https://github.com/user-attachments/assets/f3ac1d62-19b6-4d02-b0dd-2666efee25a8
+
+
+      2) Click interactions on the line chart.
+         <!-- PLACEHOLDER -->
+         - You can click on the labels under the line chart to specify biases to view.
 
       
 ---
