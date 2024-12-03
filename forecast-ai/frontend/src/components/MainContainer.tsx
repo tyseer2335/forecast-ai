@@ -45,7 +45,7 @@ const MainContainer: React.FC = () => {
   const saveChat = useSaveChat();
   var [chats, setChats] = useState<Chat[]>([]);
   var userId : string = localStorage.getItem('userId') || "";
-  if (!userId) {
+  if (!userId || !(localStorage.getItem('authToken'))) {
     window.location.href = '/login';
     return null;
   }
