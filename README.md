@@ -156,8 +156,12 @@ Our application is accessible online. Follow these steps to get started and expl
 
 
       2) Click interactions on the line chart.
-         <!-- PLACEHOLDER -->
+         
          - You can click on the labels under the line chart to specify biases to view.
+         
+         https://github.com/user-attachments/assets/0d6fdb37-bec6-433c-a2ff-3dc7f075073b
+         
+         
 
       
 ---
