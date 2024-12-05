@@ -1,5 +1,18 @@
 # ForecastAI/HeavyLifters
 
+## Table of Contents
+1. [Partner Intro](#partner-intro)
+2. [Description about the Project](#description-about-the-project)
+3. [Demo Video](#demo-video)
+4. [Key Features](#key-features)
+5. [Instructions](#instructions)
+6. [Developer Documentation](#developer-documentation)
+7. [Deployment and GitHub Workflow](#deployment-and-github-workflow)
+8. [Coding Standards and Guidelines](#coding-standards-and-guidelines)
+9. [Licenses](#licenses)
+
+---
+
 ## Partner Intro
 
 We’re working with the _Machine Learning Group, Department of Computer Science, University of Toronto_. The team consists of brilliant researchers and engineers.
@@ -16,7 +29,7 @@ Project Team Leads:
 
 ---
 
-## Description about the project
+## Description about the Project
 
 A software platform that gathers global data to enhance an AI agent's ability to forecast significant future events and visualize AI rational and cognitive bias.
 
@@ -25,7 +38,18 @@ We’re building a website that enables users to prompt forecasting questions li
 The Problems we’re solving make it easy for researchers to make judgement in order to improve AI forecasting models, and understand bias.
 
 ### Value of the Project
+
 This platform empowers researchers and analysts by simplifying complex forecasting tasks, allowing them to make better judgments and refine AI models with transparency. By visualizing AI reasoning and bias, it helps users understand and mitigate cognitive biases in AI predictions, ultimately supporting more accurate and reliable forecasting in fields like politics, finance, and social sciences.
+
+---
+
+## Demo Video
+
+Below is a demo video of our platform, showcasing key features and functionalities.
+
+[![ForecastAI Demo Video](https://img.youtube.com/vi/rHIFVTDDt40/0.jpg)](https://www.youtube.com/watch?v=rHIFVTDDt40)
+
+---
 
 ## Key Features
 
