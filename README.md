@@ -47,7 +47,7 @@ This platform empowers researchers and analysts by simplifying complex forecasti
 
 Below is a demo video of our platform, showcasing key features and functionalities.
 
-<!-- Placeholder -->
+[![ForecastAI Demo Video](https://img.youtube.com/vi/rHIFVTDDt40/0.jpg)](https://www.youtube.com/watch?v=rHIFVTDDt40)
 
 ---
 
