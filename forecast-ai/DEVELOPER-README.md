@@ -37,7 +37,33 @@ Our application follows a modular and scalable architecture designed to perform 
 - **Communication with Backend**:
   - Sends HTTP requests to the backend for generating forecasts and receiving processed results.
 
-### 2. **Backend**:
+### 2. **Frontend-Backend Communication of Other Features**:
+- **Chat Sharing**:  
+  The chat-sharing functionality enables users to share specific chat histories via a unique link, ensuring secure and controlled access to the shared content.
+
+  - **Process**:
+    1. **Frontend Trigger**:
+      - When a user opts to share a chat, the frontend makes an API call to the backend.
+      - This triggers the backend to create a unique hash code linked to the user and the chat reference.
+    2. **Database Storage**:
+      - The backend stores the hash code in Firestore and marks the chat as sharable (`isShared: true`).
+      - This ensures that the chat can only be accessed via the generated link.
+    3. **Public Access**:
+      - Anyone with the shared link (authenticated or anonymous) can view the chat.
+      - The backend verifies the hash and retrieves the relevant chat reference for display.
+    4. **View-Only Mode**:
+      - Shared chats are displayed without sidebar navigation or the ability to interact with the chat (e.g., sending new prompts), isolating functionality to read-only mode.
+    5. **Future Enhancements**:
+      - A feature to revoke sharing permissions is planned, allowing users to disable access to shared links if needed.
+
+  - **Security Considerations**:
+    - Hash codes prevent unauthorized access and are essential for maintaining data security.
+    - Additional safeguards, such as expiration dates for links, can be implemented in the future.
+
+  Below diagram represents the general overview of frontend architecture:
+  <img src="images/fe.png" alt="forecastai's frontend diagram" width="600"/>
+
+### 3. **Backend**:
 - **Main Framework**: Python with FastAPI.
 - **Core Functionalities**:
   - Processes forecasting requests.
@@ -48,7 +74,7 @@ Our application follows a modular and scalable architecture designed to perform 
 - **Bias Analysis**:
   - Uses OpenAI to create a bias heatmap, analyzing token-level biases in retrieved text.
 
-### 3. Backend Forecasting Pipeline:
+### 4. Backend Forecasting Pipeline:
 - **Search Query Extraction**:
   - Prompt GPT-4o to get google search queries that find objective information for forecasting question from different (specified) sources.
 
@@ -89,30 +115,9 @@ Our application follows a modular and scalable architecture designed to perform 
 
   - As mentioned above, we generate the bias heatmap based on the summarized forecasting answer. This ensures we avoid maximum token exceed error, and get the most relevant information for the bias heatmap. Maximum token exceed error happens otherwise, since we use function calling to get expected formatted structured data. We used to use dictionary to store the data, but we found that it was not efficient, and we were getting maximum token exceed error. So we changed dictionary to list, ensuring faster and more efficient processing of the data.
 
+  Below diagram represents the general overview of backend architecture:
+  <img src="images/be.png" alt="forecastai's backend diagram" width="600"/>
 
-### 4. **Frontend-Backend Communication of Other Features**:
-- **Chat Sharing**:  
-  The chat-sharing functionality enables users to share specific chat histories via a unique link, ensuring secure and controlled access to the shared content.
-
-  - **Process**:
-    1. **Frontend Trigger**:
-      - When a user opts to share a chat, the frontend makes an API call to the backend.
-      - This triggers the backend to create a unique hash code linked to the user and the chat reference.
-    2. **Database Storage**:
-      - The backend stores the hash code in Firestore and marks the chat as sharable (`isShared: true`).
-      - This ensures that the chat can only be accessed via the generated link.
-    3. **Public Access**:
-      - Anyone with the shared link (authenticated or anonymous) can view the chat.
-      - The backend verifies the hash and retrieves the relevant chat reference for display.
-    4. **View-Only Mode**:
-      - Shared chats are displayed without sidebar navigation or the ability to interact with the chat (e.g., sending new prompts), isolating functionality to read-only mode.
-    5. **Future Enhancements**:
-      - A feature to revoke sharing permissions is planned, allowing users to disable access to shared links if needed.
-
-  - **Security Considerations**:
-    - Hash codes prevent unauthorized access and are essential for maintaining data security.
-    - Additional safeguards, such as expiration dates for links, can be implemented in the future.
-    
 ---
 
 # Development Requirements 
