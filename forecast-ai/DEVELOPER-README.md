@@ -41,9 +41,12 @@ Our application follows a modular and scalable architecture designed to perform 
   - Cloud Firestore retrieves and stores user chat data seamlessly.
   - These are mostly handled by Firebase library.
 
- **Communication with Backend**:
+- **Communication with Backend**:
   - Sends HTTP requests to the backend for generating forecasts and receiving processed results.
   - Simple / root call is used for server status check.
+
+- **Testing**:
+  - Jest is used for testing frontend components to ensure functionality and reliability.
 
 ### 2. **Frontend-Backend Communication of Other Features**:
 - **Chat Sharing**:  
@@ -73,14 +76,20 @@ Our application follows a modular and scalable architecture designed to perform 
 
 ### 3. **Backend**:
 - **Main Framework**: Python with FastAPI.
+
 - **Core Functionalities**:
   - Processes forecasting requests.
   - Integrates external APIs (OpenAI, Google News) and handles web scraping with Selenium.
+
 - **API Integration**:
   - OpenAI API for generating search queries, filtering relevant content, and generating forecasts.
   - Google News API for retrieving relevant news links.
+
 - **Bias Analysis**:
   - Uses OpenAI to create a bias heatmap, analyzing token-level biases in retrieved text.
+
+- **Testing**:
+  - We are simply using Python code to test the backend.
 
 ### 4. Backend Forecasting Pipeline:
 - **Search Query Extraction**:
