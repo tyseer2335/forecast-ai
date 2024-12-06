@@ -28,14 +28,22 @@ Our application follows a modular and scalable architecture designed to perform 
 <img src="images/architecture.png" alt="forecastai's architecture" width="600"/>
 
 ### 1. **Frontend**:
+  * Frontend is built using React and TypeScript, majority of code is for responsiveness and user interaction.
+
 - **User Interaction**:
   - Captures user questions for forecasting.
   - Displays forecasting results, bias heatmaps, and chat history.
+  - Charts are done using Chart.js.
+  - Bias are simply done by looping each token and displaying the bias heatmap.
+
 - **Authentication and Data Management**:
   - Firebase Authentication secures user sessions.
   - Cloud Firestore retrieves and stores user chat data seamlessly.
-- **Communication with Backend**:
+  - These are mostly handled by Firebase library.
+
+ **Communication with Backend**:
   - Sends HTTP requests to the backend for generating forecasts and receiving processed results.
+  - Simple / root call is used for server status check.
 
 ### 2. **Frontend-Backend Communication of Other Features**:
 - **Chat Sharing**:  
